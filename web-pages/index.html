@@ -135,6 +135,12 @@ svg text { font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
 .pop { transform-box: fill-box; transform-origin: center; }
 .badge { display: inline-block; padding: 4px 12px; border-radius: 999px; font-weight: 800; border: 2px solid; font-size: 15px; }
 
+/* ---------- cost readout ---------- */
+.readout { display: grid; grid-template-columns: repeat(4, auto); gap: 6px 26px; justify-content: start; min-height: 64px; margin-top: 6px; padding: 10px 14px; background: #0d1117; border-radius: 10px; }
+.readout .rhead { grid-column: 1 / -1; font-size: 16px; }
+.readout .rrow { display: flex; flex-direction: column; gap: 2px; font-size: 15px; }
+.readout .usd { color: var(--good); font-weight: 800; font-size: 18px; }
+
 /* ---------- pipelines (hybrid patterns) ---------- */
 .pipe { display: flex; align-items: center; gap: 8px; position: relative; padding: 14px 0 6px; }
 .node { flex: 1; text-align: center; border: 2px solid var(--line); border-radius: 10px; padding: 8px 4px; font-weight: 700; font-size: 14px; background: #0d1117; }
@@ -266,7 +272,7 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 <!-- ================= Cost grows ================= -->
 <section class="anim" id="cost">
   <h2>How cost grows with volume</h2>
-  <p class="take">Read it like a break-even chart. Only steps that use tokens belong here.</p>
+  <p class="take">Read it like a break-even chart. Press play: the lines draw, then the marker walks through volumes and shows the cost at each.</p>
   <div id="costChart"></div>
   <div class="means">👉 <b>What this shows:</b> a script costs tokens once, to build, and then stays flat. AI in the loop costs more with every item. Past the break-even point, the script is cheaper. The dashed line, comparing every item with every other, grows fastest of all.</div>
 </section>
@@ -610,37 +616,83 @@ function pathOf(fn, X, Y) {
   }
   return d;
 }
+// Hypothetical numbers, chosen only to show magnitude:
+// 5,000 tokens per document through the LLM; 300,000 tokens to build a script;
+// hybrid sends 1 document in 10 to the LLM; comparing two documents costs 20 tokens;
+// $10 per million tokens.
+var COST = {
+  maxDocs: 1000, maxTok: 5.5e6, perDoc: 5000, build: 3e5, share: 0.1, perPair: 20, perMillion: 10,
+  ai: function (n) { return n * 5000; },
+  script: function () { return 3e5; },
+  hybrid: function (n) { return 3e5 + 0.1 * n * 5000; },
+  pairs: function (n) { return n * (n - 1) / 2 * 20; },
+};
+function fmtTok(x) { return x >= 1e6 ? (x / 1e6).toFixed(x >= 1e7 ? 0 : 1) + "M" : Math.round(x / 1000) + "k"; }
+function fmtUsd(x) { var d = x / 1e6 * COST.perMillion; return "$" + (d >= 100 ? Math.round(d).toLocaleString() : d.toFixed(2)); }
 function costChart() {
-  var W = 1100, H = 420, x0 = 90, y0 = 30, w = 700, h = 330;
-  var X = function (v) { return x0 + v / 100 * w; }, Y = function (c) { return y0 + h - c / 100 * h; };
-  var build = 22;
-  var s = '<svg viewBox="0 0 ' + W + " " + H + '" style="width:100%;max-width:1200px;display:block">';
-  for (var k = 0; k <= 5; k++) s += '<line x1="' + x0 + '" x2="' + (x0 + w) + '" y1="' + (y0 + k * h / 5) + '" y2="' + (y0 + k * h / 5) + '" stroke="' + C.line + '"/>';
+  var W = 1200, H = 470, x0 = 120, y0 = 30, w = 700, h = 360;
+  var X = function (n) { return x0 + n / COST.maxDocs * w; }, Y = function (tok) { return y0 + h - tok / COST.maxTok * h; };
+  var s = '<svg viewBox="0 0 ' + W + " " + H + '" style="width:100%;max-width:1250px;display:block">';
+  for (var k = 0; k <= 5; k++) {
+    var tok = k * 1e6, yy = Y(tok);
+    s += '<line x1="' + x0 + '" x2="' + (x0 + w) + '" y1="' + yy + '" y2="' + yy + '" stroke="' + C.line + '"/>';
+    s += '<text x="' + (x0 - 10) + '" y="' + (yy - 2) + '" fill="' + C.muted + '" font-size="13" text-anchor="end">' + (k ? k + "M tokens" : "0") + '</text>';
+    if (k) s += '<text x="' + (x0 - 10) + '" y="' + (yy + 14) + '" fill="' + C.good + '" font-size="13" font-weight="700" text-anchor="end">' + fmtUsd(tok) + "</text>";
+  }
+  for (var d = 0; d <= COST.maxDocs; d += 250) {
+    s += '<text x="' + X(d) + '" y="' + (y0 + h + 20) + '" fill="' + C.muted + '" font-size="13" text-anchor="middle">' + d.toLocaleString() + "</text>";
+  }
   s += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + (y0 + h) + '" stroke="' + C.muted + '" stroke-width="2"/>';
   s += '<line x1="' + x0 + '" y1="' + (y0 + h) + '" x2="' + (x0 + w) + '" y2="' + (y0 + h) + '" stroke="' + C.muted + '" stroke-width="2"/>';
-  s += '<text x="30" y="' + (y0 + h / 2) + '" fill="' + C.text + '" font-size="20" font-weight="700" text-anchor="middle" transform="rotate(-90 30 ' + (y0 + h / 2) + ')">Tokens and $$$</text>';
-  s += '<text x="' + (x0 + w / 2) + '" y="' + (y0 + h + 34) + '" fill="' + C.text + '" font-size="17" font-weight="700" text-anchor="middle">Volume: records processed, run after run →</text>';
-  var lines = [
-    [function (v) { return 0.012 * v * v; }, C.warn, "d4", "6 5"],
-    [function (v) { return 0.9 * v; }, C.ai, "d1", ""],
-    [function (v) { return build + 0.15 * v; }, C.hybrid, "d2", ""],
-    [function () { return build; }, C.script, "d3", ""],
-  ];
-  lines.forEach(function (l) {
-    s += '<path class="draw ' + l[2] + '" pathLength="1" d="' + pathOf(l[0], X, Y) + '" fill="none" stroke="' + l[1] + '" stroke-width="5"' + (l[3] ? ' stroke-dasharray="1"' : "") + "/>";
+  s += '<text x="22" y="' + (y0 + h / 2) + '" fill="' + C.text + '" font-size="19" font-weight="700" text-anchor="middle" transform="rotate(-90 22 ' + (y0 + h / 2) + ')">Tokens and <tspan fill="' + C.good + '">$</tspan> in a year</text>';
+  s += '<text x="' + (x0 + w / 2) + '" y="' + (y0 + h + 46) + '" fill="' + C.text + '" font-size="16" font-weight="700" text-anchor="middle">Documents processed in a year →</text>';
+  function path(fn) {
+    var d = "";
+    for (var i = 0; i <= 200; i++) {
+      var n = i / 200 * COST.maxDocs, v = fn(n);
+      if (v > COST.maxTok) break;
+      d += (i ? "L" : "M") + X(n).toFixed(1) + "," + Y(v).toFixed(1);
+    }
+    return d;
+  }
+  [[COST.pairs, C.warn, "d4"], [COST.ai, C.ai, "d1"], [COST.hybrid, C.hybrid, "d2"], [COST.script, C.script, "d3"]].forEach(function (l) {
+    s += '<path class="draw ' + l[2] + '" pathLength="1" d="' + path(l[0]) + '" fill="none" stroke="' + l[1] + '" stroke-width="5"/>';
   });
-  var be = build / 0.9;
-  s += '<g class="pop"><circle cx="' + X(be) + '" cy="' + Y(build) + '" r="9" fill="#0d1117" stroke="' + C.text + '" stroke-width="3"/>';
-  s += '<text x="' + (X(be) + 4) + '" y="' + (Y(build) + 34) + '" fill="' + C.text + '" font-size="16" font-weight="700">Break-even</text></g>';
-  var lx = x0 + w + 18;
+  var be = COST.build / COST.perDoc;
+  s += '<g class="pop"><circle cx="' + X(be) + '" cy="' + Y(COST.build) + '" r="8" fill="#0d1117" stroke="' + C.text + '" stroke-width="3"/>';
+  s += '<text x="' + (X(be) - 8) + '" y="' + (Y(COST.build) - 46) + '" fill="' + C.text + '" font-size="15" font-weight="700">Break-even: ' + be + ' documents</text>' +
+       '<line x1="' + X(be) + '" y1="' + (Y(COST.build) - 40) + '" x2="' + X(be) + '" y2="' + (Y(COST.build) - 10) + '" stroke="' + C.text + '" stroke-width="2"/></g>';
+  var lx = x0 + w + 16;
   s += '<g class="pop late">';
-  s += '<text x="' + lx + '" y="' + (Y(90) + 6) + '" fill="' + C.ai + '" font-size="19" font-weight="800">🤖 AI in the loop</text><text x="' + lx + '" y="' + (Y(90) + 28) + '" fill="' + C.muted + '" font-size="15">🔴 💸 variable: every item, every run</text>';
-  s += '<text x="' + (X(70)) + '" y="' + (y0 + 10) + '" fill="' + C.warn + '" font-size="16" font-weight="800" text-anchor="end">⚠️ 💸💸 compares every item with every other</text>';
-  s += '<text x="' + lx + '" y="' + (Y(build + 15) + 6) + '" fill="' + C.hybrid + '" font-size="19" font-weight="800">🔀 Hybrid</text><text x="' + lx + '" y="' + (Y(build + 15) + 28) + '" fill="' + C.muted + '" font-size="15">🟡 fixed + a small variable</text>';
-  s += '<text x="' + lx + '" y="' + (Y(build) + 30) + '" fill="' + C.script + '" font-size="19" font-weight="800">📜 Scripting</text><text x="' + lx + '" y="' + (Y(build) + 52) + '" fill="' + C.muted + '" font-size="15">🟢 fixed: build once, then flat</text>';
-  s += "</g></svg>";
-  document.getElementById("costChart").innerHTML = s;
+  s += '<text x="' + lx + '" y="' + (Y(COST.ai(COST.maxDocs)) + 6) + '" fill="' + C.ai + '" font-size="18" font-weight="800">🤖 AI in the loop</text><text x="' + lx + '" y="' + (Y(COST.ai(COST.maxDocs)) + 26) + '" fill="' + C.muted + '" font-size="14">🔴 💸 5,000 tokens every document</text>';
+  s += '<text x="' + (X(560)) + '" y="' + (y0 + 14) + '" fill="' + C.warn + '" font-size="15" font-weight="800" text-anchor="end">⚠️ 💸💸 AI compares every pair</text>';
+  s += '<text x="' + lx + '" y="' + (Y(COST.hybrid(COST.maxDocs)) - 4) + '" fill="' + C.hybrid + '" font-size="18" font-weight="800">🔀 Hybrid</text><text x="' + lx + '" y="' + (Y(COST.hybrid(COST.maxDocs)) + 16) + '" fill="' + C.muted + '" font-size="14">🟡 build once + 1 doc in 10</text>';
+  s += '<text x="' + lx + '" y="' + (Y(COST.build) + 26) + '" fill="' + C.script + '" font-size="18" font-weight="800">📜 Scripting</text><text x="' + lx + '" y="' + (Y(COST.build) + 46) + '" fill="' + C.muted + '" font-size="14">🟢 300k tokens to build, then flat</text>';
+  s += "</g>";
+  // The volume marker moves left to right; the readout shows the values there.
+  s += '<g id="volMark" opacity="0"><line id="volLine" y1="' + y0 + '" y2="' + (y0 + h) + '" stroke="' + C.text + '" stroke-width="2" stroke-dasharray="5 4"/>';
+  s += '<circle id="volDot" cy="' + (y0 + h) + '" r="9" fill="' + C.text + '"/></g>';
+  s += "</svg>";
+  s += '<div id="volRead" class="readout"></div>';
+  s += '<p class="small">Hypothetical numbers to show magnitude: 5,000 tokens per document, 300,000 tokens to build a script, $10 per million tokens. Your numbers will differ.</p>';
+  var box = document.getElementById("costChart");
+  box.innerHTML = s;
+  box._X = X;
 }
+function renderCost(t) {
+  var sec = document.getElementById("cost");
+  renderDraw(sec, t);
+  var k = ramp(t, 4, 7), e = k * k * (3 - 2 * k), n = Math.round(e * COST.maxDocs);
+  var mark = document.getElementById("volMark"), X = document.getElementById("costChart")._X;
+  mark.setAttribute("opacity", t >= 4 ? 1 : 0);
+  document.getElementById("volLine").setAttribute("x1", X(n)); document.getElementById("volLine").setAttribute("x2", X(n));
+  document.getElementById("volDot").setAttribute("cx", X(n));
+  var rows = [["📜 Scripting", COST.script(n), C.script], ["🔀 Hybrid", COST.hybrid(n), C.hybrid], ["🤖 AI in the loop", COST.ai(n), C.ai], ["⚠️ AI compares every pair", COST.pairs(n), C.warn]];
+  document.getElementById("volRead").innerHTML = t < 4 ? "" :
+    '<div class="rhead">At <b>' + n.toLocaleString() + "</b> documents a year</div>" +
+    rows.map(function (r) { return '<div class="rrow"><span style="color:' + r[2] + ';font-weight:800">' + r[0] + '</span><span>' + fmtTok(r[1]) + ' tokens</span><span class="usd">' + fmtUsd(r[1]) + "</span></div>"; }).join("");
+}
+
 // The dashed every-item-against-every-other line needs its own dash pattern after drawing.
 var PANELS = [
   ["💳", "Categorize card lines", "3,000 lines a month", function (v) { return 0.9 * v; }, function (v) { return 18 + 0.12 * v; }, 80, "🟢 Large", C.good],
@@ -745,7 +797,7 @@ var TIMELINES = {
   same: { dur: 9, render: renderSame },
   cant: { dur: 7.2, render: renderCant },
   hard: { dur: 8, render: renderFlips },
-  cost: { dur: 4, render: function (t) { renderDraw(document.getElementById("cost"), t); } },
+  cost: { dur: 11.5, render: renderCost },
   first: { dur: 3.4, render: function (t) { renderDraw(document.getElementById("first"), t); } },
   patterns: { dur: 9.6, render: renderPipes },
   demo: { dur: 2.2, render: renderDemo },
