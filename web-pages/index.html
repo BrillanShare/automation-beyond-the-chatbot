@@ -100,6 +100,16 @@ a { color: var(--script); }
 .result { margin-top: 10px; text-align: center; font-weight: 800; font-size: 17px; min-height: 54px; opacity: 0; }
 .on .spot, .result.on { opacity: 1; }
 
+/* ---------- data types sorter ---------- */
+.dtgrid { display: grid; grid-template-columns: 150px 1fr 1fr; gap: 16px; align-items: center; }
+.dthead { font-weight: 800; font-size: 18px; text-align: center; }
+.dtrow { padding: 8px 0; border-top: 1px dashed var(--line); }
+.dtl { font-weight: 800; font-size: 18px; }
+.dcard { display: flex; gap: 12px; align-items: center; background: #1c2128; border: 2px solid var(--line); border-radius: 10px; padding: 10px 14px; opacity: 0; }
+.dcard .di { font-size: 30px; }
+.dcard .dn { font-weight: 700; font-size: 16px; }
+.dcard .dw { font-size: 14px; color: var(--muted); opacity: 0; }
+
 /* ---------- typical → hard cards ---------- */
 .th { background: #1c2128; border: 2px solid var(--line); border-radius: 12px; padding: 14px; }
 .hv { position: relative; height: 200px; border-radius: 10px; background: #0d1117; overflow: hidden; display: flex; align-items: center; justify-content: center; }
@@ -329,10 +339,13 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 </section>
 
 <!-- ================= Data type ================= -->
-<section>
+<section class="anim" id="dtypes">
   <h2>Data type doesn't decide the bucket</h2>
-  <p class="take">Numbers can need AI. Language can be scripted.</p>
-  <img src="../images/data-types.svg" alt="Numbers, language, images and audio: one example each that scripting handles and one that needs AI in the loop" style="width:100%;max-width:1100px;display:block;margin:auto">
+  <p class="take">Press play: one task at a time arrives in the middle and moves to the bucket it needs. Each kind of data ends up in both buckets.</p>
+  <div class="dtgrid">
+    <div></div><div class="dthead" style="color:var(--script)">📜 Scripting can handle it</div><div class="dthead" style="color:var(--ai)">🤖 Needs AI in the loop</div>
+  </div>
+  <div id="dtrows"></div>
   <div class="means">👉 <b>What this shows:</b> every kind of data has some tasks a script can handle and some that need an LLM. Ask what the task needs, not what kind of data it is.</div>
 </section>
 
@@ -693,6 +706,39 @@ function renderCant(t) {
   });
 }
 
+// ---------- data types: same kind of data, sorted into different buckets ----------
+var DTYPES = [
+  ["🔢 Numbers", ["📊", "Total the same columns every month", "Same shape every time"], ["🧾", "Is this balance plausible for this business?", "Needs judgment"]],
+  ["💬 Language", ["✉️", "Fill in a letter template", "Blanks in fixed places"], ["📨", "Reply to a free-form client email", "Needs understanding"]],
+  ["🖼️ Images", ["⬜", "Remove a plain white background", "Rule: by color"], ["📷", "Read a crumpled receipt photo", "Needs reading"]],
+  ["🔊 Audio", ["🔔", "Detect a beep", "Rule: by sound"], ["🎙️", "Transcribe a client voicemail", "Needs understanding"]],
+];
+var DT_START = 0.5, DT_STEP = 2.4;
+function buildDtypes() {
+  var box = document.getElementById("dtrows"), html = "";
+  DTYPES.forEach(function (r) {
+    html += '<div class="dtgrid dtrow"><div class="dtl">' + r[0] + "</div>" +
+      '<div class="dcell"><div class="dcard s"><span class="di">' + r[1][0] + '</span><div><div class="dn">' + r[1][1] + '</div><div class="dw">📜 ' + r[1][2] + "</div></div></div></div>" +
+      '<div class="dcell"><div class="dcard a"><span class="di">' + r[2][0] + '</span><div><div class="dn">' + r[2][1] + '</div><div class="dw">🤖 ' + r[2][2] + "</div></div></div></div></div>";
+  });
+  box.innerHTML = html;
+}
+function renderDtypes(t) {
+  // One card at a time: it fades in at the middle, then slides to its bucket.
+  document.querySelectorAll("#dtrows .dtrow").forEach(function (row, r) {
+    var gap = row.querySelector(".dcell").offsetWidth / 2 + 8;
+    row.querySelectorAll(".dcard").forEach(function (c, k) {
+      var t0 = DT_START + r * DT_STEP + k * (DT_STEP / 2);
+      var show = ramp(t, t0, 0.35), move = ramp(t, t0 + 0.35, 0.45), e = move * move * (3 - 2 * move);
+      var dir = c.classList.contains("s") ? 1 : -1;
+      c.style.opacity = show;
+      c.style.transform = "translateX(" + (dir * gap * (1 - e)) + "px)";
+      c.style.borderColor = e > 0.6 ? (dir > 0 ? C.script : C.ai) : "var(--line)";
+      c.querySelector(".dw").style.opacity = ramp(t, t0 + 0.7, 0.4);
+    });
+  });
+}
+
 // ---------- hard inputs: each card morphs from what we picture to what arrives ----------
 var HARD = [
   ["📄 Text PDF", "📷 Tilted phone photo", "photo"],
@@ -722,7 +768,7 @@ function buildFlips() {
 }
 function renderFlips(t) {
   document.querySelectorAll("#flips .th").forEach(function (c, k) {
-    var a = ramp(t, 0.5 + k * 1.2, 1.2), e = a * a * (3 - 2 * a), kind = c.dataset.kind;
+    var a = ramp(t, 0.5 + k * 1.6, 2.2), e = a * a * (3 - 2 * a), kind = c.dataset.kind;
     c.style.borderColor = a > 0.5 ? "var(--warn)" : "";
     c.querySelector(".hrd").style.opacity = 0.3 + 0.7 * e;
     c.querySelector(".arr").style.opacity = 0.3 + 0.7 * e;
@@ -738,8 +784,8 @@ function renderFlips(t) {
         n.querySelector(".a").style.opacity = 1 - q; n.querySelector(".b").style.opacity = q;
       });
     } else if (kind === "rules") {
-      var rows = c.querySelectorAll(".rl"), show = 2 + Math.round(e * (rows.length - 2));
-      rows.forEach(function (r, i) { r.style.opacity = i < show ? 1 : 0; });
+      var rows = c.querySelectorAll(".rl"), steps = rows.length - 2;
+      rows.forEach(function (r, i) { r.style.opacity = i < 2 ? 1 : clamp((e * steps) - (i - 2), 0, 1); });
       c.querySelector(".rc").textContent = Math.round(lerp(5, 417, e * e));
     } else if (kind === "export") {
       c.querySelectorAll("tr.x").forEach(function (r) { r.style.opacity = e; });
@@ -1132,7 +1178,8 @@ var TIMELINES = {
   lanes: { dur: (LANE_DOCS - 1) * LANE_GAP + LANE_TRAVEL + 1.6, render: renderLanes },
   same: { dur: 9, render: renderSame },
   cant: { dur: 7.2, render: renderCant },
-  hard: { dur: 8, render: renderFlips },
+  hard: { dur: 0.5 + 5 * 1.6 + 2.4, render: renderFlips },
+  dtypes: { dur: DT_START + 4 * DT_STEP + 0.4, render: renderDtypes },
   cost: { dur: 11.5, render: renderCost },
   first: { dur: 6.5, render: renderPanels },
   patterns: { dur: PIPE_START + 3 * PIPE_STEP + 1.4, render: renderPipes },
@@ -1171,7 +1218,7 @@ function makeControls(sec) {
   sec._showEnd = function () { t = tl.dur; draw(); };
   draw();
 }
-buildLanes(); buildDemo(); buildControls(); buildSame(); buildCant(); placeSpots(); window.addEventListener('resize', placeSpots); buildFlips(); costChart(); panels(); pipes(); prompts(); votes();
+buildLanes(); buildDemo(); buildControls(); buildDtypes(); buildSame(); buildCant(); placeSpots(); window.addEventListener('resize', placeSpots); buildFlips(); costChart(); panels(); pipes(); prompts(); votes();
 document.querySelectorAll("section.anim").forEach(makeControls);
 // Show each prompt in full: grow every box to fit its text.
 document.querySelectorAll(".pbox textarea").forEach(function (ta) { ta.style.height = "auto"; ta.style.height = (ta.scrollHeight + 4) + "px"; });
