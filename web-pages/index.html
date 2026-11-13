@@ -88,6 +88,19 @@ a { color: var(--script); }
 .hrow .t { font-weight: 800; font-size: 14px; text-align: center; border-radius: 6px; padding: 3px 6px; }
 .t.same { background: #2ea04333; color: var(--good); } .t.diff { background: #f8514933; color: var(--ai); } .t.first { background: #30363d; color: var(--text); }
 
+/* ---------- redo it for a reviewer ---------- */
+.rphead { font-weight: 800; font-size: 20px; margin-bottom: 8px; }
+.rptable table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.rptable th { text-align: left; color: var(--muted); font-size: 13px; font-weight: 700; padding: 4px 8px; border-bottom: 1px solid var(--line); }
+.rptable td { padding: 5px 8px; border-bottom: 1px solid #21262d; }
+.rptable td.ln { font-family: Consolas, Menlo, monospace; font-size: 14px; }
+.rptable td.amt { text-align: right; font-variant-numeric: tabular-nums; }
+.rptable td.c1, .rptable td.c2 { font-weight: 700; border-radius: 4px; }
+.rptable td.c2.flip, .rptable td.t2.flip { color: var(--ai); background: #f8514922; }
+.rptable tr.tot td { font-weight: 800; border-bottom: none; padding-top: 9px; font-size: 16px; }
+.rpstamp { margin-top: 12px; min-height: 36px; text-align: center; }
+.rpstamp .verdict { display: inline-block; font-size: 17px; }
+
 /* ---------- what a script can't do ---------- */
 .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
 .mini { position: relative; background: var(--paper); color: var(--ink); border-radius: 4px; padding: 14px 16px; font-size: 16px; min-height: 250px; }
@@ -99,7 +112,11 @@ a { color: var(--script); }
 .bar { height: 7px; border-radius: 4px; background: var(--faint); margin: 10px 0; }
 .rent { background: #fff1a8; border-radius: 4px; padding: 6px 8px; font-weight: 700; font-size: 16px; }
 .spot { position: absolute; left: 6px; right: 6px; border: 3px dashed var(--script); border-radius: 6px; opacity: 0; transition: opacity .6s; }
-.result { margin-top: 10px; text-align: center; font-weight: 800; font-size: 17px; min-height: 54px; opacity: 0; }
+.result { margin-top: 10px; text-align: center; font-weight: 800; font-size: 17px; min-height: 64px; opacity: 0; position: relative; z-index: 3; }
+.tag { display: inline-block; padding: 6px 14px; border-radius: 999px; font-size: 18px; font-weight: 900; border: 2px solid; box-shadow: 0 4px 14px #0009; opacity: 0; }
+.tag.ok { color: var(--good); border-color: var(--good); background: #12261a; }
+.tag.miss { color: var(--ai); border-color: var(--ai); background: #2d1214; }
+.result .llm { display: inline-block; margin-top: 6px; }
 .on .spot, .result.on { opacity: 1; }
 
 /* ---------- data types sorter ---------- */
@@ -342,21 +359,13 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 
 <!-- ================= Same inputs → same output ================= -->
 <section class="anim" id="same">
-  <h2>Run it again: same answer?</h2>
-  <p class="take">Each run is added to the list, so you can compare it with the ones before.</p>
+  <h2>Redo it for a reviewer: same numbers?</h2>
+  <p class="take">A reviewer re-performs your work. Press play: each setup categorizes the same card lines, then runs again for the reviewer.</p>
   <div class="grid2">
-    <div class="card">
-      <div class="machine"><div class="inbox">1,200 + 3,100</div><div class="box" style="color:var(--script);border-color:var(--script)">📜 =SUM()</div></div>
-      <div class="history" id="sumHist"></div>
-      <div class="verdict good" style="margin-top:10px">✅ Reliable: same answer every run</div>
-    </div>
-    <div class="card">
-      <div class="machine"><div class="inbox">"Explain the March variance"</div><div class="box" style="color:var(--ai);border-color:var(--ai)">🤖 LLM</div></div>
-      <div class="history" id="llmHist"></div>
-      <div class="verdict mid" style="margin-top:10px">⚠️ Same idea, different words every run</div>
-    </div>
+    <div class="card rp" id="rpScript"><div class="rphead" style="color:var(--script)">📜 Script</div><div class="rptable"></div><div class="rpstamp"></div></div>
+    <div class="card rp" id="rpAI"><div class="rphead" style="color:var(--ai)">🤖 AI in the loop</div><div class="rptable"></div><div class="rpstamp"></div></div>
   </div>
-  <div class="means">👉 <b>What this shows:</b> =SUM() gives the same answer every run. That's what <i>deterministic</i> means. The LLM gives the same idea in different words every run, so it is not deterministic.</div>
+  <div class="means">👉 <b>What this shows:</b> the script puts every line in the same category on every run, so the totals tie when a reviewer redoes the work. That's what <i>deterministic</i> means. The AI can put a few lines somewhere else on the second run, and the totals stop tying. Numbers a reviewer must re-perform should come from a script. If AI made them, save its answers and reuse them; don't regenerate them.</div>
 </section>
 
 <!-- ================= What a script can't do ================= -->
@@ -656,26 +665,44 @@ function renderLanes(t) {
   });
 }
 
-// ---------- run it again ----------
-var LLM_ANSWERS = [
-  "Revenue fell 8% on two delayed invoices.",
-  "Mostly timing: two invoices slipped into April.",
-  "Lower billings, driven by delayed client invoices.",
-  "An 8% dip, explained by invoice timing.",
+// ---------- redo it for a reviewer ----------
+// [card line, amount, category on run 1, category the AI gives on run 2]
+var RP_LINES = [
+  ["STARBUCKS #1182", 6.45, "Meals", "Meals"],
+  ["UBER *TRIP", 23.80, "Travel", "Travel"],
+  ["MARRIOTT AIRPORT REST", 35.80, "Meals", "Travel"],
+  ["OFFICE DEPOT #511", 61.12, "Supplies", "Supplies"],
+  ["COSTCO WHSE #0012", 48.20, "Supplies", "Meals"],
+  ["DELTA AIR 0062", 412.00, "Travel", "Travel"],
+  ["PANERA BREAD #204", 14.90, "Meals", "Meals"],
 ];
+var RP_START = 0.5, RP_ROW = 0.3, RP_RUN2 = 4.2;
+function rpTotal(col) { return RP_LINES.reduce(function (a, l) { return a + (l[col] === "Meals" ? l[1] : 0); }, 0); }
 function buildSame() {
-  var sh = document.getElementById("sumHist"), lh = document.getElementById("llmHist");
-  for (var i = 1; i <= 4; i++) {
-    sh.insertAdjacentHTML("beforeend", '<div class="hrow"><span class="n">Run ' + i + '</span><span class="v">4,300</span><span class="t ' + (i === 1 ? "first" : "same") + '">' + (i === 1 ? "first run" : "same ✓") + "</span></div>");
-    lh.insertAdjacentHTML("beforeend", '<div class="hrow"><span class="n">Run ' + i + '</span><span class="v">' + LLM_ANSWERS[i - 1] + '</span><span class="t ' + (i === 1 ? "first" : "diff") + '">' + (i === 1 ? "first run" : "different ✗") + "</span></div>");
-  }
+  ["rpScript", "rpAI"].forEach(function (id) {
+    var ai = id === "rpAI", rows = RP_LINES.map(function (l, i) {
+      var c2 = ai ? l[3] : l[2], flip = c2 !== l[2];
+      return '<tr><td class="ln">' + l[0] + '</td><td class="amt">' + l[1].toFixed(2) + '</td><td class="c1" data-i="' + i + '">' + l[2] + '</td><td class="c2' + (flip ? " flip" : "") + '" data-i="' + i + '">' + c2 + (flip ? " ✗" : "") + "</td></tr>";
+    }).join("");
+    var m1 = rpTotal(2), m2 = ai ? rpTotal(3) : m1;
+    document.querySelector("#" + id + " .rptable").innerHTML = '<table><tr><th>Card line</th><th>Amount</th><th>Your run</th><th>Reviewer\'s run</th></tr>' + rows +
+      '<tr class="tot"><td>Meals total</td><td></td><td class="t1">$' + m1.toFixed(2) + '</td><td class="t2' + (m2 !== m1 ? " flip" : "") + '">$' + m2.toFixed(2) + "</td></tr></table>";
+    document.querySelector("#" + id + " .rpstamp").innerHTML = ai ? '<span class="verdict bad">❌ Doesn\'t tie: Meals is off by $' + Math.abs(m2 - m1).toFixed(2) + "</span>" : '<span class="verdict good">✅ Ties: same categories, same totals</span>';
+  });
 }
 function renderSame(t) {
-  ["sumHist", "llmHist"].forEach(function (id) {
-    document.querySelectorAll("#" + id + " .hrow").forEach(function (r, k) {
-      var a = ramp(t, 0.5 + k * 2.4, 0.8);
-      r.style.opacity = a; r.style.transform = "translateY(" + (8 * (1 - a)) + "px)";
+  ["rpScript", "rpAI"].forEach(function (id) {
+    var card = document.getElementById(id);
+    card.querySelectorAll(".c1").forEach(function (c) { c.style.opacity = ramp(t, RP_START + +c.dataset.i * RP_ROW, 0.5); });
+    card.querySelector(".t1").style.opacity = ramp(t, RP_START + RP_LINES.length * RP_ROW + 0.2, 0.5);
+    card.querySelectorAll(".c2").forEach(function (c) {
+      var a = ramp(t, RP_RUN2 + +c.dataset.i * RP_ROW, 0.5);
+      c.style.opacity = a;
+      if (c.classList.contains("flip")) c.style.boxShadow = "inset 0 0 0 " + (2 * a) + "px var(--ai)";
     });
+    card.querySelector(".t2").style.opacity = ramp(t, RP_RUN2 + RP_LINES.length * RP_ROW + 0.2, 0.5);
+    var st = card.querySelector(".rpstamp"), k = ramp(t, RP_RUN2 + RP_LINES.length * RP_ROW + 0.9, 0.6);
+    st.style.opacity = k; st.style.transform = "scale(" + (1.15 - 0.15 * k) + ")";
   });
 }
 
@@ -693,13 +720,13 @@ function buildCant() {
       '<div><div class="mini"><div class="ttl">' + m[0] + ' export</div><table><tr><th>A</th><th>C · Amt</th></tr>' +
       '<tr><td>1010</td><td class="col">' + m[1] + '</td></tr><tr><td>1020</td><td class="col">' + m[2] +
       '</td></tr><tr><td>1030</td><td class="col">' + m[3] + '</td></tr></table>' +
-      '<div class="spot"></div></div><div class="result" style="color:var(--good)">📜 Found it ✓</div></div>');
+      '<div class="spot"></div></div><div class="result"><span class="tag ok">📜 Found it ✓</span></div></div>');
   });
   LEASES.forEach(function (l) {
     var bars = "";
     for (var k = 0; k < 9; k++) bars += k === l[1] ? '<div class="rent">' + l[2] + "</div>" : '<div class="bar" style="width:' + (55 + (k * 37) % 45) + '%"></div>';
-    var res = l[3] ? '<span style="color:var(--good)">📜 Found it ✓</span>'
-      : '<span style="color:var(--ai)">📜 Missed it ✗</span><br><span class="llm" style="color:var(--good)">🤖 LLM reads it ✓</span>';
+    var res = l[3] ? '<span class="tag ok">📜 Found it ✓</span>'
+      : '<span class="tag miss">😟 📜 Missed it ✗</span><br><span class="llm" style="color:var(--good)">🤖 LLM reads it ✓</span>';
     leases.insertAdjacentHTML("beforeend",
       '<div><div class="mini"><div class="ttl">' + l[0] + "</div>" + bars + '<div class="spot"></div></div><div class="result">' + res + "</div></div>");
   });
@@ -718,14 +745,35 @@ function placeSpots() {
   document.querySelectorAll("#leases .spot").forEach(function (sp) {
     sp.style.top = (rent.offsetTop - 5) + "px"; sp.style.height = (rent.offsetHeight + 10) + "px";
   });
+  // Each tag starts on the spot the script looked at, then moves down to its place.
+  document.querySelectorAll("#sheets > div, #leases > div").forEach(function (c) {
+    var tag = c.querySelector(".tag"), sp = c.querySelector(".spot"), old = tag.style.transform;
+    tag.style.transform = "none";
+    var r = tag.getBoundingClientRect(), q = sp.getBoundingClientRect();
+    tag._dx = (q.left + q.width / 2) - (r.left + r.width / 2);
+    tag._dy = (q.top + q.height / 2) - (r.top + r.height / 2);
+    tag.style.transform = old;
+  });
+  if (TIMELINES.cant && TIMELINES.cant._t !== undefined) renderCant(TIMELINES.cant._t);
 }
+var CANT_STEP = 2.6;
 function renderCant(t) {
+  if (TIMELINES.cant) TIMELINES.cant._t = t;
   [document.querySelectorAll("#sheets > div"), document.querySelectorAll("#leases > div")].forEach(function (col) {
     col.forEach(function (c, k) {
-      c.querySelector(".spot").style.opacity = ramp(t, 0.5 + k * 1.8, 0.5);
-      c.querySelector(".result").style.opacity = ramp(t, 1.2 + k * 1.8, 0.6);
+      var t0 = 0.5 + k * CANT_STEP, tag = c.querySelector(".tag"), miss = tag.classList.contains("miss");
+      c.querySelector(".spot").style.opacity = ramp(t, t0, 0.5);
+      c.querySelector(".result").style.opacity = 1;
+      // Appear on the spot, (shake if it missed), then move down to its place.
+      var a = ramp(t, t0 + 0.5, 0.4), m = ramp(t, t0 + 1.4, 0.8), e = m * m * (3 - 2 * m);
+      var shake = 0, q = t - (t0 + 0.6);
+      if (miss && q > 0 && q < 0.9) shake = Math.sin(q * 38) * 7 * (1 - q / 0.9);
+      if (miss && t - (t0 + 2.2) > 0 && t - (t0 + 2.2) < 0.6) { var q2 = t - (t0 + 2.2); shake += Math.sin(q2 * 38) * 4 * (1 - q2 / 0.6); }
+      var dx = (tag._dx || 0) * (1 - e), dy = (tag._dy || 0) * (1 - e);
+      tag.style.opacity = a;
+      tag.style.transform = "translate(" + (dx + shake) + "px," + dy + "px) rotate(" + (shake * 1.2) + "deg) scale(" + (1.25 - 0.25 * e) + ")";
       var llm = c.querySelector(".llm");
-      if (llm) llm.style.opacity = ramp(t, 1.9 + k * 1.8, 0.6);
+      if (llm) llm.style.opacity = ramp(t, t0 + 2.4, 0.6);
     });
   });
 }
@@ -1294,8 +1342,8 @@ function votes() {
 // ---------- the control bar: play / pause, replay, scrub ----------
 var TIMELINES = {
   lanes: { dur: (LANE_DOCS - 1) * LANE_GAP + LANE_TRAVEL + 1.6, render: renderLanes },
-  same: { dur: 9, render: renderSame },
-  cant: { dur: 7.2, render: renderCant },
+  same: { dur: RP_RUN2 + RP_LINES.length * RP_ROW + 2.2, render: renderSame },
+  cant: { dur: 0.5 + 2 * CANT_STEP + 3.4, render: renderCant },
   hard: { dur: 0.5 + 5 * 1.6 + 2.4, render: renderFlips },
   dtypes: { dur: DT_START + 4 * DT_STEP + 0.4, render: renderDtypes },
   cost: { dur: 11.5, render: renderCost },
