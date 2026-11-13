@@ -324,9 +324,29 @@ def hard_inputs():
     return svg(960, 540, "Hard inputs that are easy to overlook", b)
 
 
+# ------------------------------------------------------------ demo: tokens
+def demo_tokens():
+    b = DEFS
+    b += t(20, 34, "Lines sent to the LLM each month (demo file: 40 credit card lines)", 16, TEXT, "700")
+    rows = [("All AI", "every line, every month", 40, AI),
+            ("Hybrid", "only the 9 lines no rule matched", 9, HYBRID),
+            ("All script", "none; the 9 leftovers go to a person", 0, SCRIPT)]
+    scale = 15
+    for k, (name, note, n, color) in enumerate(rows):
+        y = 70 + k * 80
+        b += t(20, y + 30, name, 17, color, "700")
+        b += f'<rect x="160" y="{y + 8}" width="{40 * scale}" height="34" rx="6" fill="#21262d"/>\n'
+        if n:
+            b += f'<rect x="160" y="{y + 8}" width="{n * scale}" height="34" rx="6" fill="{color}"/>\n'
+        b += t(160 + max(n * scale, 0) + 12, y + 31, str(n), 17, TEXT, "700")
+        b += t(160, y + 62, note, 13, MUTED)
+    b += t(20, 320, "Building the script costs tokens once. After that, only the AI-in-the-loop part costs tokens on every run.", 13, TEXT)
+    return svg(960, 340, "Demo: lines sent to the LLM each month, three ways", b)
+
+
 def main():
     for name, fn in [("data-types.svg", data_types), ("script-cant.svg", script_cant),
-                     ("io-lens.svg", io_lens), ("hard-inputs.svg", hard_inputs)]:
+                     ("io-lens.svg", io_lens), ("hard-inputs.svg", hard_inputs), ("demo-tokens.svg", demo_tokens)]:
         (OUT / name).write_text(fn(), encoding="utf-8")
         print("wrote", name)
 

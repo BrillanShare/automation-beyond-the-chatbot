@@ -23,8 +23,10 @@
 |---|---|
 | 🟢 Same inputs → same output | [`=SUM()`](https://support.microsoft.com/en-us/office/sum-function-043e1c7d-7726-4e80-8f32-07b23e057f89), a tax-bracket lookup, matching invoice numbers |
 | 🟠 Also depends on the clock, the internet or a file | [`=NOW()`](https://support.microsoft.com/en-us/office/now-function-3337fd29-145a-4347-b2e6-20c904739c46), today's stock price, today's exchange rate |
-| 🎲 Random on purpose | [`=RAND()`](https://support.microsoft.com/en-us/office/rand-function-4cbfa695-8869-4788-8d90-021ea9f5be73), random IDs, an audit sample |
+| 🎲 Random on purpose (pseudo-random\*) | [`=RAND()`](https://support.microsoft.com/en-us/office/rand-function-4cbfa695-8869-4788-8d90-021ea9f5be73), random IDs, an audit sample |
 | 🔴 AI in the loop | Every LLM call: never deterministic |
+
+\* Random in a computer isn't truly random: the picks come from a fixed recipe and a starting number. Same starting number → same picks.
 
 ### Randomness in LLMs
 
@@ -75,7 +77,7 @@ A script needs you to say **in advance** where to look and what to do with what 
 | Rename and file 200 PDFs by client ID from a system export | 📜 Scripting | The ID is in a fixed place in each file name |
 | Combine monthly CSV exports from the same system into one workbook | 📜 Scripting | Same columns every month |
 | Convert balances at today's published exchange rate | 📜 Scripting | Depends on the internet, but needs no judgment |
-| Pick a random audit sample | 📜 Scripting | Random on purpose; the script saves the setting it used for the random picks, so anyone can draw the exact same sample again |
+| Pick a random audit sample | 📜 Scripting | Random on purpose; the script saves the starting number for its (pseudo) random picks, so anyone can draw the exact same sample again |
 | Draft a client email explaining a variance | 🤖 AI in the loop | New wording for each client and situation |
 | Summarize the key terms of a 40-page lease | 🤖 AI in the loop | The terms can be anywhere, worded any way |
 | Answer a client's free-form question | 🤖 AI in the loop | No way to list the questions in advance |
@@ -270,4 +272,4 @@ For each task, vote: 📜 Scripting, 🤖 AI in the loop or 🔀 Hybrid. Then as
 - **Random IDs:** test the properties: right length and format, no duplicates in 10,000 runs.
 - **Today's stock price:** test the calculation with a fake price source that always returns $100.
 - **Due-date reminders:** test with the clock frozen ("pretend today is April 10").
-- **Audit sample:** the script saves the setting it used for the random picks in the workpapers, so a reviewer can draw the exact same sample again and check it.
+- **Audit sample:** the script saves the starting number for its (pseudo) random picks in the workpapers, so a reviewer can draw the exact same sample again and check it.

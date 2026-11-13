@@ -12,9 +12,9 @@ Instructor-only. Not copied to the public participant repo.
 
 | Time | Block | What happens | Materials |
 |---|---|---|---|
-| 0:00–0:10 | Concepts | Three buckets, the deterministic definition and Venn diagram, "data type doesn't decide", tokens. Run 3–4 clear-cut examples. | handout.md (through "Clear-cut examples") |
+| 0:00–0:10 | Concepts | Three buckets, the deterministic definition and Venn diagram, "data type doesn't decide", tokens. Run 3–4 clear-cut examples. | cheat-sheet.md; handout.md (through "Clear-cut examples") |
 | 0:10–0:40 | Participant workflows | Go deep on 2–3 participants' workflows. Run the "Agree on the design first" prompt live. Point out hard inputs and the scripting / AI-in-the-loop split. Remaining workflows: point to the handout. If participants bring few workflows, use "Sort these: discuss and vote". | prompt-card.md, CLAUDE.md |
-| 0:40–0:55 | Hybrid patterns | Use a participant workflow where one fits; otherwise the examples handout. Agree on the split for each pattern. Mention zero-token helpers. | handout.md (hard inputs, hybrid patterns, zero-token helpers) |
+| 0:40–0:55 | Hybrid patterns | Use a participant workflow where one fits; otherwise the examples handout. Agree on the split for each pattern. Mention zero-token helpers. | demo.md (one task, three ways); handout.md (hard inputs, hybrid patterns, zero-token helpers) |
 | 0:55–1:00 | Wrap | Starter CLAUDE.md, homework, where to get the files. | CLAUDE.md, homework.md |
 
 ## If time runs short
