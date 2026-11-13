@@ -37,13 +37,19 @@
 - Big files: a script reads them for free; pasting them into chat burns tokens.
 - Hybrid: send the LLM only the slice that needs judgment.
 
+## Is it worth converting?
+
+- Return = the shape of today's token line × your volume
+- Converting that changes the shape beats converting that nudges it
+- Below break-even: leave it with AI, check again when volume grows
+- Ask Claude to plot it for your task ("Plot it" on the prompt card)
+
 ## Before you rely on a script
 
 - Fail loudly: rows it can't process go on a list, never skipped silently
 - Control totals: rows in = rows out + rejected; amounts tie
 - Money math: how is it rounded, and does it match Excel?
 - Safe to run twice; never overwrites an input without asking first
-- Growth: what happens to run time and tokens at 10× the data?
 
 ## The prompt to use first
 

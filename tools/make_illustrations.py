@@ -410,9 +410,84 @@ def cost_volume():
     return svg(960, 450, "Cost-volume chart: how tokens and dollars grow with volume", b)
 
 
+# ------------------------------------------- return on converting (4 panels)
+def return_panels():
+    """Four plausible workflows: today's token line vs. the line after converting."""
+    b = DEFS
+    b += t(20, 30, "Is it worth converting? Four plausible workflows", 17, TEXT, "700")
+    # legend
+    b += f'<line x1="20" y1="52" x2="50" y2="52" stroke="{AI}" stroke-width="3.5"/>\n' + t(56, 56, "Today: AI does all of it", 12, TEXT)
+    b += f'<line x1="230" y1="52" x2="260" y2="52" stroke="{HYBRID}" stroke-width="3.5"/>\n' + t(266, 56, "After converting (hybrid or script)", 12, TEXT)
+    b += f'<line x1="510" y1="44" x2="510" y2="60" stroke="{TEXT}" stroke-width="2" stroke-dasharray="3 3"/>\n' + t(518, 56, "Your volume", 12, TEXT)
+    b += t(940, 56, "Illustrative shapes, not to scale", 11, MUTED, anchor="end")
+
+    panels = [
+        dict(title="Categorize credit card lines", vol="about 3,000 lines a month",
+             today=lambda v: 0.9 * v, after=lambda v: 18 + 0.12 * v, you=80,
+             verdict="Return: large", color=GREEN,
+             why=["Rules catch most lines.", "AI sees only the leftovers."]),
+        dict(title="Find duplicate vendor payments", vol="about 5,000 payments a year",
+             today=lambda v: 0.011 * v * v, after=lambda v: 15 + 0.1 * v, you=80,
+             verdict="Return: largest", color=GREEN,
+             why=["Today's line curves upward.", "A script finds the exact", "matches. AI checks only", "the near-matches."]),
+        dict(title="Pull amounts from W-2s", vol="about 15 forms a year",
+             today=lambda v: 0.9 * v, after=lambda v: 45, you=15, breakeven=50,
+             verdict="Return: not yet", color=AMBER,
+             why=["Your volume is below", "break-even. Revisit if", "the volume grows."]),
+        dict(title="Answer client questions", vol="about 30 emails a month",
+             today=lambda v: 0.8 * v, after=lambda v: 6 + 0.8 * v, you=60,
+             verdict="Return: none", color=MUTED,
+             why=["Every email needs reading", "and writing. Converting", "doesn't change the line."]),
+    ]
+    for k, p in enumerate(panels):
+        px = 20 + (k % 2) * 470
+        py = 76 + (k // 2) * 262
+        b += f'<rect x="{px}" y="{py}" width="450" height="248" rx="12" fill="#1c2128" stroke="#30363d"/>\n'
+        b += t(px + 14, py + 24, p["title"], 15, TEXT, "700")
+        b += t(px + 14, py + 42, p["vol"], 12, MUTED)
+        x0, y0, w, h = px + 44, py + 58, 230, 150
+        X = lambda v: x0 + v / 100 * w
+        Y = lambda c: y0 + h - c / 100 * h
+        b += f'<line x1="{x0}" y1="{y0}" x2="{x0}" y2="{y0 + h}" stroke="{MUTED}" stroke-width="1.5"/>\n'
+        b += f'<line x1="{x0}" y1="{y0 + h}" x2="{x0 + w}" y2="{y0 + h}" stroke="{MUTED}" stroke-width="1.5"/>\n'
+        b += (f'<text x="{px + 22}" y="{y0 + h / 2}" font-size="11" fill="{MUTED}" text-anchor="middle" '
+              f'transform="rotate(-90 {px + 22} {y0 + h / 2})">Tokens and $$$ in a year</text>\n')
+        b += t(x0 + w / 2, y0 + h + 28, "Records in a year", 11, MUTED, anchor="middle")
+        for fn_, color in ((p["today"], AI), (p["after"], HYBRID)):
+            pts = []
+            for i in range(0, 1001):
+                v = i / 10
+                c = fn_(v)
+                if c > 100:
+                    break
+                pts.append(f"{X(v):.1f},{Y(c):.1f}")
+            b += f'<polyline points="{" ".join(pts)}" fill="none" stroke="{color}" stroke-width="3"/>\n'
+        you = p["you"]
+        ct, ca = p["today"](you), p["after"](you)
+        b += f'<line x1="{X(you)}" y1="{y0}" x2="{X(you)}" y2="{y0 + h}" stroke="{TEXT}" stroke-width="1.5" stroke-dasharray="3 3"/>\n'
+        b += t(X(you), y0 + h + 13, "you", 11, TEXT, "700", "middle")
+        # the gap at your volume
+        if abs(ct - ca) > 8:
+            gap_color = GREEN if ct > ca else AMBER
+            b += f'<line x1="{X(you) + 7}" y1="{Y(ct)}" x2="{X(you) + 7}" y2="{Y(ca)}" stroke="{gap_color}" stroke-width="4"/>\n'
+            label = "saved" if ct > ca else "costs more"
+            b += t(X(you) + 14, (Y(ct) + Y(ca)) / 2 + 4, label, 11, gap_color, "700")
+        if "breakeven" in p:
+            be = p["breakeven"]
+            b += f'<circle cx="{X(be)}" cy="{Y(p["after"](be))}" r="5" fill="{BG}" stroke="{TEXT}" stroke-width="2"/>\n'
+            b += t(X(be) + 4, Y(p["after"](be)) + 18, "break-even", 11, TEXT)
+        # verdict and reason
+        tx = px + 292
+        b += f'<rect x="{tx}" y="{py + 70}" width="146" height="28" rx="14" fill="{p["color"]}33" stroke="{p["color"]}" stroke-width="2"/>\n'
+        b += t(tx + 73, py + 89, p["verdict"], 13, p["color"] if p["color"] != MUTED else TEXT, "700", "middle")
+        for i, line_ in enumerate(p["why"]):
+            b += t(tx, py + 124 + i * 17, line_, 12, TEXT)
+    return svg(960, 610, "Is it worth converting? Today's token line and the line after converting, for four workflows", b)
+
+
 def main():
     for name, fn in [("data-types.svg", data_types), ("script-cant.svg", script_cant),
-                     ("io-lens.svg", io_lens), ("hard-inputs.svg", hard_inputs), ("demo-tokens.svg", demo_tokens), ("cost-volume.svg", cost_volume)]:
+                     ("io-lens.svg", io_lens), ("hard-inputs.svg", hard_inputs), ("demo-tokens.svg", demo_tokens), ("cost-volume.svg", cost_volume), ("return-panels.svg", return_panels)]:
         (OUT / name).write_text(fn(), encoding="utf-8")
         print("wrote", name)
 

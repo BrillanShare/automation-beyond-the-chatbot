@@ -135,7 +135,7 @@ Read it like a cost-volume (break-even) chart:
 - **Break-even:** the volume where the script has paid for itself. For a task you repeat, that comes early.
 - **Watch for the curve.** Comparing every item with every other item (finding duplicates, fuzzy matching) grows with the square of the volume.
 
-| Volume | 📜 Scripting | 🔀 Hybrid (1 item in 10 needs judgment) | 🤖 AI in the loop | ⚠️ Every item against every other |
+| Volume | 📜 Scripting | 🔀 Hybrid (1 item in 10 needs judgment) | 🤖 AI in the loop | ⚠️ AI compares every item with every other |
 |---|---|---|---|---|
 | 10 items | Build cost | Build cost + 1 | 10 | 100 |
 | 100 items | Build cost | Build cost + 10 | 100 | 10,000 |
@@ -143,7 +143,33 @@ Read it like a cost-volume (break-even) chart:
 
 One unit = the tokens for one item or one comparison.
 
-**Ask Claude:** "What happens to run time and tokens at 10× the data?"
+**Only steps that use tokens belong on this chart.** A finished script uses no tokens per run, so there's nothing to plot for it: its line is flat.
+
+## Is it worth converting?
+
+Converting a task from all AI to hybrid or script takes effort. The return depends on two things together:
+
+- **The shape of today's line:** how the tokens grow as you process more lines, documents or clients.
+- **Your volume:** how many you process, and how often.
+
+A steep line doesn't matter at a tiny volume. A gentle line matters a lot at a large one.
+
+![Four workflows, each with today's all-AI token line, the line after converting, and a marker at the firm's volume: categorizing card lines (large return), finding duplicate payments (largest), pulling amounts from W-2s (not yet), answering client questions (none)](return-panels.svg)
+
+| Workflow | Volume | Today's line (all AI) | After converting | Return |
+|---|---|---|---|---|
+| Categorize credit card lines | About 3,000 lines a month | Rises with every line | Rules catch most lines; AI sees the leftovers | 🟢 Large |
+| Find duplicate vendor payments | About 5,000 payments a year | Curves upward: every payment against every other | A script finds the exact matches; AI checks the near-matches | 🟢 Largest |
+| Pull amounts from W-2s | About 15 forms a year | Rises with every form | Flat, but building it costs more than a year of doing it with AI | 🟠 Not yet |
+| Answer client questions | About 30 emails a month | Rises with every email | Almost the same line: every email still needs reading and writing | ⚪ None |
+
+**What to look for:**
+
+- **Does converting change the shape of the line, or only nudge it?** A changed shape is worth more than a small drop.
+- **Is your volume past break-even?** If not, leave the task with AI and check again when the volume grows.
+- **Several candidates?** Get this picture for each one, then convert the one with the biggest gap at your volume first.
+
+There's no rule for "big enough" that fits every firm. Ask Claude to work it out for your task and your volume. The prompt card has three prompts for this: "Is it worth converting?", "Plot it" and "Which one first?"
 
 ## Hybrid patterns
 
