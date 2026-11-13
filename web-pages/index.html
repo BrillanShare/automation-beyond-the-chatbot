@@ -135,6 +135,16 @@ svg text { font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
 .pop { transform-box: fill-box; transform-origin: center; }
 .badge { display: inline-block; padding: 4px 12px; border-radius: 999px; font-weight: 800; border: 2px solid; font-size: 15px; }
 
+/* ---------- which first: workflow cards ---------- */
+.pic { margin: 8px 0 4px; background: var(--paper); color: var(--ink); border-radius: 6px; padding: 8px 10px; font-size: 13px; min-height: 74px; }
+.pic div { display: flex; justify-content: space-between; gap: 8px; }
+.pic.stmt span, .pic.w2 span { font-family: Consolas, Menlo, monospace; }
+.pic.dup .chip { background: #ffd8d3; border-radius: 4px; padding: 4px 6px; margin: 3px 0; font-weight: 700; justify-content: center; }
+.pic.w2 .hd { font-weight: 800; justify-content: flex-start; margin-bottom: 4px; }
+.pic.mail { font-style: italic; }
+.wread { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; min-height: 44px; font-size: 13px; text-align: center; }
+.wread b { display: block; font-size: 17px; color: var(--text); }
+
 /* ---------- cost readout ---------- */
 .readout { display: grid; grid-template-columns: repeat(4, auto); gap: 6px 26px; justify-content: start; min-height: 64px; margin-top: 6px; padding: 10px 14px; background: #0d1117; border-radius: 10px; }
 .readout .rhead { grid-column: 1 / -1; font-size: 16px; }
@@ -280,7 +290,7 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 <!-- ================= Which first ================= -->
 <section class="anim" id="first">
   <h2>Many tasks? Convert the biggest gap first</h2>
-  <p class="take">You know your volume. The hidden part is the shape of the line.</p>
+  <p class="take">Four example tasks. Press play: the lines draw, then the marker walks to each firm's volume and shows what converting would save in a year.</p>
   <div class="grid4" id="panels"></div>
   <div class="means">👉 <b>What this shows:</b> converting saves the most where today's line is steep and your volume is high (green bars). At low volume, building the script can cost more than it saves. If every item still needs an LLM, converting saves little.</div>
 </section>
@@ -694,30 +704,64 @@ function renderCost(t) {
 }
 
 // The dashed every-item-against-every-other line needs its own dash pattern after drawing.
+// Hypothetical yearly costs in dollars ($10 per million tokens), chosen to show magnitude.
 var PANELS = [
-  ["💳", "Categorize card lines", "3,000 lines a month", function (v) { return 0.9 * v; }, function (v) { return 18 + 0.12 * v; }, 80, "🟢 Large", C.good],
-  ["🔁", "Find duplicate payments", "5,000 payments a year", function (v) { return 0.011 * v * v; }, function (v) { return 15 + 0.1 * v; }, 80, "🟢🟢 Largest", C.good],
-  ["🧾", "Pull W-2 amounts", "15 forms a year", function (v) { return 0.9 * v; }, function () { return 45; }, 15, "🟠 Not yet", C.warn],
-  ["✉️", "Answer client emails", "30 emails a month", function (v) { return 0.8 * v; }, function (v) { return 6 + 0.8 * v; }, 60, "⚪ None", C.muted],
+  { ico: "💳", title: "Categorize card lines", vol: "3,000 lines a month", unit: "lines", you: 36000, max: 45000,
+    pic: '<div class="pic stmt"><div><span>AMZN Mktp US*RT5</span><b>38.12</b></div><div><span>UBER *TRIP</span><b>23.80</b></div><div><span>SQ *BLUE HERON</span><b>9.75</b></div></div>',
+    today: function (n) { return n * 0.01; }, after: function (n) { return 3 + n * 0.001; }, badge: "🟢 Large return", color: C.good },
+  { ico: "🔁", title: "Find duplicate payments", vol: "5,000 payments a year", unit: "payments", you: 5000, max: 5600,
+    pic: '<div class="pic dup"><div class="chip">INV-0412 · ACME Inc · $1,284.00</div><div class="chip">INV-0412 · Acme, Inc. · $1,284.00</div></div>',
+    today: function (n) { return n * (n - 1) / 2 * 20 / 1e6 * 10; }, after: function (n) { return 3 + n * 0.002; }, badge: "🟢🟢 Largest return", color: C.good },
+  { ico: "🧾", title: "Pull W-2 amounts", vol: "15 forms a year", unit: "forms", you: 15, max: 150,
+    pic: '<div class="pic w2"><div class="hd">W-2 Wage and Tax Statement</div><div><span>1 Wages</span><b>52,400.00</b></div><div><span>2 Fed. tax withheld</span><b>6,118.00</b></div></div>',
+    today: function (n) { return n * 0.03; }, after: function (n) { return 3 + n * 0.002; }, badge: "🟠 Not yet", color: C.warn },
+  { ico: "✉️", title: "Answer client emails", vol: "30 emails a month", unit: "emails", you: 360, max: 450,
+    pic: '<div class="pic mail">hi! quick q, we moved the shop to my sister\'s garage in march, do we still deduct the lease?</div>',
+    today: function (n) { return n * 0.04; }, after: function (n) { return 3 + n * 0.04; }, badge: "⚪ No return", color: C.muted },
 ];
+function money(d) { return "$" + (d >= 100 ? Math.round(d).toLocaleString() : d.toFixed(2)); }
 function panels() {
   var box = document.getElementById("panels"), html = "";
-  PANELS.forEach(function (p) {
-    var W = 320, H = 210, x0 = 20, y0 = 10, w = 290, h = 170;
-    var X = function (v) { return x0 + v / 100 * w; }, Y = function (c) { return y0 + h - c / 100 * h; };
-    var you = p[5], ct = p[3](you), ca = p[4](you);
+  PANELS.forEach(function (p, i) {
+    var W = 330, H = 230, x0 = 52, y0 = 12, w = 262, h = 160;
+    var top = Math.max(p.today(p.max), p.after(p.max)) * 1.05;
+    var X = function (n) { return x0 + n / p.max * w; }, Y = function (d) { return y0 + h - Math.min(d, top) / top * h; };
+    p._X = X; p._Y = Y;
+    function path(fn) { var d = ""; for (var k = 0; k <= 120; k++) { var n = k / 120 * p.max; d += (k ? "L" : "M") + X(n).toFixed(1) + "," + Y(fn(n)).toFixed(1); } return d; }
     var s = '<svg viewBox="0 0 ' + W + " " + H + '" style="width:100%">';
     s += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + (y0 + h) + '" stroke="' + C.muted + '" stroke-width="2"/><line x1="' + x0 + '" y1="' + (y0 + h) + '" x2="' + (x0 + w) + '" y2="' + (y0 + h) + '" stroke="' + C.muted + '" stroke-width="2"/>';
-    s += '<path class="draw d1" pathLength="1" d="' + pathOf(p[3], X, Y) + '" fill="none" stroke="' + C.ai + '" stroke-width="4"/>';
-    s += '<path class="draw d2" pathLength="1" d="' + pathOf(p[4], X, Y) + '" fill="none" stroke="' + C.hybrid + '" stroke-width="4"/>';
-    s += '<g class="pop"><line x1="' + X(you) + '" y1="' + y0 + '" x2="' + X(you) + '" y2="' + (y0 + h) + '" stroke="' + C.text + '" stroke-dasharray="4 4" stroke-width="2"/>';
-    s += '<text x="' + X(you) + '" y="' + (y0 + h + 18) + '" fill="' + C.text + '" font-size="14" font-weight="800" text-anchor="middle">you</text>';
-    if (Math.abs(ct - ca) > 8) s += '<line x1="' + (X(you) + 8) + '" y1="' + Y(Math.min(ct, 100)) + '" x2="' + (X(you) + 8) + '" y2="' + Y(ca) + '" stroke="' + (ct > ca ? C.good : C.warn) + '" stroke-width="7"/>';
-    s += "</g></svg>";
-    html += '<div class="card"><div class="pname">' + p[0] + " " + p[1] + '</div><div class="small">' + p[2] + "</div>" + s +
-      '<div style="text-align:center"><span class="badge" style="color:' + p[7] + ";border-color:" + p[7] + '">Return: ' + p[6] + "</span></div></div>";
+    s += '<text x="' + (x0 - 6) + '" y="' + (y0 + 10) + '" fill="' + C.good + '" font-size="12" font-weight="700" text-anchor="end">' + money(top) + '</text><text x="' + (x0 - 6) + '" y="' + (y0 + h) + '" fill="' + C.good + '" font-size="12" font-weight="700" text-anchor="end">$0</text>';
+    s += '<text x="14" y="' + (y0 + h / 2) + '" fill="' + C.text + '" font-size="12" font-weight="700" text-anchor="middle" transform="rotate(-90 14 ' + (y0 + h / 2) + ')"><tspan fill="' + C.good + '">$</tspan> in a year</text>';
+    s += '<text x="' + x0 + '" y="' + (y0 + h + 16) + '" fill="' + C.muted + '" font-size="12" text-anchor="middle">0</text><text x="' + (x0 + w) + '" y="' + (y0 + h + 16) + '" fill="' + C.muted + '" font-size="12" text-anchor="end">' + p.max.toLocaleString() + '</text>';
+    s += '<text x="' + (x0 + w / 2) + '" y="' + (y0 + h + 34) + '" fill="' + C.text + '" font-size="12" font-weight="700" text-anchor="middle">' + p.unit + ' in a year →</text>';
+    s += '<path class="draw d1" pathLength="1" d="' + path(p.today) + '" fill="none" stroke="' + C.ai + '" stroke-width="4"/>';
+    s += '<path class="draw d2" pathLength="1" d="' + path(p.after) + '" fill="none" stroke="' + C.hybrid + '" stroke-width="4"/>';
+    s += '<g class="mk" opacity="0"><line class="mline" y1="' + y0 + '" y2="' + (y0 + h) + '" stroke="' + C.text + '" stroke-dasharray="4 4" stroke-width="2"/>';
+    s += '<line class="gap" stroke-width="7"/><text class="you" y="' + (y0 + h + 16) + '" fill="' + C.text + '" font-size="13" font-weight="800" text-anchor="middle">you</text></g>';
+    s += "</svg>";
+    html += '<div class="card wf" data-i="' + i + '"><div class="pname">' + p.ico + " " + p.title + '</div><div class="small">' + p.vol + "</div>" + p.pic + s +
+      '<div class="wread"></div><div style="text-align:center;min-height:34px"><span class="badge" style="opacity:0;color:' + p.color + ";border-color:" + p.color + '">' + p.badge + "</span></div></div>";
   });
-  box.innerHTML = '<div class="small" style="grid-column:1/-1;margin-top:-8px"><span style="color:' + C.ai + ';font-weight:700">━ today (all AI)</span> &nbsp; <span style="color:' + C.hybrid + ';font-weight:700">━ after converting</span> &nbsp; <span style="color:' + C.good + ';font-weight:700">▌ saved</span></div>' + html;
+  box.innerHTML = '<div class="small" style="grid-column:1/-1;margin-top:-8px"><span style="color:' + C.ai + ';font-weight:700">━ today: all AI 💸</span> &nbsp; <span style="color:' + C.hybrid + ';font-weight:700">━ after converting</span> &nbsp; <span style="color:' + C.good + ';font-weight:700">▌ saved</span> &nbsp; <span style="color:' + C.warn + ';font-weight:700">▌ costs more</span> &nbsp; Hypothetical $ at $10 per million tokens.</div>' + html;
+}
+function renderPanels(t) {
+  var sec = document.getElementById("first");
+  renderDraw(sec, t);
+  sec.querySelectorAll(".wf").forEach(function (card) {
+    var p = PANELS[+card.dataset.i], k = ramp(t, 2.4, 3), e = k * k * (3 - 2 * k), n = Math.round(e * p.you);
+    var mk = card.querySelector(".mk"), x = p._X(n), a = p.today(n), b = p.after(n);
+    mk.setAttribute("opacity", t >= 2.4 ? 1 : 0);
+    var ml = card.querySelector(".mline"); ml.setAttribute("x1", x); ml.setAttribute("x2", x);
+    card.querySelector(".you").setAttribute("x", x);
+    var g = card.querySelector(".gap");
+    g.setAttribute("x1", x + 7); g.setAttribute("x2", x + 7); g.setAttribute("y1", p._Y(a)); g.setAttribute("y2", p._Y(b));
+    g.setAttribute("stroke", a >= b ? C.good : C.warn); g.setAttribute("opacity", Math.abs(p._Y(a) - p._Y(b)) > 3 ? 1 : 0);
+    var diff = a - b;
+    card.querySelector(".wread").innerHTML = t < 2.4 ? "" :
+      '<div><span style="color:' + C.ai + '">Today</span> <b>' + money(a) + '</b></div><div><span style="color:' + C.hybrid + '">After</span> <b>' + money(b) + "</b></div>" +
+      '<div><span style="color:' + (diff >= 0 ? C.good : C.warn) + '">' + (diff >= 0 ? "Saved" : "Costs more") + '</span> <b style="color:' + (diff >= 0 ? C.good : C.warn) + '">' + money(Math.abs(diff)) + "</b></div>";
+    card.querySelector(".badge").style.opacity = ramp(t, 5.6, 0.6);
+  });
 }
 
 // ---------- hybrid patterns ----------
@@ -798,7 +842,7 @@ var TIMELINES = {
   cant: { dur: 7.2, render: renderCant },
   hard: { dur: 8, render: renderFlips },
   cost: { dur: 11.5, render: renderCost },
-  first: { dur: 3.4, render: function (t) { renderDraw(document.getElementById("first"), t); } },
+  first: { dur: 6.5, render: renderPanels },
   patterns: { dur: 9.6, render: renderPipes },
   demo: { dur: 2.2, render: renderDemo },
 };
