@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="430" viewBox="0 0 960 430" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <title>Three buckets: what happens at build time and at run time</title>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker>
+  </defs>
+  <rect x="0" y="0" width="960" height="430" fill="#161a1f"/>
+  <text x="290" y="40" fill="#c9d1d9" font-size="17" font-weight="700" text-anchor="middle">Build time (once)</text>
+  <text x="615" y="40" fill="#c9d1d9" font-size="17" font-weight="700" text-anchor="middle">Run time (every run)</text>
+  <text x="870" y="40" fill="#c9d1d9" font-size="17" font-weight="700" text-anchor="middle">Tokens per run</text>
+  <line x1="455" y1="55" x2="455" y2="415" stroke="#30363d" stroke-dasharray="4 4"/>
+
+  <!-- Scripting -->
+  <text x="20" y="117" fill="#58a6ff" font-size="18" font-weight="700">Scripting</text>
+  <rect x="190" y="80" width="200" height="64" rx="10" fill="#1f6feb33" stroke="#58a6ff" stroke-width="2"/>
+  <text x="290" y="108" fill="#e6edf3" font-size="14" text-anchor="middle">Claude writes the</text>
+  <text x="290" y="127" fill="#e6edf3" font-size="14" text-anchor="middle">script and its tests</text>
+  <line x1="392" y1="112" x2="478" y2="112" stroke="#8b949e" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="480" y="80" width="270" height="64" rx="10" fill="#1f6feb33" stroke="#58a6ff" stroke-width="2"/>
+  <text x="615" y="117" fill="#e6edf3" font-size="14" text-anchor="middle">Script runs on your computer</text>
+  <rect x="790" y="92" width="160" height="40" rx="20" fill="#2ea04333" stroke="#3fb950" stroke-width="2"/>
+  <text x="870" y="117" fill="#3fb950" font-size="15" font-weight="700" text-anchor="middle">None</text>
+
+  <!-- AI in the loop -->
+  <text x="20" y="237" fill="#f85149" font-size="18" font-weight="700">AI in the loop</text>
+  <rect x="190" y="200" width="200" height="64" rx="10" fill="#21262d" stroke="#8b949e" stroke-width="2"/>
+  <text x="290" y="237" fill="#e6edf3" font-size="14" text-anchor="middle">You write a prompt</text>
+  <line x1="392" y1="232" x2="478" y2="232" stroke="#8b949e" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="480" y="200" width="270" height="64" rx="10" fill="#f8514933" stroke="#f85149" stroke-width="2"/>
+  <text x="615" y="228" fill="#e6edf3" font-size="14" text-anchor="middle">LLM reads the input</text>
+  <text x="615" y="247" fill="#e6edf3" font-size="14" text-anchor="middle">and writes the output</text>
+  <rect x="790" y="212" width="160" height="40" rx="20" fill="#f8514933" stroke="#f85149" stroke-width="2"/>
+  <text x="870" y="237" fill="#f85149" font-size="15" font-weight="700" text-anchor="middle">Every run</text>
+
+  <!-- Hybrid -->
+  <text x="20" y="357" fill="#bc8cff" font-size="18" font-weight="700">Hybrid</text>
+  <rect x="190" y="320" width="200" height="64" rx="10" fill="#1f6feb33" stroke="#58a6ff" stroke-width="2"/>
+  <text x="290" y="348" fill="#e6edf3" font-size="14" text-anchor="middle">Claude writes the script;</text>
+  <text x="290" y="367" fill="#e6edf3" font-size="14" text-anchor="middle">you agree on the split</text>
+  <line x1="392" y1="352" x2="478" y2="352" stroke="#8b949e" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="480" y="324" width="70" height="56" rx="8" fill="#1f6feb33" stroke="#58a6ff" stroke-width="2"/>
+  <text x="515" y="357" fill="#e6edf3" font-size="13" text-anchor="middle">script</text>
+  <line x1="551" y1="352" x2="573" y2="352" stroke="#8b949e" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="575" y="324" width="80" height="56" rx="8" fill="#f8514933" stroke="#f85149" stroke-width="2"/>
+  <text x="615" y="348" fill="#e6edf3" font-size="13" text-anchor="middle">LLM:</text>
+  <text x="615" y="366" fill="#e6edf3" font-size="13" text-anchor="middle">the slice</text>
+  <line x1="656" y1="352" x2="678" y2="352" stroke="#8b949e" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="680" y="324" width="70" height="56" rx="8" fill="#1f6feb33" stroke="#58a6ff" stroke-width="2"/>
+  <text x="715" y="357" fill="#e6edf3" font-size="13" text-anchor="middle">script</text>
+  <rect x="790" y="332" width="160" height="40" rx="20" fill="#d2992233" stroke="#d29922" stroke-width="2"/>
+  <text x="870" y="357" fill="#d29922" font-size="15" font-weight="700" text-anchor="middle">Slice only</text>
+</svg>
