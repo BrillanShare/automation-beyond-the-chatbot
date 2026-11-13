@@ -204,8 +204,9 @@ svg text { font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
 .cn { font-size: 18px; text-align: right; } .cn.a { color: var(--ai); } .cn.s { color: var(--script); }
 
 /* ---------- controls ---------- */
-.ctlgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.ctl2 { display: flex; flex-direction: column; gap: 10px; }
+.ctlgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px 36px; margin-top: 10px; }
+.ctl2 { display: flex; flex-direction: column; gap: 16px; padding: 22px 24px; }
+.ctl2 .cnum { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; min-width: 40px; height: 32px; padding: 0 8px; border-radius: 8px; background: #1f6feb; color: #fff; font: 800 17px Georgia, "Times New Roman", serif; }
 .chead { display: flex; gap: 12px; align-items: center; }
 .chead .ico { font-size: 34px; }
 .chead .nm { font-weight: 800; font-size: 19px; }
@@ -236,11 +237,11 @@ svg text { font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
 .q { font-weight: 800; color: var(--warn); margin-bottom: 6px; }
 .small2 { font-size: 13px; }
 .bottom { font-size: 15px; }
-.ctlfoot { border-top: 1px solid var(--line); padding-top: 8px; font-size: 14px; color: var(--muted); } .ctlfoot b { color: var(--text); }
+.ctlfoot { border-top: 1px solid var(--line); padding-top: 12px; font-size: 14px; color: var(--muted); } .ctlfoot b { color: var(--text); }
 @media (max-width: 1100px) { .ctlgrid { grid-template-columns: 1fr; } }
 
 /* ---------- editable prompts ---------- */
-.lt { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: #1f6feb; color: #fff; font-weight: 900; font-size: 14px; }
+.lt { font-family: Georgia, "Times New Roman", serif; display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: #1f6feb; color: #fff; font-weight: 900; font-size: 14px; }
 .lt.big { width: 36px; height: 36px; font-size: 20px; margin-right: 6px; vertical-align: 3px; }
 .xref { margin-top: 8px; font-size: 15px; color: var(--muted); display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .xref.down { margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--line); }
@@ -548,7 +549,7 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 <!-- ================= Prompts ================= -->
 <section id="promptsec">
   <h2>Ask Claude first</h2>
-  <p class="take">All twelve prompts from the prompt card, in full. Fill in the [brackets] here or after pasting, then copy it into Claude. Each one links ↑ to the ideas it goes with; each idea links ↓ back here. Prompts 13 to 22 are on the controls cards (idea I).</p>
+  <p class="take">All twelve prompts from the prompt card, in full. Fill in the [brackets] here or after pasting, then copy it into Claude. Each one links ↑ to the ideas it goes with; each idea links ↓ back here. Prompts 13 to 22 are on the controls cards I1 to I10.</p>
   <div class="grid2" id="prompts"></div>
 </section>
 
@@ -1182,7 +1183,7 @@ function prompts() {
   // Each idea links down to its prompts.
   IDEAS.forEach(function (id) {
     var mine = PROMPTS.filter(function (p) { return p[4].indexOf(id) >= 0; });
-    var extra = id === "controls" ? ' <span class="small">Prompts 13 to 22 are on the cards above.</span>' : "";
+    var extra = id === "controls" ? ' <span class="small">Prompts 13 to 22 are on cards I1 to I10 above.</span>' : "";
     document.getElementById(id).insertAdjacentHTML("beforeend", '<div class="xref down">↓ Prompts for this idea: ' + mine.map(promptLink).join(" ") + extra + "</div>");
   });
   // A jump list of every idea under the page header.
@@ -1336,6 +1337,11 @@ function makeControls(sec, tl, before) {
 buildLanes(); buildControls(); buildDtypes(); buildSame(); buildCant(); placeSpots(); window.addEventListener('resize', placeSpots); buildFlips(); costChart(); panels(); pipes(); prompts(); votes();
 document.querySelectorAll("section.anim").forEach(function (sec) { if (TIMELINES[sec.id]) makeControls(sec); });
 document.querySelectorAll(".xref.down").forEach(function (x) { x.parentNode.appendChild(x); });
+// Number the controls cards I1, I2, … so they can be named and linked.
+document.querySelectorAll("#controls .ctl2").forEach(function (card, i) {
+  card.id = "I" + (i + 1);
+  card.querySelector(".chead").insertAdjacentHTML("afterbegin", '<span class="cnum">I' + (i + 1) + "</span>");
+});
 // The controls cards each play their own story.
 document.querySelectorAll("#controls .ctl2").forEach(function (card) {
   makeControls(card, { dur: 4.2, render: function (t) { renderControls(card, t); } }, card.querySelector(".bottom"));
