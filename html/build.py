@@ -21,7 +21,7 @@ PAGE = HERE / "text.html"
 def main():
     html = PAGE.read_text(encoding="utf-8")
     # The page's own list of Markdown files, so there's only one list to keep.
-    files = re.findall(r'\["([\w.-]+\.md)",', html)
+    files = re.findall(r'\["([\w./-]+\.md)",', html)
     saved = {f: (MARKDOWN_FOLDER / f).read_text(encoding="utf-8") for f in files}
     data = json.dumps(saved, ensure_ascii=False)
     data = data.replace("</", "<\\/").replace("<!--", "\\u003c!--")

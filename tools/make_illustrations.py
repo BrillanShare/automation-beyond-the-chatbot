@@ -1,11 +1,11 @@
-"""Draw the document illustrations used in participant/handout.md.
+"""Draw the document illustrations used in handout.md and demo.md.
 
 Run from the repo root:  python tools/make_illustrations.py
-Writes SVG files into participant/. Not published; only the SVGs are.
+Writes SVG files into the repo root.
 """
 from pathlib import Path
 
-OUT = Path(__file__).resolve().parent.parent / "participant"
+OUT = Path(__file__).resolve().parent.parent
 
 BG = "#161a1f"
 PAPER = "#f4f1ea"
