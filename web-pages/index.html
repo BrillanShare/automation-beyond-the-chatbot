@@ -120,6 +120,9 @@ a { color: var(--script); }
 .on .spot, .result.on { opacity: 1; }
 
 /* ---------- data types sorter ---------- */
+.dtpic { position: relative; max-width: 1100px; margin: 0 auto; }
+.dtpic img { width: 100%; display: block; }
+.dtcover { position: absolute; background: #161a1f; }
 .dtgrid { display: grid; grid-template-columns: 150px 1fr 1fr; gap: 16px; align-items: center; }
 .dthead { font-weight: 800; font-size: 18px; text-align: center; }
 .dtrow { padding: 8px 0; border-top: 1px dashed var(--line); }
@@ -382,11 +385,8 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 <!-- ================= Data type ================= -->
 <section class="anim" id="dtypes">
   <h2>Data type doesn't decide the bucket</h2>
-  <p class="take">Press play: one task at a time arrives in the middle and moves to the bucket it needs. Each kind of data ends up in both buckets.</p>
-  <div class="dtgrid">
-    <div></div><div class="dthead" style="color:var(--script)">📜 Scripting can handle it</div><div class="dthead" style="color:var(--ai)">🤖 Needs AI in the loop</div>
-  </div>
-  <div id="dtrows"></div>
+  <p class="take">Press play: one kind of data at a time fades in, with a task a script can handle and a task that needs AI.</p>
+  <div class="dtpic" id="dtpic"><img src="../images/data-types.svg" alt="Numbers, language, images and audio: one example each that scripting handles and one that needs AI in the loop"></div>
   <div class="means">👉 <b>What this shows:</b> every kind of data has some tasks a script can handle and some that need an LLM. Ask what the task needs, not what kind of data it is.</div>
 </section>
 
@@ -778,36 +778,24 @@ function renderCant(t) {
   });
 }
 
-// ---------- data types: same kind of data, sorted into different buckets ----------
-var DTYPES = [
-  ["🔢 Numbers", ["📊", "Total the same columns every month", "Same shape every time"], ["🧾", "Is this balance plausible for this business?", "Needs judgment"]],
-  ["💬 Language", ["✉️", "Fill in a letter template", "Blanks in fixed places"], ["📨", "Reply to a free-form client email", "Needs understanding"]],
-  ["🖼️ Images", ["⬜", "Remove a plain white background", "Rule: by color"], ["📷", "Read a crumpled receipt photo", "Needs reading"]],
-  ["🔊 Audio", ["🔔", "Detect a beep", "Rule: by sound"], ["🎙️", "Transcribe a client voicemail", "Needs understanding"]],
-];
-var DT_START = 0.5, DT_STEP = 2.4;
+// ---------- data types: the drawing fades in one kind of data at a time ----------
+// Covers sit over the drawing (images/data-types.svg, 960 × 650) and fade away.
+// Rows start at y = 50 + 150 per row and are 135 tall; script cells x 120–490, AI cells x 530–940.
+var DT_START = 0.5, DT_STEP = 1.8;
 function buildDtypes() {
-  var box = document.getElementById("dtrows"), html = "";
-  DTYPES.forEach(function (r) {
-    html += '<div class="dtgrid dtrow"><div class="dtl">' + r[0] + "</div>" +
-      '<div class="dcell"><div class="dcard s"><span class="di">' + r[1][0] + '</span><div><div class="dn">' + r[1][1] + '</div><div class="dw">📜 ' + r[1][2] + "</div></div></div></div>" +
-      '<div class="dcell"><div class="dcard a"><span class="di">' + r[2][0] + '</span><div><div class="dn">' + r[2][1] + '</div><div class="dw">🤖 ' + r[2][2] + "</div></div></div></div></div>";
-  });
-  box.innerHTML = html;
+  var box = document.getElementById("dtpic"), html = "";
+  function pct(x, W) { return (x / W * 100) + "%"; }
+  for (var r = 0; r < 4; r++) {
+    var y = 44 + r * 150;
+    [[0, 118, 0], [118, 377, 0], [508, 452, 1]].forEach(function (c) {
+      html += '<div class="dtcover" data-r="' + r + '" data-k="' + c[2] + '" style="left:' + pct(c[0], 960) + ";top:" + pct(y, 650) + ";width:" + pct(c[1], 960) + ";height:" + pct(147, 650) + '"></div>';
+    });
+  }
+  box.insertAdjacentHTML("beforeend", html);
 }
 function renderDtypes(t) {
-  // One card at a time: it fades in at the middle, then slides to its bucket.
-  document.querySelectorAll("#dtrows .dtrow").forEach(function (row, r) {
-    var gap = row.querySelector(".dcell").offsetWidth / 2 + 8;
-    row.querySelectorAll(".dcard").forEach(function (c, k) {
-      var t0 = DT_START + r * DT_STEP + k * (DT_STEP / 2);
-      var show = ramp(t, t0, 0.35), move = ramp(t, t0 + 0.35, 0.45), e = move * move * (3 - 2 * move);
-      var dir = c.classList.contains("s") ? 1 : -1;
-      c.style.opacity = show;
-      c.style.transform = "translateX(" + (dir * gap * (1 - e)) + "px)";
-      c.style.borderColor = e > 0.6 ? (dir > 0 ? C.script : C.ai) : "var(--line)";
-      c.querySelector(".dw").style.opacity = ramp(t, t0 + 0.7, 0.4);
-    });
+  document.querySelectorAll("#dtpic .dtcover").forEach(function (c) {
+    c.style.opacity = 1 - ramp(t, DT_START + +c.dataset.r * DT_STEP + +c.dataset.k * 0.8, 0.7);
   });
 }
 
