@@ -7,3 +7,4 @@
 - To add a handout, add it to the `PAGES` list in `participant/index.html`, then run `python build.py`.
 - Keep one open pull request at a time; add new changes to it.
 - Pull request text and GitHub comments must say they're from Claude.
+- The document illustrations in `participant/` are drawn by `tools/make_illustrations.py`. Edit the script and rerun it rather than editing those SVGs by hand.

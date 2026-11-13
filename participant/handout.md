@@ -38,6 +38,8 @@
 
 A script needs you to say **in advance** where to look and what to do with what it finds.
 
+![Monthly Excel exports with the same shape next to two leases with the rent in different places](script-cant.svg)
+
 | | Changes from run to run | Script still works? |
 |---|---|---|
 | 📊 Monthly Excel export | The **values**. Column C is always the amount; the steps are always the same. | ✅ Yes |
@@ -47,6 +49,8 @@ A script needs you to say **in advance** where to look and what to do with what 
 - **Different shape or wording, same meaning to find** → AI in the loop
 
 ## Data type doesn't decide the bucket
+
+![Numbers, language, images and audio: one example each that scripting can handle and one that needs AI in the loop](data-types.svg)
 
 | Data type | 📜 Scripting example | 🤖 AI-in-the-loop example |
 |---|---|---|
@@ -60,10 +64,7 @@ A script needs you to say **in advance** where to look and what to do with what 
 - **Use it to describe the task:** what goes in, what has to come out, in what format.
 - **Don't use it to pick the bucket:** the same input and output can land in different buckets.
 
-| Input | Output | Variation | Bucket |
-|---|---|---|---|
-| PDF bank statements | Filled Excel form | Text-based PDFs from one bank | 📜 Scripting |
-| PDF bank statements | Filled Excel form | Scans and phone photos from many banks | 🔀 Hybrid |
+![Bank statements in, Excel form out: text PDFs from one bank are scripting; scans and photos from many banks are hybrid](io-lens.svg)
 
 ## Clear-cut examples
 
@@ -74,7 +75,7 @@ A script needs you to say **in advance** where to look and what to do with what 
 | Rename and file 200 PDFs by client ID from a system export | 📜 Scripting | The ID is in a fixed place in each file name |
 | Combine monthly CSV exports from the same system into one workbook | 📜 Scripting | Same columns every month |
 | Convert balances at today's published exchange rate | 📜 Scripting | Depends on the internet, but needs no judgment |
-| Pick a random audit sample | 📜 Scripting | Random on purpose; record the [seed](https://en.wikipedia.org/wiki/Random_seed) so the sample can be reproduced |
+| Pick a random audit sample | 📜 Scripting | Random on purpose; the script saves the setting it used for the random picks, so anyone can draw the exact same sample again |
 | Draft a client email explaining a variance | 🤖 AI in the loop | New wording for each client and situation |
 | Summarize the key terms of a 40-page lease | 🤖 AI in the loop | The terms can be anywhere, worded any way |
 | Answer a client's free-form question | 🤖 AI in the loop | No way to list the questions in advance |
@@ -89,6 +90,8 @@ A script needs you to say **in advance** where to look and what to do with what 
 - Mostly the same shape, with some messy cases → 🔀 Hybrid
 
 **Why they're hard to apply:** we picture the typical input, not the hard ones.
+
+![Six hard inputs: a tilted scan, one vendor under many names, a rules list that keeps growing, a messy Excel export, a changed invoice layout, duplicate and locked files](hard-inputs.svg)
 
 | Task that looks like scripting | ⚠️ Hard input that's easy to overlook | What it does to the design |
 |---|---|---|
@@ -135,7 +138,7 @@ Agree on the split for each one before building.
 
 | Need | 💻 Local model | Notes |
 |---|---|---|
-| Text from scanned documents ([OCR](https://en.wikipedia.org/wiki/Optical_character_recognition)) | [Tesseract](https://github.com/tesseract-ocr/tesseract) | Struggles with poor scans and handwriting |
+| Text from scanned documents (optical character recognition) | [Tesseract](https://github.com/tesseract-ocr/tesseract) | Struggles with poor scans and handwriting |
 | Speech to text | [whisper.cpp](https://github.com/ggml-org/whisper.cpp), [Vosk](https://alphacephei.com/vosk/) | Runs offline; larger models need a stronger computer |
 | Categorize transactions from the firm's own past entries | [scikit-learn](https://scikit-learn.org/stable/) | Needs enough past examples to learn from |
 | Find names, dates and amounts in text | [spaCy](https://spacy.io/) | Accuracy depends on the type of text |
@@ -228,7 +231,7 @@ For each task, vote: 📜 Scripting, 🤖 AI in the loop or 🔀 Hybrid. Then as
 
 - Hint: What if every W-2 is a text PDF from the same payroll provider?
 - Hint: What if some are phone photos?
-- Answer: 🔀 Hybrid. Text PDFs → script; scans and photos → local OCR or AI; the script checks totals either way.
+- Answer: 🔀 Hybrid. Text PDFs → script; scans and photos → local optical character recognition or AI; the script checks totals either way.
 
 </details>
 </div>
@@ -267,4 +270,4 @@ For each task, vote: 📜 Scripting, 🤖 AI in the loop or 🔀 Hybrid. Then as
 - **Random IDs:** test the properties: right length and format, no duplicates in 10,000 runs.
 - **Today's stock price:** test the calculation with a fake price source that always returns $100.
 - **Due-date reminders:** test with the clock frozen ("pretend today is April 10").
-- **Audit sample:** record the [random seed](https://en.wikipedia.org/wiki/Random_seed) in the workpapers so the sample can be reproduced.
+- **Audit sample:** the script saves the setting it used for the random picks in the workpapers, so a reviewer can draw the exact same sample again and check it.

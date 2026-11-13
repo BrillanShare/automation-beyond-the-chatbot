@@ -20,7 +20,7 @@ Materials for advanced AI users in accounting: when to script, when to put AI in
 | `prompt-card.md` | Prompts to copy and adapt |
 | `CLAUDE.md` | Starter instructions for Claude that apply the workshop's principles |
 | `homework.md` | Homework: a Python script as the output |
-| `buckets.svg`, `venn.svg` | Diagrams used in the handout |
+| `*.svg` | Diagrams and illustrations used in the handout |
 | `vendor/` | [marked](https://github.com/markedjs/marked), the library the start page uses to show Markdown (MIT license) |
 
 ## Using the starter CLAUDE.md
@@ -37,4 +37,4 @@ The start page reads the Markdown files directly when it's served by a web serve
 2. Run `python -m http.server 8000`.
 3. Open http://localhost:8000 in a browser.
 
-When opened by double-clicking, the page shows a copy of the Markdown saved inside it. The bottom of the menu says which one you're seeing.
+When opened by double-clicking, the page shows the version of the handouts saved inside it, and edits to the .md files won't appear there. When it's served, the bottom of the menu says "Live".
