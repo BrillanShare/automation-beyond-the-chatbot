@@ -4,12 +4,12 @@ Workshop materials for advanced AI users in accounting: when to script, when to 
 
 ## For participants
 
-**Start here: open `html/index.html`** in a browser. It's the workshop as a series of animated infographics.
+**Start here: double-click `index.html`** in this folder. It opens the workshop as a series of animated infographics (`html/index.html`).
 
 1. Get the files.
     - a. On GitHub: **Code → Download ZIP**, then unzip it.
     - b. Or clone the repo with GitHub Desktop.
-2. Double-click `html/index.html`.
+2. Double-click `index.html`.
 
 | File | What it is |
 |---|---|
@@ -50,6 +50,7 @@ Instructions for Claude when it works on this repo are in the root `CLAUDE.md`. 
 
 | File | What it is |
 |---|---|
+| `index.html` | Opens `html/index.html`, so there's a start page in the root |
 | `CLAUDE.md` | Rules for working on this repo (not the starter file) |
 | `html/build.py` | Rebuilds `html/text.html` from the Markdown and stamps the build time in its banner. Python only. |
 | `images/` | Diagrams and illustrations used in the handouts |
