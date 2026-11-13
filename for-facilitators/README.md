@@ -1,4 +1,4 @@
-# facilitator/
+# for-facilitators/
 
 For the presenter and co-host.
 

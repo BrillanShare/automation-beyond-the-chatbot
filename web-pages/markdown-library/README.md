@@ -1,4 +1,4 @@
-# html/vendor/
+# web-pages/markdown-library/
 
 Third-party code used by `../text.html`. Don't edit.
 

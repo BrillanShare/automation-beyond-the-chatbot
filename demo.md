@@ -10,7 +10,7 @@
 | **Tokens per run** | Large → none | Large → small |
 | **Same answer every month?** | Not guaranteed → yes | Not guaranteed → yes for the 31 matched lines |
 
-**Files in `demo/`:**
+**Files in `demo-files/`:**
 
 | File | What it is |
 |---|---|
