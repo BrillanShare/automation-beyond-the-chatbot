@@ -46,7 +46,7 @@ a { color: var(--script); }
 .ctrl .time { font-family: Consolas, Menlo, monospace; font-size: 13px; color: var(--muted); min-width: 92px; text-align: right; }
 
 /* ---------- plain-language takeaway under each visual ---------- */
-.means { margin-top: 16px; padding: 10px 16px; border-left: 4px solid var(--good); background: #2ea04314; border-radius: 6px; font-size: 17px; }
+.means { margin: 12px 0 18px; padding: 10px 16px; border-left: 4px solid var(--good); background: #2ea04314; border-radius: 6px; font-size: 17px; }
 .means b { color: var(--good); }
 
 /* ---------- lanes: where the work runs ---------- */
@@ -342,6 +342,7 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 <section class="anim" id="lanes">
   <h2>Where does the work run?</h2>
   <p class="take">The same documents go through each setup, from input on the left to output on the right.</p>
+  <div class="means">👉 <b>What this shows:</b> the script spends no tokens, however many documents go through. AI in the loop spends tokens on every document. Hybrid spends tokens only on the documents that need judgment (1 in 4 here).</div>
   <div class="lane" data-kind="script">
     <div class="lane-name" style="color:var(--script)">📜 Scripting<div class="verdict good">🟢 Free to run</div></div>
     <div class="track"><div class="endcap in"><span class="e">📥</span>input</div><div class="station script" style="left:50%">⚙️ script</div><div class="endcap out"><span class="e">✅</span>output</div></div>
@@ -357,75 +358,75 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
     <div class="track"><div class="endcap in" style="top:104px"><span class="e">📥</span>input</div><div class="station script" style="left:38%">⚙️ script</div><div class="branch"></div><div class="station ai" style="left:62%">🤖 LLM</div><div class="endcap out" style="top:104px"><span class="e">✅</span>output</div></div>
     <div class="meter hybrid"><div class="row">🪙💵 <b>0</b></div>tokens and $ spent</div>
   </div>
-  <div class="means">👉 <b>What this shows:</b> the script spends no tokens, however many documents go through. AI in the loop spends tokens on every document. Hybrid spends tokens only on the documents that need judgment (1 in 4 here).</div>
 </section>
 
 <!-- ================= Same inputs → same output ================= -->
 <section class="anim" id="same">
   <h2>Redo it for a reviewer: same numbers?</h2>
   <p class="take">A reviewer re-performs your work. Press play: each setup categorizes the same card lines, then runs again for the reviewer.</p>
+  <div class="means">👉 <b>What this shows:</b> the script puts every line in the same category on every run, so the totals tie when a reviewer redoes the work. That's what <i>deterministic</i> means. The AI can put a few lines somewhere else on the second run, and the totals stop tying. Numbers a reviewer must re-perform should come from a script. If AI made them, save its answers and reuse them; don't regenerate them.</div>
   <div class="grid2">
     <div class="card rp" id="rpScript"><div class="rphead" style="color:var(--script)">📜 Script</div><div class="rptable"></div><div class="rpstamp"></div></div>
     <div class="card rp" id="rpAI"><div class="rphead" style="color:var(--ai)">🤖 AI in the loop</div><div class="rptable"></div><div class="rpstamp"></div></div>
   </div>
-  <div class="means">👉 <b>What this shows:</b> the script puts every line in the same category on every run, so the totals tie when a reviewer redoes the work. That's what <i>deterministic</i> means. The AI can put a few lines somewhere else on the second run, and the totals stop tying. Numbers a reviewer must re-perform should come from a script. If AI made them, save its answers and reuse them; don't regenerate them.</div>
 </section>
 
 <!-- ================= What a script can't do ================= -->
 <section class="anim" id="cant">
   <h2>A script looks in the same place every time</h2>
   <p class="take">The dashed box is where the script looks. It looks in the same spot on every document.</p>
+  <div class="means">👉 <b>What this shows:</b> in the exports, the amount is always in column C, so the script finds it every month. In the leases, the rent is in a different place and worded differently each time, so the script misses it and an LLM has to read the lease.</div>
   <div style="display:grid;gap:18px">
     <div class="card"><div class="pname">📊 Monthly exports</div><div class="trio" id="sheets"></div><div class="verdict good" style="margin-top:10px">✅ Same shape every month: a script works, 🟢 free</div></div>
     <div class="card"><div class="pname">📄 Leases</div><div class="trio" id="leases"></div><div class="verdict bad" style="margin-top:10px">❌ Script misses it · 🤖 LLM needed, 💸 costs tokens</div></div>
   </div>
-  <div class="means">👉 <b>What this shows:</b> in the exports, the amount is always in column C, so the script finds it every month. In the leases, the rent is in a different place and worded differently each time, so the script misses it and an LLM has to read the lease.</div>
 </section>
 
 <!-- ================= Data type ================= -->
 <section class="anim" id="dtypes">
   <h2>Data type doesn't decide the bucket</h2>
   <p class="take">Press play: one kind of data at a time fades in, with a task a script can handle and a task that needs AI.</p>
-  <div class="dtpic" id="dtpic"><img src="../images/data-types.svg" alt="Numbers, language, images and audio: one example each that scripting handles and one that needs AI in the loop"></div>
   <div class="means">👉 <b>What this shows:</b> every kind of data has some tasks a script can handle and some that need an LLM. Ask what the task needs, not what kind of data it is.</div>
+  <div class="dtpic" id="dtpic"><img src="../images/data-types.svg" alt="Numbers, language, images and audio: one example each that scripting handles and one that needs AI in the loop"></div>
 </section>
 
 <!-- ================= Hard inputs ================= -->
 <section class="anim" id="hard">
   <h2>Picture the hard inputs, not the typical ones</h2>
   <p class="take">Press play: each picture changes from what we picture to what actually arrives.</p>
-  <div class="grid4" id="flips" style="grid-template-columns:repeat(3,1fr)"></div>
   <div class="means">👉 <b>What this shows:</b> a design that works on the typical input can fail on the hard one. Ask Claude to list the hard inputs before it builds anything.</div>
+  <div class="grid4" id="flips" style="grid-template-columns:repeat(3,1fr)"></div>
 </section>
 
 <!-- ================= Cost grows ================= -->
 <section class="anim" id="cost">
   <h2>How cost grows with volume</h2>
   <p class="take">Read it like a break-even chart. Press play: the lines draw, then the marker walks through volumes and shows the cost at each.</p>
-  <div id="costChart"></div>
   <div class="means">👉 <b>What this shows:</b> a script costs tokens once, to build, and then stays flat. AI in the loop costs more with every item. Past the break-even point, the script is cheaper. The dashed line, comparing every item with every other, grows fastest of all.</div>
+  <div id="costChart"></div>
 </section>
 
 <!-- ================= Which first ================= -->
 <section class="anim" id="first">
   <h2>Many tasks? Convert the biggest gap first</h2>
   <p class="take">Four example tasks. Press play: the lines draw, then one task at a time, left to right, the marker walks to the firm's volume and shows what converting would save in a year.</p>
-  <div class="grid4" id="panels"></div>
   <div class="means">👉 <b>What this shows:</b> converting saves the most where today's line is steep and your volume is high (green bars). At low volume, building the script can cost more than it saves. If every item still needs an LLM, converting saves little.</div>
+  <div class="grid4" id="panels"></div>
 </section>
 
 <!-- ================= Hybrid patterns ================= -->
 <section class="anim" id="patterns">
   <h2>Split the work</h2>
   <p class="take">Each pattern starts with the LLM doing every step. Every <b style="color:var(--good)">$</b> is a step that costs tokens on every run. Press play: the steps a script can do turn blue, their $ goes away, and the chart shows the LLM tokens that are left.</p>
-  <div class="grid2" id="pipes"></div>
   <div class="means">👉 <b>What this shows:</b> every step a script takes over flattens the token line. What remains is the LLM's share: the step that needs judgment. In the last pattern, the LLM's work happens once, so nothing is left per run.</div>
+  <div class="grid2" id="pipes"></div>
 </section>
 
 <!-- ================= Controls ================= -->
 <section class="anim" id="controls">
   <h2>Ask for the controls you'd expect anywhere else</h2>
   <p class="take">You can't read the code, but you can ask for these. ✅ The starter CLAUDE.md already asks Claude for all ten. Press ▶ on any card to play its story. Each card shows a prompt to check or fix a script you already have, ready to edit and copy (same numbers as the prompt card).</p>
+  <div class="means">👉 <b>What this shows:</b> each control is something you already expect in accounting. The starter CLAUDE.md asks for all of them; the prompt on each card checks or fixes a script you already have.</div>
   <div class="ctlgrid">
 
     <div class="card ctl2" data-p="13">
@@ -552,7 +553,6 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
     </div>
 
   </div>
-  <div class="means">👉 <b>What this shows:</b> each control is something you already expect in accounting. The starter CLAUDE.md asks for all of them; the prompt on each card checks or fixes a script you already have.</div>
 </section>
 
 <!-- ================= Prompts ================= -->
