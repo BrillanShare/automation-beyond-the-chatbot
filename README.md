@@ -52,7 +52,8 @@ Instructions for Claude when it works on this repo are in the root `CLAUDE.md`. 
 |---|---|
 | `CLAUDE.md` | Rules for working on this repo (not the starter file) |
 | `html/build.py` | Rebuilds `html/text.html` from the Markdown and stamps the build time in its banner. Python only. |
-| `tools/make_illustrations.py` | Draws the document illustrations (`*.svg`) |
+| `images/` | Diagrams and illustrations used in the handouts |
+| `tools/make_illustrations.py` | Draws the document illustrations in `images/` |
 | `html/vendor/` | [marked](https://github.com/markedjs/marked), used by `text.html` to show Markdown (MIT license) |
 
 After editing a Markdown handout, run `python html/build.py`.
