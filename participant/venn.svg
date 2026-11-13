@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <title>Where procedures fall: deterministic or not, scripting or AI in the loop</title>
+  <rect x="0" y="0" width="960" height="560" fill="#161a1f"/>
+  <!-- outer set -->
+  <rect x="15" y="15" width="930" height="530" rx="18" fill="none" stroke="#8b949e" stroke-width="2"/>
+  <text x="35" y="45" fill="#c9d1d9" font-size="18" font-weight="600">All procedures</text>
+  <!-- scripting boundary -->
+  <rect x="50" y="62" width="625" height="470" rx="28" fill="none" stroke="#58a6ff" stroke-width="2.5" stroke-dasharray="10 7"/>
+  <text x="362" y="85" fill="#58a6ff" font-size="17" font-weight="700" text-anchor="middle">Scripting can live anywhere inside the dashed line</text>
+  <!-- deterministic -->
+  <circle cx="235" cy="300" r="165" fill="#2ea04333" stroke="#3fb950" stroke-width="2.5"/>
+  <text x="235" y="240" fill="#3fb950" font-size="18" font-weight="700" text-anchor="middle">Deterministic</text>
+  <text x="235" y="265" fill="#e6edf3" font-size="15" text-anchor="middle">same inputs → same output</text>
+  <text x="235" y="310" fill="#c9d1d9" font-size="14" text-anchor="middle">=SUM()</text>
+  <text x="235" y="333" fill="#c9d1d9" font-size="14" text-anchor="middle">tax-bracket lookup</text>
+  <text x="235" y="356" fill="#c9d1d9" font-size="14" text-anchor="middle">matching invoice numbers</text>
+  <!-- not deterministic label -->
+  <text x="815" y="485" fill="#c9d1d9" font-size="16" font-weight="600" text-anchor="middle">Everything outside the</text>
+  <text x="815" y="507" fill="#c9d1d9" font-size="16" font-weight="600" text-anchor="middle">green circle: not deterministic</text>
+  <!-- clock/internet/file -->
+  <circle cx="545" cy="215" r="108" fill="#d2992233" stroke="#d29922" stroke-width="2.5"/>
+  <text x="545" y="185" fill="#d29922" font-size="15" font-weight="700" text-anchor="middle">Also depends on the</text>
+  <text x="545" y="205" fill="#d29922" font-size="15" font-weight="700" text-anchor="middle">clock, internet or a file</text>
+  <text x="545" y="238" fill="#c9d1d9" font-size="14" text-anchor="middle">=NOW()</text>
+  <text x="545" y="260" fill="#c9d1d9" font-size="14" text-anchor="middle">today's stock price</text>
+  <!-- random -->
+  <circle cx="545" cy="425" r="95" fill="#a371f733" stroke="#a371f7" stroke-width="2.5"/>
+  <text x="545" y="405" fill="#a371f7" font-size="15" font-weight="700" text-anchor="middle">Random on purpose</text>
+  <text x="545" y="435" fill="#c9d1d9" font-size="14" text-anchor="middle">=RAND()</text>
+  <text x="545" y="457" fill="#c9d1d9" font-size="14" text-anchor="middle">random IDs, audit sample</text>
+  <!-- AI in the loop -->
+  <circle cx="815" cy="320" r="118" fill="#f8514933" stroke="#f85149" stroke-width="2.5"/>
+  <text x="815" y="295" fill="#f85149" font-size="18" font-weight="700" text-anchor="middle">AI in the loop</text>
+  <text x="815" y="322" fill="#e6edf3" font-size="14" text-anchor="middle">an LLM runs every time</text>
+  <text x="815" y="350" fill="#c9d1d9" font-size="14" text-anchor="middle">always</text>
+  <text x="815" y="370" fill="#c9d1d9" font-size="14" text-anchor="middle">not deterministic</text>
+</svg>
