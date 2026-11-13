@@ -4,14 +4,14 @@ Private development copy of the workshop materials. Only the `participant/` fold
 
 ## Start here
 
-**Open `participant/html/index.html`** in a browser. It shows every handout on one page.
+**Open `participant/html/index.html`** in a browser: the workshop as animated infographics. `participant/html/text.html` has every handout on one page.
 
 ## What's here
 
 | Path | Published? | What it is |
 |---|---|---|
 | `participant/` | ✅ Yes | Everything participants and the instructor use; see `participant/README.md` |
-| `participant/html/` | ✅ Yes | One-page view of the handouts, rebuilt with `python participant/html/build.py` |
+| `participant/html/` | ✅ Yes | `index.html` (infographics, drawn by hand) and `text.html` (the handouts, rebuilt with `python participant/html/build.py`) |
 | `instructor/run-of-show.md` | ❌ No | 60-minute timeline |
 | `tools/make_illustrations.py` | ❌ No | Draws the document illustrations in `participant/` |
 | `CLAUDE.md` | ❌ No | Instructions for Claude when working on this repo |
@@ -19,8 +19,9 @@ Private development copy of the workshop materials. Only the `participant/` fold
 ## Editing
 
 1. Edit the Markdown files in `participant/`.
-2. Run `python participant/html/build.py` to rebuild the one-page view. It stamps the build time in the page's banner.
-3. Commit both.
+2. Run `python participant/html/build.py` to rebuild `text.html`. It stamps the build time in the page's banner.
+3. If the change affects a concept shown in `participant/html/index.html`, update that page too.
+4. Commit them together.
 
 ## Publishing
 

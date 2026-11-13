@@ -4,7 +4,8 @@ Materials for advanced AI users in accounting: when to script, when to put AI in
 
 ## Start here
 
-Read the Markdown files below. GitHub and Claude both show them formatted, with the diagrams. Start with `cheat-sheet.md`, then `handout.md`.
+- **See it:** open `html/index.html`, the workshop as animated infographics.
+- **Read it:** the Markdown files below. GitHub and Claude both show them formatted. Start with `cheat-sheet.md`, then `handout.md`.
 
 ## What's here
 
@@ -17,7 +18,7 @@ Read the Markdown files below. GitHub and Claude both show them formatted, with 
 | `CLAUDE.md` | Starter instructions for Claude that apply the workshop's principles |
 | `homework.md` | Homework: a Python script as the output |
 | `*.svg` | Diagrams and illustrations used in the handouts |
-| `html/` | All the handouts on one web page, with colored tables and hint buttons; see `html/README.md` |
+| `html/` | `index.html`: the workshop as animated infographics. `text.html`: all the handouts on one page. See `html/README.md` |
 
 ## Using the starter CLAUDE.md
 
