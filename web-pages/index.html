@@ -161,6 +161,12 @@ svg text { font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
 .dot { position: absolute; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--text); left: 0; opacity: 0; }
 .pname { font-weight: 800; font-size: 16px; margin-bottom: 2px; }
 
+/* ---------- split the work ---------- */
+.node .who { display: block; font-size: 11px; font-weight: 800; margin-top: 2px; }
+.pchart svg { max-height: 170px; }
+.pchart { display: grid; grid-template-columns: 1fr 180px; gap: 12px; align-items: center; margin-top: 8px; }
+.pread { text-align: center; } .pread .big { font-size: 36px; font-weight: 900; line-height: 1.1; }
+
 /* ---------- demo bars ---------- */
 .dbar { display: grid; grid-template-columns: 140px 1fr 70px; align-items: center; gap: 12px; margin: 8px 0; }
 .dbar .trackbar { height: 30px; background: #0d1117; border-radius: 8px; overflow: hidden; }
@@ -298,9 +304,9 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 <!-- ================= Hybrid patterns ================= -->
 <section class="anim" id="patterns">
   <h2>Split the work</h2>
-  <p class="take">Send the LLM only the slice that needs judgment.</p>
+  <p class="take">Each pattern starts with the LLM doing every step. Press play: the steps a script can do turn blue, and the chart shows the LLM tokens that are left.</p>
   <div class="grid2" id="pipes"></div>
-  <div class="means">👉 <b>What this shows:</b> in each pattern, the LLM (red) handles only the step that needs judgment. Scripts (blue) do the rest.</div>
+  <div class="means">👉 <b>What this shows:</b> every step a script takes over flattens the token line. What remains is the LLM's share: the step that needs judgment. In the last pattern, the LLM's work happens once, so nothing is left per run.</div>
 </section>
 
 <!-- ================= Demo ================= -->
@@ -599,16 +605,6 @@ function renderDraw(sec, t) {
   });
 }
 
-// ---------- hybrid patterns ----------
-function renderPipes(t) {
-  document.querySelectorAll("#pipes .dot").forEach(function (d, k) {
-    var q = ((t - k * 0.6) % 3.2 + 3.2) % 3.2 / 3.2;
-    if (t < k * 0.6) { d.style.opacity = 0; return; }
-    d.style.left = lerp(2, 96, Math.min(q / 0.95, 1)) + "%";
-    d.style.opacity = q > 0.95 ? 0 : 1;
-  });
-}
-
 // ---------- demo bars ----------
 function renderDemo(t) {
   var k = ramp(t, 0.3, 1.6), e = 1 - Math.pow(1 - k, 3);
@@ -723,7 +719,7 @@ function money(d) { return "$" + (d >= 100 ? Math.round(d).toLocaleString() : d.
 function panels() {
   var box = document.getElementById("panels"), html = "";
   PANELS.forEach(function (p, i) {
-    var W = 330, H = 230, x0 = 52, y0 = 12, w = 262, h = 160;
+    var W = 330, H = 250, x0 = 52, y0 = 12, w = 262, h = 160;
     var top = Math.max(p.today(p.max), p.after(p.max)) * 1.05;
     var X = function (n) { return x0 + n / p.max * w; }, Y = function (d) { return y0 + h - Math.min(d, top) / top * h; };
     p._X = X; p._Y = Y;
@@ -732,8 +728,8 @@ function panels() {
     s += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + (y0 + h) + '" stroke="' + C.muted + '" stroke-width="2"/><line x1="' + x0 + '" y1="' + (y0 + h) + '" x2="' + (x0 + w) + '" y2="' + (y0 + h) + '" stroke="' + C.muted + '" stroke-width="2"/>';
     s += '<text x="' + (x0 - 6) + '" y="' + (y0 + 10) + '" fill="' + C.good + '" font-size="12" font-weight="700" text-anchor="end">' + money(top) + '</text><text x="' + (x0 - 6) + '" y="' + (y0 + h) + '" fill="' + C.good + '" font-size="12" font-weight="700" text-anchor="end">$0</text>';
     s += '<text x="14" y="' + (y0 + h / 2) + '" fill="' + C.text + '" font-size="12" font-weight="700" text-anchor="middle" transform="rotate(-90 14 ' + (y0 + h / 2) + ')"><tspan fill="' + C.good + '">$</tspan> in a year</text>';
-    s += '<text x="' + x0 + '" y="' + (y0 + h + 16) + '" fill="' + C.muted + '" font-size="12" text-anchor="middle">0</text><text x="' + (x0 + w) + '" y="' + (y0 + h + 16) + '" fill="' + C.muted + '" font-size="12" text-anchor="end">' + p.max.toLocaleString() + '</text>';
-    s += '<text x="' + (x0 + w / 2) + '" y="' + (y0 + h + 34) + '" fill="' + C.text + '" font-size="12" font-weight="700" text-anchor="middle">' + p.unit + ' in a year →</text>';
+    s += '<text x="' + x0 + '" y="' + (y0 + h + 16) + '" fill="' + C.muted + '" font-size="12" text-anchor="middle">0</text><text x="' + (x0 + w) + '" y="' + (y0 + h + 32) + '" fill="' + C.muted + '" font-size="12" text-anchor="end">' + p.max.toLocaleString() + '</text>';
+    s += '<text x="' + (x0 + w / 2) + '" y="' + (y0 + h + 50) + '" fill="' + C.text + '" font-size="12" font-weight="700" text-anchor="middle">' + p.unit + ' in a year →</text>';
     s += '<path class="draw d1" pathLength="1" d="' + path(p.today) + '" fill="none" stroke="' + C.ai + '" stroke-width="4"/>';
     s += '<path class="draw d2" pathLength="1" d="' + path(p.after) + '" fill="none" stroke="' + C.hybrid + '" stroke-width="4"/>';
     s += '<g class="mk" opacity="0"><line class="mline" y1="' + y0 + '" y2="' + (y0 + h) + '" stroke="' + C.text + '" stroke-dasharray="4 4" stroke-width="2"/>';
@@ -765,19 +761,61 @@ function renderPanels(t) {
 }
 
 // ---------- hybrid patterns ----------
+// Each pattern starts with every step done by the LLM. On play, the steps that a
+// script can do turn blue one by one, and the chart shows the tokens that remain.
+// [icon, label, final kind ("a" stays LLM, "s" becomes a script, "o" LLM once, then script), share of today's tokens]
 var PIPES = [
-  ["AI extracts → script processes", [["a", "📄", "messy PDFs"], ["a", "🤖", "pull fields"], ["s", "⚙️", "check + total"], ["s", "📊", "Excel form"]]],
-  ["Script filters → AI judges", [["s", "🏦", "all lines"], ["s", "⚙️", "reconcile"], ["a", "🤖", "explain exceptions"], ["s", "✉️", "client note"]]],
-  ["Rules first → AI for leftovers", [["s", "💳", "3,000 lines"], ["s", "⚙️", "vendor rules"], ["a", "🤖", "leftovers only"], ["s", "➕", "new rules"]]],
-  ["AI first → promote to a script", [["a", "🤖", "do it a few times"], ["a", "🔎", "spot the pattern"], ["s", "📜", "write the script"], ["s", "♻️", "no tokens per run"]]],
+  ["AI extracts → script processes", [["📄", "read messy PDFs", "a", 0.35], ["🤖", "pull fields", "a", 0.25], ["⚙️", "check + total", "s", 0.2], ["📊", "fill Excel form", "s", 0.2]]],
+  ["Script filters → AI judges", [["🏦", "load all lines", "s", 0.4], ["⚙️", "reconcile", "s", 0.35], ["🤖", "explain exceptions", "a", 0.15], ["✉️", "client note", "s", 0.1]]],
+  ["Rules first → AI for leftovers", [["💳", "read 3,000 lines", "s", 0.3], ["⚙️", "apply vendor rules", "s", 0.4], ["🤖", "leftovers only", "a", 0.2], ["➕", "save new rules", "s", 0.1]]],
+  ["AI first → promote to a script", [["🤖", "AI does it a few times", "o", 0.4], ["🔎", "spot the pattern", "o", 0.2], ["📜", "write the script", "s", 0.2], ["♻️", "script runs it after", "s", 0.2]]],
 ];
+var PIPE_STEP = 1.1, PIPE_START = 0.8;
 function pipes() {
   var html = "";
   PIPES.forEach(function (p, k) {
-    var nodes = p[1].map(function (n) { return '<div class="node ' + n[0] + '"><span class="i">' + n[1] + "</span>" + n[2] + "</div>"; }).join('<span class="arrow">→</span>');
-    html += '<div class="card"><div class="pname">' + p[0] + '</div><div class="pipe"><span class="dot" style="animation-delay:' + (k * 0.6) + 's"></span>' + nodes + "</div></div>";
+    var nodes = p[1].map(function (n) { return '<div class="node a" data-final="' + n[2] + '"><span class="i">' + n[0] + "</span>" + n[1] + '<span class="who">🤖 LLM</span></div>'; }).join('<span class="arrow">→</span>');
+    html += '<div class="card pcard" data-k="' + k + '"><div class="pname">' + p[0] + '</div><div class="pipe">' + nodes + "</div>" +
+      '<div class="pchart"><svg viewBox="0 0 300 150" style="width:100%"></svg><div class="pread"></div></div></div>';
   });
   document.getElementById("pipes").innerHTML = html;
+}
+function pipeState(p, t) {
+  // How far each convertible step has turned into a script, in order.
+  var j = 0, remaining = 0, built = 0;
+  p[1].forEach(function (n) {
+    var k = 0;
+    if (n[2] !== "a") { k = ramp(t, PIPE_START + j * PIPE_STEP, 0.8); j++; }
+    n._k = k;
+    remaining += n[3] * (1 - k);
+    built += (n[2] !== "a" ? 1 : 0) * k;
+  });
+  return { remaining: remaining, build: 0.08 * built };
+}
+function renderPipes(t) {
+  document.querySelectorAll("#pipes .pcard").forEach(function (card) {
+    var p = PIPES[+card.dataset.k], st = pipeState(p, t);
+    card.querySelectorAll(".node").forEach(function (el, i) {
+      var n = p[1][i], k = n._k, fin = n[2];
+      var col = fin === "o" ? "#8b949e" : C.script;
+      el.style.borderColor = k > 0.5 ? col : C.ai;
+      el.style.color = k > 0.5 ? col : C.ai;
+      el.style.background = "rgba(" + (k > 0.5 ? (fin === "o" ? "139,148,158" : "88,166,255") : "248,81,73") + "," + (0.08 + 0.1 * Math.sin(Math.PI * k)) + ")";
+      el.querySelector(".who").textContent = k > 0.5 ? (fin === "o" ? "🤖 once, then done" : "📜 script") : "🤖 LLM";
+    });
+    var W = 300, H = 150, x0 = 34, y0 = 8, w = 250, h = 110;
+    var X = function (v) { return x0 + v * w; }, Y = function (c) { return y0 + h - Math.min(c, 1) * h; };
+    var s = '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + (y0 + h) + '" stroke="' + C.muted + '" stroke-width="2"/><line x1="' + x0 + '" y1="' + (y0 + h) + '" x2="' + (x0 + w) + '" y2="' + (y0 + h) + '" stroke="' + C.muted + '" stroke-width="2"/>';
+    s += '<text x="12" y="' + (y0 + h / 2) + '" fill="' + C.text + '" font-size="11" font-weight="700" text-anchor="middle" transform="rotate(-90 12 ' + (y0 + h / 2) + ')">LLM tokens</text>';
+    s += '<text x="' + (x0 + w / 2) + '" y="' + (y0 + h + 22) + '" fill="' + C.text + '" font-size="11" font-weight="700" text-anchor="middle">documents processed →</text>';
+    s += '<line x1="' + X(0) + '" y1="' + Y(0) + '" x2="' + X(1) + '" y2="' + Y(1) + '" stroke="' + C.ai + '" stroke-width="3" stroke-dasharray="5 4" opacity=".55"/>';
+    s += '<line x1="' + X(0) + '" y1="' + Y(st.build) + '" x2="' + X(1) + '" y2="' + Y(st.build + st.remaining) + '" stroke="' + C.hybrid + '" stroke-width="4"/>';
+    s += '<text x="' + (X(1) - 40) + '" y="' + (Y(1) + 6) + '" fill="' + C.ai + '" font-size="11" text-anchor="end">all LLM (before)</text>';
+    card.querySelector("svg").innerHTML = s;
+    var pct = Math.round(st.remaining * 100), good = pct <= 30;
+    card.querySelector(".pread").innerHTML = '<div class="small">Tokens per run vs. all LLM</div><div class="big" style="color:' + (pct >= 99 ? C.ai : good ? C.good : C.warn) + '">' + pct + '%</div><div class="small">' +
+      (pct >= 99 ? "🔴 💸 every step uses tokens" : pct === 0 ? "🟢 no tokens per run" : good ? "🟢 most of the work is free" : "🟡 the LLM still does the heavy part") + "</div>";
+  });
 }
 
 // ---------- prompts ----------
@@ -843,7 +881,7 @@ var TIMELINES = {
   hard: { dur: 8, render: renderFlips },
   cost: { dur: 11.5, render: renderCost },
   first: { dur: 6.5, render: renderPanels },
-  patterns: { dur: 9.6, render: renderPipes },
+  patterns: { dur: PIPE_START + 3 * PIPE_STEP + 1.4, render: renderPipes },
   demo: { dur: 2.2, render: renderDemo },
 };
 function fmt(s) { return (Math.floor(s / 60)) + ":" + ("0" + Math.floor(s % 60)).slice(-2); }
