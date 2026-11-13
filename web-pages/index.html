@@ -173,6 +173,18 @@ svg text { font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
 .dbar .fill { height: 100%; width: 0; border-radius: 8px; }
 .dbar .num { font-size: 24px; font-weight: 800; }
 
+/* ---------- demo rows ---------- */
+.setups { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 8px 0 12px; }
+.setup { background: #0d1117; border-radius: 10px; padding: 10px 12px; }
+.sname { font-weight: 800; font-size: 16px; margin-bottom: 6px; }
+.crow { display: grid; grid-template-columns: 74px 1fr 30px; align-items: center; gap: 8px; min-height: 30px; }
+.crow.total { border-top: 2px solid var(--line); margin-top: 4px; padding-top: 6px; }
+.crow .cl { font-size: 13px; font-weight: 700; }
+.cells { display: flex; flex-wrap: wrap; gap: 2px; }
+.cell { width: 9px; height: 18px; border-radius: 2px; display: inline-block; }
+.cell.a { background: var(--ai); } .cell.s { background: var(--script); }
+.cn { font-size: 18px; text-align: right; } .cn.a { color: var(--ai); } .cn.s { color: var(--script); }
+
 /* ---------- controls ---------- */
 .ctl { text-align: center; }
 .ctl .ico { font-size: 36px; }
@@ -309,27 +321,6 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
   <div class="means">👉 <b>What this shows:</b> every step a script takes over flattens the token line. What remains is the LLM's share: the step that needs judgment. In the last pattern, the LLM's work happens once, so nothing is left per run.</div>
 </section>
 
-<!-- ================= Demo ================= -->
-<section class="anim" id="demo">
-  <h2>Demo: lines sent to the LLM each month</h2>
-  <p class="take">Running a finished script uses no tokens. Keep what it prints short.</p>
-  <div class="grid2">
-    <div class="card">
-      <div class="pname">🏦 Match bank lines to the ledger</div>
-      <div class="dbar"><span style="color:var(--ai);font-weight:700">🤖 All AI 💸</span><div class="trackbar"><div class="fill" data-w="75" style="background:var(--ai)"></div></div><span class="num" data-n="30">0</span></div>
-      <div class="dbar"><span style="color:var(--script);font-weight:700">📜 Script</span><div class="trackbar"><div class="fill" data-w="0" style="background:var(--script)"></div></div><span class="num" data-n="0">0</span></div>
-      <div class="verdict good">✅ 30 → 0 lines: 🟢 free every month after</div>
-    </div>
-    <div class="card">
-      <div class="pname">💳 Categorize credit card lines</div>
-      <div class="dbar"><span style="color:var(--ai);font-weight:700">🤖 All AI 💸</span><div class="trackbar"><div class="fill" data-w="100" style="background:var(--ai)"></div></div><span class="num" data-n="40">0</span></div>
-      <div class="dbar"><span style="color:var(--hybrid);font-weight:700">🔀 Hybrid</span><div class="trackbar"><div class="fill" data-w="22.5" style="background:var(--hybrid)"></div></div><span class="num" data-n="9">0</span></div>
-      <div class="verdict good">✅ 40 → 9 lines: 💰 about 4× less to the LLM</div>
-    </div>
-  </div>
-  <div class="means">👉 <b>What this shows:</b> matching bank lines needs no judgment, so a script does all of it and nothing goes to the LLM. Categorizing card lines needs judgment for 9 of the 40, so only those 9 go to the LLM.</div>
-</section>
-
 <!-- ================= Controls ================= -->
 <section id="controls">
   <h2>Ask for the controls you'd expect anywhere else</h2>
@@ -347,6 +338,15 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
     <div class="card ctl"><div class="ico">🧪</div><div class="nm">Tests saved, rerun after changes</div><div class="tw">= <b>re-performing a test</b></div></div>
   </div>
   <div class="means">👉 <b>What this shows:</b> each control is something you already expect in accounting. Ask Claude to build them into every script.</div>
+</section>
+
+<!-- ================= Demo ================= -->
+<section class="anim" id="demo">
+  <h2>Demo: where each line goes</h2>
+  <p class="take">Press play: each line drops into the LLM row or the script row, and the total row adds them up.</p>
+  <div class="grid2" id="demoCards"></div>
+  <div class="means">👉 <b>What this shows:</b> matching bank lines needs no judgment, so the script does every line and the total is all blue: 🟢 nothing goes to the LLM. Categorizing card lines needs judgment for 9 of the 40, so hybrid sends only those 9 to the LLM: 💰 about 4× fewer tokens than all AI.</div>
+  <p class="small" style="margin:10px 0 0">Running a finished script uses no tokens. Keep what it prints short, because anything Claude reads back uses tokens.</p>
 </section>
 
 <!-- ================= Prompts ================= -->
@@ -605,11 +605,51 @@ function renderDraw(sec, t) {
   });
 }
 
-// ---------- demo bars ----------
+// ---------- demo: each line drops into the LLM row or the script row ----------
+var DEMOS = [
+  { title: "🏦 Match bank lines to the ledger", n: 30, setups: [["🤖 All AI", function () { return "a"; }], ["📜 All script", function () { return "s"; }]],
+    verdict: '<div class="verdict good">✅ 30 → 0 lines to the LLM: 🟢 free every month after</div>' },
+  { title: "💳 Categorize credit card lines", n: 40, setups: [["🤖 All AI", function () { return "a"; }], ["🔀 Hybrid", function (i) { return [3, 8, 12, 17, 21, 26, 30, 34, 38].indexOf(i) >= 0 ? "a" : "s"; }]],
+    verdict: '<div class="verdict good">✅ 40 → 9 lines to the LLM: 💰 about 4× fewer tokens</div>' },
+];
+var DEMO_GAP = 0.13;
+function buildDemo() {
+  var box = document.getElementById("demoCards"), html = "";
+  DEMOS.forEach(function (d, di) {
+    html += '<div class="card"><div class="pname">' + d.title + '</div><div class="setups">';
+    d.setups.forEach(function (st, si) {
+      html += '<div class="setup" data-d="' + di + '" data-s="' + si + '"><div class="sname">' + st[0] + "</div>" +
+        '<div class="crow"><span class="cl" style="color:var(--ai)">🤖 LLM</span><div class="cells a"></div><b class="cn a">0</b></div>' +
+        '<div class="crow"><span class="cl" style="color:var(--script)">📜 Script</span><div class="cells s"></div><b class="cn s">0</b></div>' +
+        '<div class="crow total"><span class="cl">= Total</span><div class="cells t"></div><b class="cn t">0</b></div></div>';
+    });
+    html += "</div>" + d.verdict + "</div>";
+  });
+  box.innerHTML = html;
+  document.querySelectorAll("#demo .setup").forEach(function (el) {
+    var d = DEMOS[+el.dataset.d], st = d.setups[+el.dataset.s];
+    for (var i = 0; i < d.n; i++) {
+      var kind = st[1](i);
+      var c = document.createElement("span"); c.className = "cell " + kind; c.style.opacity = 0;
+      el.querySelector(".cells." + kind).appendChild(c);
+      var tc = document.createElement("span"); tc.className = "cell " + kind; tc.style.opacity = 0;
+      el.querySelector(".cells.t").appendChild(tc);
+      c._t = tc._t = 0.4 + i * DEMO_GAP;
+    }
+  });
+}
 function renderDemo(t) {
-  var k = ramp(t, 0.3, 1.6), e = 1 - Math.pow(1 - k, 3);
-  document.querySelectorAll("#demo .fill").forEach(function (f) { f.style.width = (+f.dataset.w * e) + "%"; });
-  document.querySelectorAll("#demo .num").forEach(function (n) { n.textContent = Math.round(+n.dataset.n * e); });
+  document.querySelectorAll("#demo .setup").forEach(function (el) {
+    ["a", "s", "t"].forEach(function (k) {
+      var n = 0;
+      el.querySelectorAll(".cells." + k + " .cell").forEach(function (c) {
+        var q = ramp(t, c._t + (k === "t" ? 0.25 : 0), 0.35);
+        c.style.opacity = q; c.style.transform = "translate(" + (-24 * (1 - q)) + "px," + (k === "t" ? -14 * (1 - q) : 0) + "px)";
+        if (q >= 1) n++;
+      });
+      el.querySelector(".cn." + k).textContent = n;
+    });
+  });
 }
 
 // ---------- charts ----------
@@ -882,7 +922,7 @@ var TIMELINES = {
   cost: { dur: 11.5, render: renderCost },
   first: { dur: 6.5, render: renderPanels },
   patterns: { dur: PIPE_START + 3 * PIPE_STEP + 1.4, render: renderPipes },
-  demo: { dur: 2.2, render: renderDemo },
+  demo: { dur: 0.4 + 40 * DEMO_GAP + 1, render: renderDemo },
 };
 function fmt(s) { return (Math.floor(s / 60)) + ":" + ("0" + Math.floor(s % 60)).slice(-2); }
 function makeControls(sec) {
@@ -916,7 +956,7 @@ function makeControls(sec) {
   sec._showEnd = function () { t = tl.dur; draw(); };
   draw();
 }
-buildLanes(); buildSame(); buildCant(); placeSpots(); window.addEventListener('resize', placeSpots); buildFlips(); costChart(); panels(); pipes(); prompts(); votes();
+buildLanes(); buildDemo(); buildSame(); buildCant(); placeSpots(); window.addEventListener('resize', placeSpots); buildFlips(); costChart(); panels(); pipes(); prompts(); votes();
 document.querySelectorAll("section.anim").forEach(makeControls);
 // Nothing plays on its own: each panel waits for its Play button.
 </script>
