@@ -19,6 +19,7 @@ Private development copy of the workshop materials. Only the `participant/` fold
 | `participant/` | ✅ Yes | Everything participants and the instructor use; see `participant/README.md` |
 | `instructor/run-of-show.md` | ❌ No | 60-minute timeline |
 | `build.py` | ❌ No | Refreshes the saved copy inside `participant/index.html` |
+| `tools/make_illustrations.py` | ❌ No | Draws the document illustrations in `participant/` |
 | `CLAUDE.md` | ❌ No | Instructions for Claude when working on this repo |
 
 ## Editing

@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="650" viewBox="0 0 960 650" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<title>Data type doesn't decide the bucket</title>
+<rect width="960" height="650" fill="#161a1f"/>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker></defs>
+<text x="300" y="32" font-size="16" fill="#58a6ff" font-weight="700" text-anchor="middle">Scripting can handle it</text>
+<text x="720" y="32" font-size="16" fill="#f85149" font-weight="700" text-anchor="middle">Needs AI in the loop</text>
+<text x="20" y="125" font-size="17" fill="#e6edf3" font-weight="700" text-anchor="start">Numbers</text>
+<rect x="120" y="50" width="370" height="135" rx="12" fill="#58a6ff14" stroke="#58a6ff" stroke-width="2"/>
+<rect x="530" y="50" width="410" height="135" rx="12" fill="#f8514914" stroke="#f85149" stroke-width="2"/>
+<text x="20" y="275" font-size="17" fill="#e6edf3" font-weight="700" text-anchor="start">Language</text>
+<rect x="120" y="200" width="370" height="135" rx="12" fill="#58a6ff14" stroke="#58a6ff" stroke-width="2"/>
+<rect x="530" y="200" width="410" height="135" rx="12" fill="#f8514914" stroke="#f85149" stroke-width="2"/>
+<text x="20" y="425" font-size="17" fill="#e6edf3" font-weight="700" text-anchor="start">Images</text>
+<rect x="120" y="350" width="370" height="135" rx="12" fill="#58a6ff14" stroke="#58a6ff" stroke-width="2"/>
+<rect x="530" y="350" width="410" height="135" rx="12" fill="#f8514914" stroke="#f85149" stroke-width="2"/>
+<text x="20" y="575" font-size="17" fill="#e6edf3" font-weight="700" text-anchor="start">Audio</text>
+<rect x="120" y="500" width="370" height="135" rx="12" fill="#58a6ff14" stroke="#58a6ff" stroke-width="2"/>
+<rect x="530" y="500" width="410" height="135" rx="12" fill="#f8514914" stroke="#f85149" stroke-width="2"/>
+<rect x="140" y="66" width="200" height="102" fill="#f4f1ea"/>
+<rect x="140" y="151" width="50" height="17" fill="#cfe3ff"/>
+<rect x="190" y="151" width="50" height="17" fill="#cfe3ff"/>
+<rect x="240" y="151" width="50" height="17" fill="#cfe3ff"/>
+<rect x="290" y="151" width="50" height="17" fill="#cfe3ff"/>
+<rect x="140" y="66" width="200" height="17" fill="#d9e2ec"/>
+<line x1="140" y1="66" x2="340" y2="66" stroke="#c4bfb5"/>
+<line x1="140" y1="83" x2="340" y2="83" stroke="#c4bfb5"/>
+<line x1="140" y1="100" x2="340" y2="100" stroke="#c4bfb5"/>
+<line x1="140" y1="117" x2="340" y2="117" stroke="#c4bfb5"/>
+<line x1="140" y1="134" x2="340" y2="134" stroke="#c4bfb5"/>
+<line x1="140" y1="151" x2="340" y2="151" stroke="#c4bfb5"/>
+<line x1="140" y1="168" x2="340" y2="168" stroke="#c4bfb5"/>
+<line x1="140" y1="66" x2="140" y2="168" stroke="#c4bfb5"/>
+<line x1="190" y1="66" x2="190" y2="168" stroke="#c4bfb5"/>
+<line x1="240" y1="66" x2="240" y2="168" stroke="#c4bfb5"/>
+<line x1="290" y1="66" x2="290" y2="168" stroke="#c4bfb5"/>
+<line x1="340" y1="66" x2="340" y2="168" stroke="#c4bfb5"/>
+<text x="144" y="78" font-size="10" fill="#3b3f46" font-weight="700" text-anchor="start">Date</text>
+<text x="194" y="78" font-size="10" fill="#3b3f46" font-weight="700" text-anchor="start">Ref</text>
+<text x="244" y="78" font-size="10" fill="#3b3f46" font-weight="700" text-anchor="start">Debit</text>
+<text x="294" y="78" font-size="10" fill="#3b3f46" font-weight="700" text-anchor="start">Credit</text>
+<text x="286" y="95" font-size="10" fill="#3b3f46" font-weight="normal" text-anchor="end">1,200</text>
+<text x="336" y="112" font-size="10" fill="#3b3f46" font-weight="normal" text-anchor="end">450</text>
+<text x="286" y="129" font-size="10" fill="#3b3f46" font-weight="normal" text-anchor="end">3,100</text>
+<text x="336" y="146" font-size="10" fill="#3b3f46" font-weight="normal" text-anchor="end">75</text>
+<text x="286" y="163" font-size="10" fill="#3b3f46" font-weight="normal" text-anchor="end">4,300</text>
+<text x="146" y="163" font-size="10" fill="#3b3f46" font-weight="700" text-anchor="start" font-family="Consolas, Menlo, monospace">=SUM()</text>
+<text x="360" y="100" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">Same columns</text>
+<text x="360" y="118" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">every month;</text>
+<text x="360" y="136" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">fixed formulas</text>
+<rect x="553" y="68" width="200" height="108" rx="3" fill="#00000066"/>
+<rect x="550" y="64" width="200" height="108" rx="3" fill="#f4f1ea" stroke="none"/>
+<text x="560" y="81" font-size="10" fill="#3b3f46" font-weight="700" text-anchor="start">Trial balance: consulting firm</text>
+<text x="560" y="98" font-size="10" fill="#3b3f46" font-weight="normal" text-anchor="start">Consulting revenue</text>
+<text x="742" y="98" font-size="10" fill="#3b3f46" font-weight="normal" text-anchor="end">912,000</text>
+<text x="560" y="113" font-size="10" fill="#3b3f46" font-weight="normal" text-anchor="start">Salaries</text>
+<text x="742" y="113" font-size="10" fill="#3b3f46" font-weight="normal" text-anchor="end">540,000</text>
+<text x="560" y="128" font-size="10" fill="#3b3f46" font-weight="normal" text-anchor="start">Rent</text>
+<text x="742" y="128" font-size="10" fill="#3b3f46" font-weight="normal" text-anchor="end">84,000</text>
+<rect x="554" y="132" width="192" height="15" fill="#ffd8d3"/>
+<text x="560" y="143" font-size="10" fill="#3b3f46" font-weight="normal" text-anchor="start">Office supplies</text>
+<text x="742" y="143" font-size="10" fill="#3b3f46" font-weight="normal" text-anchor="end">48,200</text>
+<text x="560" y="158" font-size="10" fill="#3b3f46" font-weight="normal" text-anchor="start">Software</text>
+<text x="742" y="158" font-size="10" fill="#3b3f46" font-weight="normal" text-anchor="end">22,100</text>
+<text x="770" y="100" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">Is this balance</text>
+<text x="770" y="118" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">plausible for this</text>
+<text x="770" y="136" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">kind of business?</text>
+<rect x="143" y="218" width="200" height="108" rx="3" fill="#00000066"/>
+<rect x="140" y="214" width="200" height="108" rx="3" fill="#f4f1ea" stroke="none"/>
+<text x="150" y="234" font-size="11" fill="#3b3f46" font-weight="normal" text-anchor="start" font-family="Consolas, Menlo, monospace">Dear {client},</text>
+<text x="150" y="252" font-size="11" fill="#3b3f46" font-weight="normal" text-anchor="start" font-family="Consolas, Menlo, monospace">Your {year} return</text>
+<text x="150" y="268" font-size="11" fill="#3b3f46" font-weight="normal" text-anchor="start" font-family="Consolas, Menlo, monospace">is ready to sign.</text>
+<text x="150" y="284" font-size="11" fill="#3b3f46" font-weight="normal" text-anchor="start" font-family="Consolas, Menlo, monospace">Due: {due_date}</text>
+<rect x="150" y="296" width="82" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="150" y="305" width="130" height="3" rx="1.5" fill="#b9b4aa"/>
+<text x="360" y="258" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">A template with</text>
+<text x="360" y="276" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">blanks to fill</text>
+<rect x="553" y="218" width="200" height="108" rx="3" fill="#00000066"/>
+<rect x="550" y="214" width="200" height="108" rx="3" fill="#f4f1ea" stroke="none"/>
+<text x="558" y="232" font-size="10.5" fill="#3b3f46" font-weight="normal" text-anchor="start" font-style="italic">hi! quick q, we moved the</text>
+<text x="558" y="249" font-size="10.5" fill="#3b3f46" font-weight="normal" text-anchor="start" font-style="italic">shop to my sister's garage in</text>
+<text x="558" y="266" font-size="10.5" fill="#3b3f46" font-weight="normal" text-anchor="start" font-style="italic">march and sold the old van,</text>
+<text x="558" y="283" font-size="10.5" fill="#3b3f46" font-weight="normal" text-anchor="start" font-style="italic">do we still deduct the lease?</text>
+<text x="558" y="300" font-size="10.5" fill="#3b3f46" font-weight="normal" text-anchor="start" font-style="italic">also my kid started college</text>
+<text x="770" y="258" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">Free-form message:</text>
+<text x="770" y="276" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">understand it,</text>
+<text x="770" y="294" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">then write a reply</text>
+<rect x="140" y="364" width="200" height="108" fill="#ffffff"/>
+<rect x="208" y="374" width="70" height="96" rx="3" fill="#00000066"/>
+<rect x="205" y="370" width="70" height="96" rx="3" fill="#f4f1ea" stroke="none"/>
+<text x="240" y="386" font-size="8" fill="#3b3f46" font-weight="700" text-anchor="middle">RECEIPT</text>
+<rect x="213" y="396" width="54" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="213" y="404" width="54" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="213" y="412" width="54" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="213" y="420" width="54" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="213" y="428" width="54" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="213" y="436" width="54" height="3" rx="1.5" fill="#b9b4aa"/>
+<text x="360" y="408" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">Plain background:</text>
+<text x="360" y="426" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">remove it by color</text>
+<rect x="550" y="364" width="200" height="108" fill="#6b4f3a"/>
+<path d="M600,380 L668,372 L690,458 L615,466 Z" fill="#f4f1ea"/>
+<path d="M620,390 L660,420 M612,435 L680,428" stroke="#d6cfc2" stroke-width="2"/>
+<line x1="612" y1="392" x2="660.0" y2="387" stroke="#b9b4aa" stroke-width="3"/>
+<line x1="613" y1="403" x2="661.5" y2="398" stroke="#b9b4aa" stroke-width="3"/>
+<line x1="614" y1="414" x2="663.0" y2="409" stroke="#b9b4aa" stroke-width="3"/>
+<line x1="615" y1="425" x2="664.5" y2="420" stroke="#b9b4aa" stroke-width="3"/>
+<line x1="616" y1="436" x2="666.0" y2="431" stroke="#b9b4aa" stroke-width="3"/>
+<line x1="617" y1="447" x2="667.5" y2="442" stroke="#b9b4aa" stroke-width="3"/>
+<ellipse cx="655" cy="445" rx="16" ry="9" fill="#c9a57a88"/>
+<text x="770" y="408" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">Crumpled receipt photo</text>
+<text x="770" y="426" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">on a desk: read the</text>
+<text x="770" y="444" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">vendor, date, total</text>
+<rect x="140" y="514" width="200" height="108" rx="4" fill="#0d1117"/>
+<polyline points="150,568.0 151,567.2 152,567.2 153,567.9 154,568.7 155,568.9 156,568.3 157,567.4 158,567.1 159,567.6 160,568.5 161,568.9 162,568.5 163,567.6 164,567.1 165,567.4 166,568.3 167,568.9 168,568.7 169,567.9 170,567.2 171,567.2 172,568.0 173,568.8 174,568.8 175,568.1 176,567.3 177,567.1 178,567.8 179,568.6 180,568.9 181,568.4 182,567.5 183,567.1 184,567.5 185,568.4 186,568.9 187,568.6 188,567.7 189,567.1 190,567.3 191,568.1 192,568.8 193,568.7 194,568.0 195,567.2 196,567.2 197,567.9 198,568.7 199,568.9 200,568.2 201,567.4 202,567.1 203,567.6 204,568.5 205,568.9 206,568.5 207,567.6 208,567.1 209,567.4 210,568.3 211,568.9 212,568.7 213,567.8 214,567.2 215,567.3 216,568.0 217,568.8 218,568.8 219,568.1 220,567.3 221,567.1 222,567.8 223,568.6 224,568.9 225,568.3 226,567.5 227,567.1 228,567.5 229,568.4 230,568.9 231,586.0 232,598.0 233,587.3 234,562.0 235,541.2 236,540.7 237,560.9 238,586.4 239,598.0 240,586.9 241,561.5 242,541.0 243,541.0 244,561.4 245,586.8 246,598.0 247,586.5 248,561.0 249,540.8 250,568.5 251,567.6 252,567.1 253,567.4 254,568.3 255,568.9 256,568.7 257,567.8 258,567.2 259,567.3 260,568.0 261,568.8 262,568.8 263,568.1 264,567.3 265,567.1 266,567.8 267,568.6 268,568.9 269,568.3 270,567.5 271,567.1 272,567.6 273,568.4 274,568.9 275,568.6 276,567.7 277,567.1 278,567.4 279,568.2 280,568.8 281,568.7 282,568.0 283,567.2 284,567.2 285,567.9 286,568.7 287,568.8 288,568.2 289,567.4 290,567.1 291,567.7 292,568.5 293,568.9 294,568.4 295,567.6 296,567.1 297,567.5 298,568.3 299,568.9 300,568.6 301,567.8 302,567.2 303,567.3 304,568.1 305,568.8 306,568.8 307,568.1 308,567.3 309,567.2 310,567.8 311,568.6 312,568.9 313,568.3 314,567.5 315,567.1 316,567.6 317,568.4 318,568.9 319,568.5 320,567.7 321,567.1 322,567.4 323,568.2 324,568.8 325,568.7 326,567.9 327,567.2 328,567.2 329,567.9" fill="none" stroke="#8fd3ff" stroke-width="1.6"/>
+<text x="240" y="612" font-size="11" fill="#8b949e" font-weight="normal" text-anchor="middle">beep</text>
+<text x="360" y="558" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">Detect a sound:</text>
+<text x="360" y="576" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">a beep or a clap</text>
+<rect x="550" y="514" width="200" height="108" rx="4" fill="#0d1117"/>
+<polyline points="560,558.0 561,552.4 562,548.5 563,548.9 564,554.2 565,562.3 566,569.5 567,571.8 568,567.4 569,557.7 570,547.1 571,540.9 572,542.6 573,552.0 574,565.2 575,575.8 576,578.4 577,571.3 578,557.3 579,542.9 580,535.1 581,538.1 582,550.7 583,567.3 584,580.0 585,582.5 586,573.3 587,556.7 588,540.4 589,532.3 590,536.3 591,550.5 592,568.3 593,581.2 594,583.1 595,573.2 596,556.3 597,540.4 598,533.1 599,537.6 600,551.4 601,567.9 602,579.2 603,580.3 604,571.0 605,556.2 606,542.9 607,537.3 608,541.6 609,553.1 610,566.0 611,574.3 612,574.6 613,567.2 614,556.4 615,547.4 616,544.1 617,547.5 618,555.1 619,563.0 620,567.5 621,558.0 622,558.0 623,558.0 624,558.0 625,558.0 626,558.0 627,558.0 628,558.0 629,558.0 630,558.0 631,558.0 632,555.9 633,545.7 634,540.6 635,543.7 636,554.1 637,567.3 638,576.9 639,577.9 640,569.3 641,554.7 642,540.9 643,534.8 644,539.6 645,553.4 646,569.9 647,581.2 648,581.7 649,570.9 650,553.7 651,538.3 652,532.1 653,538.1 654,553.5 655,571.1 656,582.4 657,582.2 658,570.6 659,553.3 660,538.5 661,533.0 662,539.4 663,554.2 664,570.3 665,580.2 666,579.4 667,568.7 668,553.6 669,541.3 670,537.4 671,543.1 672,555.3 673,567.9 674,575.0 675,573.8 676,565.5 677,554.7 678,546.4 679,544.3 680,548.6 681,556.5 682,564.1 683,567.8 684,566.6 685,561.8 686,556.1 687,550.7 688,548.1 689,550.2 690,556.8 691,565.0 692,571.0 693,571.1 694,564.6 695,554.0 696,544.3 697,540.5 698,545.0 699,556.3 700,569.3 701,577.7 702,577.1 703,567.1 704,552.1 705,539.2 706,534.8 707,541.4 708,556.2 709,572.4 710,582.1 711,580.6 712,568.2 713,550.8 714,536.5 715,532.3 716,540.2 717,556.6 718,573.6 719,583.3 720,581.0 721,567.9 722,550.4 723,536.8 724,533.3 725,541.4 726,557.1 727,572.6 728,580.8 729,578.2 730,566.3 731,551.2 732,540.0 733,537.7 734,544.9 735,557.6 736,569.6 737,575.4 738,572.8 739,563.7" fill="none" stroke="#8fd3ff" stroke-width="1.6"/>
+<text x="650" y="598" font-size="10.5" fill="#c9d1d9" font-weight="normal" text-anchor="middle" font-style="italic">“so um, can you file</text>
+<text x="650" y="613" font-size="10.5" fill="#c9d1d9" font-weight="normal" text-anchor="middle" font-style="italic">mine by the 15th?”</text>
+<text x="770" y="558" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">Client voicemail:</text>
+<text x="770" y="576" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">a punctuated</text>
+<text x="770" y="594" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">transcript</text>
+</svg>

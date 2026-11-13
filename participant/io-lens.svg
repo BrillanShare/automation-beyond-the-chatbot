@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="380" viewBox="0 0 960 380" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<title>The input/output lens defines the task, but doesn't decide the bucket</title>
+<rect width="960" height="380" fill="#161a1f"/>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker></defs>
+<rect x="20" y="20" width="920" height="150" rx="12" fill="#58a6ff14" stroke="#58a6ff" stroke-width="2"/>
+<text x="32" y="42" font-size="14" fill="#58a6ff" font-weight="700" text-anchor="start">Scripting</text>
+<rect x="63" y="59" width="90" height="100" rx="3" fill="#00000066"/>
+<rect x="60" y="55" width="90" height="100" rx="3" fill="#f4f1ea" stroke="none"/>
+<text x="68" y="72" font-size="8" fill="#1f4f99" font-weight="700" text-anchor="start">FIRST BANK</text>
+<rect x="68" y="80" width="41" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="68" y="89" width="64" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="68" y="98" width="54" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="68" y="107" width="44" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="68" y="116" width="67" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="68" y="125" width="57" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="68" y="134" width="47" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="85" y="67" width="90" height="100" rx="3" fill="#00000066"/>
+<rect x="82" y="63" width="90" height="100" rx="3" fill="#f4f1ea" stroke="none"/>
+<text x="90" y="80" font-size="8" fill="#1f4f99" font-weight="700" text-anchor="start">FIRST BANK</text>
+<rect x="90" y="88" width="41" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="90" y="97" width="64" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="90" y="106" width="54" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="90" y="115" width="44" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="90" y="124" width="67" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="90" y="133" width="57" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="90" y="142" width="47" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="107" y="75" width="90" height="100" rx="3" fill="#00000066"/>
+<rect x="104" y="71" width="90" height="100" rx="3" fill="#f4f1ea" stroke="none"/>
+<text x="112" y="88" font-size="8" fill="#1f4f99" font-weight="700" text-anchor="start">FIRST BANK</text>
+<rect x="112" y="96" width="41" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="112" y="105" width="64" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="112" y="114" width="54" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="112" y="123" width="44" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="112" y="132" width="67" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="112" y="141" width="57" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="112" y="150" width="47" height="3" rx="1.5" fill="#b9b4aa"/>
+<text x="110" y="165" font-size="1" fill="#e6edf3" font-weight="normal" text-anchor="start"></text>
+<text x="240" y="100" font-size="14" fill="#e6edf3" font-weight="normal" text-anchor="start">Text-based PDF statements,</text>
+<text x="240" y="120" font-size="14" fill="#e6edf3" font-weight="normal" text-anchor="start">all from one bank</text>
+<line x1="470" y1="105" x2="640" y2="105" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+<rect x="663" y="66" width="110" height="80" rx="3" fill="#00000066"/>
+<rect x="660" y="62" width="110" height="80" rx="3" fill="#f4f1ea" stroke="none"/>
+<rect x="668" y="80" width="94" height="45" fill="#f4f1ea"/>
+<rect x="668" y="80" width="94" height="15" fill="#d9e2ec"/>
+<line x1="668" y1="80" x2="762" y2="80" stroke="#c4bfb5"/>
+<line x1="668" y1="95" x2="762" y2="95" stroke="#c4bfb5"/>
+<line x1="668" y1="110" x2="762" y2="110" stroke="#c4bfb5"/>
+<line x1="668" y1="125" x2="762" y2="125" stroke="#c4bfb5"/>
+<line x1="668" y1="80" x2="668" y2="125" stroke="#c4bfb5"/>
+<line x1="715" y1="80" x2="715" y2="125" stroke="#c4bfb5"/>
+<line x1="762" y1="80" x2="762" y2="125" stroke="#c4bfb5"/>
+<text x="672" y="90" font-size="10" fill="#3b3f46" font-weight="700" text-anchor="start">Field</text>
+<text x="719" y="90" font-size="10" fill="#3b3f46" font-weight="700" text-anchor="start">Value</text>
+<text x="758" y="105" font-size="10" fill="#3b3f46" font-weight="normal" text-anchor="end">12,480</text>
+<text x="758" y="120" font-size="10" fill="#3b3f46" font-weight="normal" text-anchor="end">9,315</text>
+<text x="668" y="74" font-size="9" fill="#3b3f46" font-weight="700" text-anchor="start">Excel form</text>
+<text x="478" y="92" font-size="13" fill="#58a6ff" font-weight="normal" text-anchor="start">Script reads fixed spots</text>
+<rect x="20" y="190" width="920" height="170" rx="12" fill="#bc8cff14" stroke="#bc8cff" stroke-width="2"/>
+<text x="32" y="212" font-size="14" fill="#bc8cff" font-weight="700" text-anchor="start">Hybrid</text>
+<rect x="58" y="232" width="80" height="100" rx="3" fill="#00000066" transform="rotate(-8 95.0 278.0)"/>
+<rect x="55" y="228" width="80" height="100" rx="3" fill="#e7e1d4" stroke="none" transform="rotate(-8 95.0 278.0)"/>
+<text x="62" y="250" font-size="8" fill="#7a3b1f" font-weight="700" text-anchor="start">Cascade CU</text>
+<rect x="62" y="258" width="33" height="3" rx="1.5" fill="#a9a294"/>
+<rect x="62" y="267" width="52" height="3" rx="1.5" fill="#a9a294"/>
+<rect x="62" y="276" width="44" height="3" rx="1.5" fill="#a9a294"/>
+<rect x="62" y="285" width="36" height="3" rx="1.5" fill="#a9a294"/>
+<rect x="62" y="294" width="55" height="3" rx="1.5" fill="#a9a294"/>
+<rect x="62" y="303" width="46" height="3" rx="1.5" fill="#a9a294"/>
+<rect x="62" y="312" width="38" height="3" rx="1.5" fill="#a9a294"/>
+<rect x="135" y="240" width="72" height="104" rx="8" fill="#222"/>
+<rect x="144" y="254" width="60" height="84" rx="3" fill="#00000066" transform="rotate(6 171.0 292.0)"/>
+<rect x="141" y="250" width="60" height="84" rx="3" fill="#f4f1ea" stroke="none" transform="rotate(6 171.0 292.0)"/>
+<rect x="147" y="262" width="25" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="147" y="271" width="40" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="147" y="280" width="34" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="147" y="289" width="27" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="147" y="298" width="42" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="147" y="307" width="36" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="147" y="316" width="29" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="215" y="236" width="82" height="100" rx="3" fill="#00000066" transform="rotate(3 253.0 282.0)"/>
+<rect x="212" y="232" width="82" height="100" rx="3" fill="#f4f1ea" stroke="none" transform="rotate(3 253.0 282.0)"/>
+<text x="219" y="250" font-size="8" fill="#2e6b3a" font-weight="700" text-anchor="start">Northwest Sav.</text>
+<rect x="219" y="258" width="35" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="219" y="267" width="55" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="219" y="276" width="47" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="219" y="285" width="38" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="219" y="294" width="58" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="219" y="303" width="50" height="3" rx="1.5" fill="#b9b4aa"/>
+<rect x="219" y="312" width="41" height="3" rx="1.5" fill="#b9b4aa"/>
+<text x="320" y="270" font-size="14" fill="#e6edf3" font-weight="normal" text-anchor="start">Scans, phone photos,</text>
+<text x="320" y="290" font-size="14" fill="#e6edf3" font-weight="normal" text-anchor="start">many banks</text>
+<line x1="470" y1="280" x2="640" y2="280" stroke="#8b949e" stroke-width="2" marker-end="url(#a)"/>
+<rect x="663" y="244" width="110" height="80" rx="3" fill="#00000066"/>
+<rect x="660" y="240" width="110" height="80" rx="3" fill="#f4f1ea" stroke="none"/>
+<rect x="668" y="258" width="94" height="45" fill="#f4f1ea"/>
+<rect x="668" y="258" width="94" height="15" fill="#d9e2ec"/>
+<line x1="668" y1="258" x2="762" y2="258" stroke="#c4bfb5"/>
+<line x1="668" y1="273" x2="762" y2="273" stroke="#c4bfb5"/>
+<line x1="668" y1="288" x2="762" y2="288" stroke="#c4bfb5"/>
+<line x1="668" y1="303" x2="762" y2="303" stroke="#c4bfb5"/>
+<line x1="668" y1="258" x2="668" y2="303" stroke="#c4bfb5"/>
+<line x1="715" y1="258" x2="715" y2="303" stroke="#c4bfb5"/>
+<line x1="762" y1="258" x2="762" y2="303" stroke="#c4bfb5"/>
+<text x="672" y="268" font-size="10" fill="#3b3f46" font-weight="700" text-anchor="start">Field</text>
+<text x="719" y="268" font-size="10" fill="#3b3f46" font-weight="700" text-anchor="start">Value</text>
+<text x="758" y="283" font-size="10" fill="#3b3f46" font-weight="normal" text-anchor="end">12,480</text>
+<text x="758" y="298" font-size="10" fill="#3b3f46" font-weight="normal" text-anchor="end">9,315</text>
+<text x="668" y="252" font-size="9" fill="#3b3f46" font-weight="700" text-anchor="start">Excel form</text>
+<text x="478" y="262" font-size="13" fill="#bc8cff" font-weight="normal" text-anchor="start">Local model or AI reads;</text>
+<text x="478" y="308" font-size="13" fill="#bc8cff" font-weight="normal" text-anchor="start">script fills the form</text>
+<text x="800" y="108" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="start">Same input,</text>
+<text x="800" y="126" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="start">same output,</text>
+<text x="800" y="144" font-size="13" fill="#e6edf3" font-weight="700" text-anchor="start">different bucket</text>
+<text x="800" y="286" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="start">Same input,</text>
+<text x="800" y="304" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="start">same output,</text>
+<text x="800" y="322" font-size="13" fill="#e6edf3" font-weight="700" text-anchor="start">different bucket</text>
+</svg>

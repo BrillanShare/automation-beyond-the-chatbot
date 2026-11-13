@@ -7,7 +7,7 @@ Instructions for Claude. Put this file in the folder you work in with Claude Cod
 - **Scripting:** AI may write the script, its tests and its sample data. No LLM runs when the script runs.
 - **AI in the loop:** an LLM is called every time the task runs.
 - **Hybrid:** some steps are scripting, some are AI in the loop.
-- **Local model:** a machine learning model that runs on my computer (OCR, speech-to-text, a classifier). Not an LLM. Zero tokens. Counts as scripting.
+- **Local model:** a machine learning model that runs on my computer (optical character recognition, speech-to-text, a classifier). Not an LLM. Zero tokens. Counts as scripting.
 - **Deterministic:** the same inputs always give the same output. AI in the loop is never deterministic.
 
 ## Before building anything
