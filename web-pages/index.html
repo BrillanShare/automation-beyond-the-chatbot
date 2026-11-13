@@ -27,8 +27,6 @@ main { max-width: 1500px; margin: 0 auto; padding: 0 40px 80px; }
 section { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 22px 28px 26px; margin: 22px 0; position: relative; }
 section h2 { margin: 0 0 4px; font-size: 26px; }
 .take { color: var(--muted); font-size: 17px; margin: 0 0 18px; }
-.replay { position: absolute; top: 18px; right: 22px; background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 8px; padding: 4px 10px; cursor: pointer; font-size: 14px; }
-.replay:hover { color: var(--text); }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
 .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 .grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
@@ -37,82 +35,121 @@ section h2 { margin: 0 0 4px; font-size: 26px; }
 .small { font-size: 14px; color: var(--muted); }
 a { color: var(--script); }
 
+/* ---------- animation controls ---------- */
+.ctrl { display: flex; align-items: center; gap: 10px; margin-top: 14px; padding: 8px 12px; background: #0d1117; border: 1px solid var(--line); border-radius: 10px; }
+.ctrl button { background: #21262d; color: var(--text); border: 1px solid var(--line); border-radius: 8px; width: 40px; height: 34px; font-size: 16px; cursor: pointer; }
+.ctrl button.play { background: #1f6feb; border-color: #1f6feb; width: auto; height: 42px; padding: 0 22px; font-size: 18px; font-weight: 800; }
+.ctrl button.play.idle { box-shadow: 0 0 0 4px #1f6feb44; }
+.ctrl input[type=range] { flex: 1; accent-color: #58a6ff; height: 6px; cursor: pointer; }
+.ctrl .time { font-family: Consolas, Menlo, monospace; font-size: 13px; color: var(--muted); min-width: 92px; text-align: right; }
+
+/* ---------- plain-language takeaway under each visual ---------- */
+.means { margin-top: 16px; padding: 10px 16px; border-left: 4px solid var(--good); background: #2ea04314; border-radius: 6px; font-size: 17px; }
+.means b { color: var(--good); }
+
 /* ---------- lanes: where the work runs ---------- */
-.lane { display: grid; grid-template-columns: 210px 1fr 230px; align-items: center; gap: 16px; padding: 10px 0; border-bottom: 1px dashed var(--line); }
-.lane:last-child { border-bottom: none; }
+.lane { display: grid; grid-template-columns: 190px 1fr 250px; align-items: center; gap: 16px; padding: 12px 0; border-bottom: 1px dashed var(--line); }
+.lane:last-of-type { border-bottom: none; }
 .lane-name { font-weight: 700; font-size: 19px; }
-.track { position: relative; height: 74px; background: #0d1117; border-radius: 12px; overflow: hidden; }
-.station { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 8px 14px; border-radius: 10px; font-weight: 700; border: 2px solid; background: var(--panel); z-index: 2; white-space: nowrap; }
+.verdict { font-size: 14px; font-weight: 700; margin-top: 6px; padding: 3px 8px; border-radius: 6px; display: inline-block; }
+.verdict.good { background: #2ea04326; color: var(--good); } .verdict.bad { background: #f8514926; color: var(--ai); } .verdict.mid { background: #d2992226; color: var(--warn); }
+.track { position: relative; height: 80px; background: #0d1117; border-radius: 12px; overflow: visible; }
+.lane[data-kind="hybrid"] .track { height: 150px; }
+.endcap { position: absolute; top: 50%; transform: translateY(-50%); font-size: 13px; color: var(--muted); text-align: center; line-height: 1.2; }
+.endcap .e { font-size: 26px; display: block; }
+.endcap.in { left: 8px; } .endcap.out { right: 8px; }
+.station { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 118px; text-align: center; padding: 8px 0; border-radius: 10px; font-weight: 700; border: 2px solid; background: var(--panel); z-index: 2; }
 .station.script { color: var(--script); border-color: var(--script); }
 .station.ai { color: var(--ai); border-color: var(--ai); }
-.station.mini { top: 14px; left: 74%; transform: translateX(-50%); padding: 2px 8px; font-size: 14px; }
-.out { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 26px; }
-.doc { position: absolute; left: 8px; top: 22px; font-size: 28px; z-index: 1; }
-.in .doc.go { animation: move 4.2s linear forwards; }
-.in .doc.go.judge { animation: hop 4.2s linear forwards; }
-@keyframes move { from { left: 8px; } to { left: calc(100% - 70px); } }
-@keyframes hop {
-  0% { left: 8px; top: 22px; } 45% { top: 22px; } 62% { left: 74%; top: -2px; filter: drop-shadow(0 0 6px var(--ai)); }
-  80% { top: 22px; } 100% { left: calc(100% - 70px); top: 22px; }
-}
-.meter { font-size: 16px; }
-.meter b { font-size: 30px; display: inline-block; min-width: 2ch; transition: transform .2s; }
-.meter b.bump { transform: scale(1.35); }
+.station.lit { box-shadow: 0 0 0 4px #f8514955, 0 0 18px #f85149; }
+.lane[data-kind="hybrid"] .station.script { top: 104px; }
+.lane[data-kind="hybrid"] .station.ai { top: 36px; }
+.branch { position: absolute; left: 62%; top: 40px; width: 2px; height: 60px; border-left: 2px dashed #f8514988; }
+.doc { position: absolute; left: 70px; font-size: 28px; z-index: 1; transform: translateY(-50%); }
+.coin { position: absolute; font-size: 28px; z-index: 4; pointer-events: none; }
+.meter { font-size: 16px; padding: 8px 12px; border-radius: 10px; border: 2px solid var(--line); transition: background .3s, border-color .3s; }
+.meter .row { display: flex; align-items: center; gap: 8px; }
+.meter b { font-size: 34px; display: inline-block; min-width: 2ch; transition: transform .25s; }
+.meter.bump { background: #f8514926; border-color: var(--ai); }
+.meter.bump b { transform: scale(1.4); }
 .meter.script b { color: var(--script); } .meter.ai b { color: var(--ai); } .meter.hybrid b { color: var(--hybrid); }
 
 /* ---------- same inputs, same output? ---------- */
-.machine { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 14px; }
+.machine { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 14px; margin-bottom: 12px; }
 .box { border: 2px solid; border-radius: 12px; padding: 12px 16px; text-align: center; font-weight: 700; }
-.inbox, .outbox { background: var(--paper); color: var(--ink); border-radius: 8px; padding: 12px 14px; min-height: 64px; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 600; }
-.outbox { transition: opacity .25s; }
-.outbox.flash { animation: flash .6s; }
-@keyframes flash { 0% { box-shadow: 0 0 0 0 #fff8; } 100% { box-shadow: 0 0 0 14px #fff0; } }
-.runs { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; min-height: 30px; }
-.runs span { padding: 2px 8px; border-radius: 6px; font-size: 13px; font-weight: 700; }
-.runs .same { background: #2ea04333; color: var(--good); }
-.runs .diff { background: #f8514933; color: var(--ai); }
+.inbox { background: var(--paper); color: var(--ink); border-radius: 8px; padding: 12px 14px; font-weight: 600; text-align: center; }
+.history { display: flex; flex-direction: column; gap: 6px; min-height: 190px; }
+.hrow { display: grid; grid-template-columns: 62px 1fr 110px; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 8px; background: #0d1117; opacity: 0; }
+.hrow.show { opacity: 1; transform: none; }
+.hrow .n { color: var(--muted); font-size: 14px; }
+.hrow .v { background: var(--paper); color: var(--ink); border-radius: 6px; padding: 4px 10px; font-weight: 600; font-size: 15px; }
+.hrow .t { font-weight: 800; font-size: 14px; text-align: center; border-radius: 6px; padding: 3px 6px; }
+.t.same { background: #2ea04333; color: var(--good); } .t.diff { background: #f8514933; color: var(--ai); } .t.first { background: #30363d; color: var(--text); }
 
 /* ---------- what a script can't do ---------- */
-.stage { position: relative; height: 250px; display: flex; justify-content: center; align-items: center; }
-.sheet, .lease { position: absolute; transition: opacity .4s, transform .4s; opacity: 0; transform: translateX(40px); }
-.sheet.on, .lease.on { opacity: 1; transform: none; }
-.sheet table { border-collapse: collapse; background: var(--paper); color: var(--ink); font-size: 14px; }
-.sheet td, .sheet th { border: 1px solid #c4bfb5; padding: 4px 10px; min-width: 60px; text-align: right; }
-.sheet th { background: #d9e2ec; }
-.sheet .col { background: #cfe3ff; font-weight: 700; }
-.sheet .cap { color: var(--text); font-weight: 700; margin-bottom: 6px; text-align: left; }
-.lease { width: 220px; height: 236px; background: var(--paper); border-radius: 4px; padding: 14px; color: var(--ink); }
-.lease .ttl { font-weight: 800; font-size: 12px; margin-bottom: 8px; }
-.bar { height: 5px; border-radius: 3px; background: var(--faint); margin: 7px 0; }
-.rent { background: #fff1a8; border-radius: 3px; padding: 4px 6px; font-size: 12px; font-weight: 700; }
-.lens { position: absolute; font-size: 40px; z-index: 3; filter: drop-shadow(0 2px 4px #000); }
-.verdict { position: absolute; bottom: 0; left: 0; right: 0; text-align: center; font-weight: 800; font-size: 20px; }
+.trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.mini { position: relative; background: var(--paper); color: var(--ink); border-radius: 4px; padding: 14px 16px; font-size: 16px; min-height: 250px; }
+.mini .ttl { font-weight: 800; margin-bottom: 10px; font-size: 17px; }
+.mini table { border-collapse: collapse; width: 100%; }
+.mini td, .mini th { border: 1px solid #c4bfb5; padding: 6px 10px; text-align: right; }
+.mini th { background: #d9e2ec; }
+.mini .col { background: #cfe3ff; font-weight: 700; }
+.bar { height: 7px; border-radius: 4px; background: var(--faint); margin: 10px 0; }
+.rent { background: #fff1a8; border-radius: 4px; padding: 6px 8px; font-weight: 700; font-size: 16px; }
+.spot { position: absolute; left: 6px; right: 6px; border: 3px dashed var(--script); border-radius: 6px; opacity: 0; transition: opacity .6s; }
+.result { margin-top: 10px; text-align: center; font-weight: 800; font-size: 17px; min-height: 54px; opacity: 0; }
+.on .spot, .result.on { opacity: 1; }
 
-/* ---------- flip cards: hard inputs ---------- */
-.flip { perspective: 900px; height: 170px; cursor: pointer; }
-.flip .inner { position: relative; width: 100%; height: 100%; transition: transform .7s; transform-style: preserve-3d; }
-.flip.flipped .inner { transform: rotateY(180deg); }
-.face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 6px; }
-.front { background: #1c2128; border: 2px solid var(--line); }
-.back { background: #2b2412; border: 2px solid var(--warn); transform: rotateY(180deg); }
-.face .ico { font-size: 40px; line-height: 1; }
-.face .lab { font-weight: 700; font-size: 16px; }
-.face .tag { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
-.back .tag { color: var(--warn); }
-.mono { font-family: Consolas, Menlo, monospace; font-size: 13px; }
+/* ---------- typical → hard cards ---------- */
+.th { background: #1c2128; border: 2px solid var(--line); border-radius: 12px; padding: 14px; }
+.hv { position: relative; height: 200px; border-radius: 10px; background: #0d1117; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.hv .pg { position: relative; background: var(--paper); color: var(--ink); border-radius: 4px; padding: 12px 14px; width: 62%; box-shadow: 0 4px 10px #0008; }
+.hv .ttl { font-weight: 800; font-size: 14px; margin-bottom: 6px; }
+.photo .smudge { position: absolute; right: 14px; bottom: 12px; width: 34px; height: 22px; border-radius: 50%; background: #b8a98a99; opacity: 0; }
+.names, .rules { flex-direction: column; align-items: stretch; justify-content: flex-start; padding: 12px; background: var(--paper); color: var(--ink); }
+.nm { position: relative; height: 30px; border-bottom: 1px solid #ddd6c7; font-size: 16px; font-weight: 600; }
+.nm span { position: absolute; left: 6px; top: 5px; }
+.nm .b { opacity: 0; font-size: 15px; }
+.rules .cnt { font-size: 15px; margin-bottom: 4px; } .rules .cnt b { font-size: 20px; }
+.rl { font-size: 13px; padding: 0 4px; line-height: 1.3; } .rl.bad { color: #c62828; font-weight: 700; }
+.export table { border-collapse: collapse; background: var(--paper); color: var(--ink); font-size: 14px; width: 86%; }
+.export td { border: 1px solid #c4bfb5; padding: 4px 8px; }
+.export .hd td { background: #d9e2ec; font-weight: 700; }
+.export tr.x { opacity: 0; } .export .merged td { text-align: center; font-weight: 800; background: #e8edf2; }
+.invoice .pg { height: 168px; }
+.invoice .tot { position: absolute; right: 12px; top: 118px; background: #ffd8d3; padding: 4px 8px; border-radius: 4px; font-weight: 800; font-size: 14px; }
+.invoice .look { position: absolute; right: 8px; top: 112px; width: 140px; height: 36px; border: 3px dashed var(--script); border-radius: 6px; opacity: 0; }
+.files { gap: 10px; }
+.files .pg { width: 30%; text-align: center; font-size: 13px; font-weight: 600; padding: 14px 6px; }
+.files .f2 { opacity: 0; } .files .lock { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 40px; background: #0006; border-radius: 4px; opacity: 0; }
+.pair { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center; margin-top: 12px; font-weight: 700; font-size: 16px; }
+.pair .tag { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; margin-bottom: 2px; }
+.pair .hrd { color: var(--warn); opacity: .3; } .pair .hrd .tag { color: var(--warn); }
+.pair .arr { color: var(--warn); font-size: 24px; opacity: .3; }
+.mono { font-family: Consolas, Menlo, monospace; }
 
 /* ---------- charts ---------- */
 svg text { font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
 .draw { stroke-dasharray: 1; stroke-dashoffset: 1; }
-.in .draw { animation: draw 2.2s ease-out forwards; }
-.in .draw.d2 { animation-delay: .5s; } .in .draw.d3 { animation-delay: 1s; } .in .draw.d4 { animation-delay: 1.5s; }
-@keyframes draw { to { stroke-dashoffset: 0; } }
 .pop { opacity: 0; }
-.in .pop { animation: pop .5s forwards; animation-delay: 2.6s; }
-.in .pop.late { animation-delay: 3.2s; }
-@keyframes pop { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
 .pop { transform-box: fill-box; transform-origin: center; }
 .badge { display: inline-block; padding: 4px 12px; border-radius: 999px; font-weight: 800; border: 2px solid; font-size: 15px; }
+
+/* ---------- which first: workflow cards ---------- */
+.pic { margin: 8px 0 4px; background: var(--paper); color: var(--ink); border-radius: 6px; padding: 8px 10px; font-size: 13px; min-height: 74px; }
+.pic div { display: flex; justify-content: space-between; gap: 8px; }
+.pic.stmt span, .pic.w2 span { font-family: Consolas, Menlo, monospace; }
+.pic.dup .chip { background: #ffd8d3; border-radius: 4px; padding: 4px 6px; margin: 3px 0; font-weight: 700; justify-content: center; }
+.pic.w2 .hd { font-weight: 800; justify-content: flex-start; margin-bottom: 4px; }
+.pic.mail { font-style: italic; }
+.wread { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; min-height: 44px; font-size: 13px; text-align: center; }
+.wread b { display: block; font-size: 17px; color: var(--text); }
+
+/* ---------- cost readout ---------- */
+.readout { display: grid; grid-template-columns: repeat(4, auto); gap: 6px 26px; justify-content: start; min-height: 64px; margin-top: 6px; padding: 10px 14px; background: #0d1117; border-radius: 10px; }
+.readout .rhead { grid-column: 1 / -1; font-size: 16px; }
+.readout .rrow { display: flex; flex-direction: column; gap: 2px; font-size: 15px; }
+.readout .usd { color: var(--good); font-weight: 800; font-size: 18px; }
 
 /* ---------- pipelines (hybrid patterns) ---------- */
 .pipe { display: flex; align-items: center; gap: 8px; position: relative; padding: 14px 0 6px; }
@@ -122,14 +159,18 @@ svg text { font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
 .node.a { border-color: var(--ai); color: var(--ai); }
 .arrow { color: var(--muted); font-size: 20px; }
 .dot { position: absolute; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--text); left: 0; opacity: 0; }
-.in .dot { animation: travel 3.2s linear infinite; }
-@keyframes travel { 0% { left: 2%; opacity: 1; } 95% { left: 96%; opacity: 1; } 100% { left: 96%; opacity: 0; } }
 .pname { font-weight: 800; font-size: 16px; margin-bottom: 2px; }
+
+/* ---------- split the work ---------- */
+.node .who { display: block; font-size: 11px; font-weight: 800; margin-top: 2px; }
+.pchart svg { max-height: 170px; }
+.pchart { display: grid; grid-template-columns: 1fr 180px; gap: 12px; align-items: center; margin-top: 8px; }
+.pread { text-align: center; } .pread .big { font-size: 36px; font-weight: 900; line-height: 1.1; }
 
 /* ---------- demo bars ---------- */
 .dbar { display: grid; grid-template-columns: 140px 1fr 70px; align-items: center; gap: 12px; margin: 8px 0; }
 .dbar .trackbar { height: 30px; background: #0d1117; border-radius: 8px; overflow: hidden; }
-.dbar .fill { height: 100%; width: 0; border-radius: 8px; transition: width 1.6s ease-out; }
+.dbar .fill { height: 100%; width: 0; border-radius: 8px; }
 .dbar .num { font-size: 24px; font-weight: 800; }
 
 /* ---------- controls ---------- */
@@ -141,8 +182,6 @@ svg text { font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
 .alarm { margin-top: 8px; font-weight: 900; font-size: 13px; padding: 4px 6px; border-radius: 6px; }
 .alarm.red { color: #fff; background: var(--ai); }
 .alarm.yel { color: #1b1300; background: var(--warn); }
-.in .alarm.red { animation: blink 1.2s steps(2) infinite; }
-@keyframes blink { 50% { opacity: .35; } }
 .tie { font-family: Consolas, Menlo, monospace; font-size: 13px; margin-top: 8px; color: var(--good); }
 
 /* ---------- prompts and vote ---------- */
@@ -180,69 +219,54 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 
 <!-- ================= Where the work runs ================= -->
 <section class="anim" id="lanes">
-  <button class="replay">↻ Replay</button>
   <h2>Where does the work run?</h2>
-  <p class="take">Same documents, three ways. Watch the counters.</p>
+  <p class="take">The same documents go through each setup, from input on the left to output on the right.</p>
   <div class="lane" data-kind="script">
-    <div class="lane-name" style="color:var(--script)">📜 Scripting</div>
-    <div class="track"><div class="station script">⚙️ script</div><div class="out">✅</div></div>
-    <div class="meter script">🪙 Sent to the LLM: <b>0</b></div>
+    <div class="lane-name" style="color:var(--script)">📜 Scripting<div class="verdict good">🟢 Free to run</div></div>
+    <div class="track"><div class="endcap in"><span class="e">📥</span>input</div><div class="station script" style="left:50%">⚙️ script</div><div class="endcap out"><span class="e">✅</span>output</div></div>
+    <div class="meter script"><div class="row">🪙💵 <b>0</b></div>tokens and $ spent</div>
   </div>
   <div class="lane" data-kind="ai">
-    <div class="lane-name" style="color:var(--ai)">🤖 AI in the loop</div>
-    <div class="track"><div class="station ai">🤖 LLM</div><div class="out">✅</div></div>
-    <div class="meter ai">🪙 Sent to the LLM: <b>0</b></div>
+    <div class="lane-name" style="color:var(--ai)">🤖 AI in the loop<div class="verdict bad">🔴 💸 Pays for every document</div></div>
+    <div class="track"><div class="endcap in"><span class="e">📥</span>input</div><div class="station ai" style="left:50%">🤖 LLM</div><div class="endcap out"><span class="e">✅</span>output</div></div>
+    <div class="meter ai"><div class="row">🪙💵 <b>0</b></div>tokens and $ spent</div>
   </div>
   <div class="lane" data-kind="hybrid">
-    <div class="lane-name" style="color:var(--hybrid)">🔀 Hybrid</div>
-    <div class="track"><div class="station script" style="left:38%">⚙️ script</div><div class="station ai mini">🤖 LLM</div><div class="out">✅</div></div>
-    <div class="meter hybrid">🪙 Sent to the LLM: <b>0</b></div>
+    <div class="lane-name" style="color:var(--hybrid)">🔀 Hybrid<div class="verdict mid">🟡 Pays only for judgment calls</div></div>
+    <div class="track"><div class="endcap in" style="top:104px"><span class="e">📥</span>input</div><div class="station script" style="left:38%">⚙️ script</div><div class="branch"></div><div class="station ai" style="left:62%">🤖 LLM</div><div class="endcap out" style="top:104px"><span class="e">✅</span>output</div></div>
+    <div class="meter hybrid"><div class="row">🪙💵 <b>0</b></div>tokens and $ spent</div>
   </div>
-  <p class="small" style="margin:12px 0 0">AI writing the script doesn't count: that's build time, once. 📜 Every diagram here was drawn by a script an LLM wrote; redrawing them uses no tokens.</p>
+  <div class="means">👉 <b>What this shows:</b> the script spends no tokens, however many documents go through. AI in the loop spends tokens on every document. Hybrid spends tokens only on the documents that need judgment (1 in 4 here).</div>
 </section>
 
 <!-- ================= Same inputs → same output ================= -->
 <section class="anim" id="same">
-  <button class="replay">↻ Replay</button>
   <h2>Run it again: same answer?</h2>
-  <p class="take">Deterministic = same inputs → same output, every time.</p>
+  <p class="take">Each run is added to the list, so you can compare it with the ones before.</p>
   <div class="grid2">
     <div class="card">
-      <div class="machine">
-        <div class="inbox">1,200 + 3,100</div>
-        <div class="box" style="color:var(--script);border-color:var(--script)">📜 =SUM()</div>
-        <div class="outbox" id="sumOut">4,300</div>
-      </div>
-      <div class="runs" id="sumRuns"></div>
+      <div class="machine"><div class="inbox">1,200 + 3,100</div><div class="box" style="color:var(--script);border-color:var(--script)">📜 =SUM()</div></div>
+      <div class="history" id="sumHist"></div>
+      <div class="verdict good" style="margin-top:10px">✅ Reliable: same answer every run</div>
     </div>
     <div class="card">
-      <div class="machine">
-        <div class="inbox">"Explain the March variance"</div>
-        <div class="box" style="color:var(--ai);border-color:var(--ai)">🤖 LLM</div>
-        <div class="outbox" id="llmOut">…</div>
-      </div>
-      <div class="runs" id="llmRuns"></div>
+      <div class="machine"><div class="inbox">"Explain the March variance"</div><div class="box" style="color:var(--ai);border-color:var(--ai)">🤖 LLM</div></div>
+      <div class="history" id="llmHist"></div>
+      <div class="verdict mid" style="margin-top:10px">⚠️ Same idea, different words every run</div>
     </div>
   </div>
+  <div class="means">👉 <b>What this shows:</b> =SUM() gives the same answer every run. That's what <i>deterministic</i> means. The LLM gives the same idea in different words every run, so it is not deterministic.</div>
 </section>
 
 <!-- ================= What a script can't do ================= -->
 <section class="anim" id="cant">
-  <button class="replay">↻ Replay</button>
   <h2>A script looks in the same place every time</h2>
-  <p class="take">New values, same shape → script. New shape and wording → AI.</p>
-  <div class="grid2">
-    <div class="card">
-      <div class="stage" id="sheets">
-        <div class="lens" style="left:calc(50% + 16px);top:28px">🔍</div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="stage" id="leases">
-        <div class="lens" style="left:calc(50% + 70px);top:60px">🔍</div>
-      </div>
-    </div>
+  <p class="take">The dashed box is where the script looks. It looks in the same spot on every document.</p>
+  <div style="display:grid;gap:18px">
+    <div class="card"><div class="pname">📊 Monthly exports</div><div class="trio" id="sheets"></div><div class="verdict good" style="margin-top:10px">✅ Same shape every month: a script works, 🟢 free</div></div>
+    <div class="card"><div class="pname">📄 Leases</div><div class="trio" id="leases"></div><div class="verdict bad" style="margin-top:10px">❌ Script misses it · 🤖 LLM needed, 💸 costs tokens</div></div>
   </div>
+  <div class="means">👉 <b>What this shows:</b> in the exports, the amount is always in column C, so the script finds it every month. In the leases, the rent is in a different place and worded differently each time, so the script misses it and an LLM has to read the lease.</div>
 </section>
 
 <!-- ================= Data type ================= -->
@@ -250,62 +274,64 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
   <h2>Data type doesn't decide the bucket</h2>
   <p class="take">Numbers can need AI. Language can be scripted.</p>
   <img src="../images/data-types.svg" alt="Numbers, language, images and audio: one example each that scripting handles and one that needs AI in the loop" style="width:100%;max-width:1100px;display:block;margin:auto">
+  <div class="means">👉 <b>What this shows:</b> every kind of data has some tasks a script can handle and some that need an LLM. Ask what the task needs, not what kind of data it is.</div>
 </section>
 
 <!-- ================= Hard inputs ================= -->
 <section class="anim" id="hard">
-  <button class="replay">↻ Replay</button>
   <h2>Picture the hard inputs, not the typical ones</h2>
-  <p class="take">Tap a card to flip it.</p>
-  <div class="grid4" id="flips" style="grid-template-columns:repeat(6,1fr)"></div>
+  <p class="take">Press play: each picture changes from what we picture to what actually arrives.</p>
+  <div class="grid4" id="flips" style="grid-template-columns:repeat(3,1fr)"></div>
+  <div class="means">👉 <b>What this shows:</b> a design that works on the typical input can fail on the hard one. Ask Claude to list the hard inputs before it builds anything.</div>
 </section>
 
 <!-- ================= Cost grows ================= -->
 <section class="anim" id="cost">
-  <button class="replay">↻ Replay</button>
   <h2>How cost grows with volume</h2>
-  <p class="take">Read it like a break-even chart. Only steps that use tokens belong here.</p>
+  <p class="take">Read it like a break-even chart. Press play: the lines draw, then the marker walks through volumes and shows the cost at each.</p>
   <div id="costChart"></div>
+  <div class="means">👉 <b>What this shows:</b> a script costs tokens once, to build, and then stays flat. AI in the loop costs more with every item. Past the break-even point, the script is cheaper. The dashed line, comparing every item with every other, grows fastest of all.</div>
 </section>
 
 <!-- ================= Which first ================= -->
 <section class="anim" id="first">
-  <button class="replay">↻ Replay</button>
   <h2>Many tasks? Convert the biggest gap first</h2>
-  <p class="take">You know your volume. The hidden part is the shape of the line.</p>
+  <p class="take">Four example tasks. Press play: the lines draw, then the marker walks to each firm's volume and shows what converting would save in a year.</p>
   <div class="grid4" id="panels"></div>
+  <div class="means">👉 <b>What this shows:</b> converting saves the most where today's line is steep and your volume is high (green bars). At low volume, building the script can cost more than it saves. If every item still needs an LLM, converting saves little.</div>
 </section>
 
 <!-- ================= Hybrid patterns ================= -->
 <section class="anim" id="patterns">
-  <button class="replay">↻ Replay</button>
   <h2>Split the work</h2>
-  <p class="take">Send the LLM only the slice that needs judgment.</p>
+  <p class="take">Each pattern starts with the LLM doing every step. Press play: the steps a script can do turn blue, and the chart shows the LLM tokens that are left.</p>
   <div class="grid2" id="pipes"></div>
+  <div class="means">👉 <b>What this shows:</b> every step a script takes over flattens the token line. What remains is the LLM's share: the step that needs judgment. In the last pattern, the LLM's work happens once, so nothing is left per run.</div>
 </section>
 
 <!-- ================= Demo ================= -->
 <section class="anim" id="demo">
-  <button class="replay">↻ Replay</button>
   <h2>Demo: lines sent to the LLM each month</h2>
   <p class="take">Running a finished script uses no tokens. Keep what it prints short.</p>
   <div class="grid2">
     <div class="card">
       <div class="pname">🏦 Match bank lines to the ledger</div>
-      <div class="dbar"><span style="color:var(--ai);font-weight:700">🤖 All AI</span><div class="trackbar"><div class="fill" data-w="75" style="background:var(--ai)"></div></div><span class="num" data-n="30">0</span></div>
+      <div class="dbar"><span style="color:var(--ai);font-weight:700">🤖 All AI 💸</span><div class="trackbar"><div class="fill" data-w="75" style="background:var(--ai)"></div></div><span class="num" data-n="30">0</span></div>
       <div class="dbar"><span style="color:var(--script);font-weight:700">📜 Script</span><div class="trackbar"><div class="fill" data-w="0" style="background:var(--script)"></div></div><span class="num" data-n="0">0</span></div>
+      <div class="verdict good">✅ 30 → 0 lines: 🟢 free every month after</div>
     </div>
     <div class="card">
       <div class="pname">💳 Categorize credit card lines</div>
-      <div class="dbar"><span style="color:var(--ai);font-weight:700">🤖 All AI</span><div class="trackbar"><div class="fill" data-w="100" style="background:var(--ai)"></div></div><span class="num" data-n="40">0</span></div>
+      <div class="dbar"><span style="color:var(--ai);font-weight:700">🤖 All AI 💸</span><div class="trackbar"><div class="fill" data-w="100" style="background:var(--ai)"></div></div><span class="num" data-n="40">0</span></div>
       <div class="dbar"><span style="color:var(--hybrid);font-weight:700">🔀 Hybrid</span><div class="trackbar"><div class="fill" data-w="22.5" style="background:var(--hybrid)"></div></div><span class="num" data-n="9">0</span></div>
+      <div class="verdict good">✅ 40 → 9 lines: 💰 about 4× less to the LLM</div>
     </div>
   </div>
+  <div class="means">👉 <b>What this shows:</b> matching bank lines needs no judgment, so a script does all of it and nothing goes to the LLM. Categorizing card lines needs judgment for 9 of the 40, so only those 9 go to the LLM.</div>
 </section>
 
 <!-- ================= Controls ================= -->
-<section class="anim" id="controls">
-  <button class="replay">↻ Replay</button>
+<section id="controls">
   <h2>Ask for the controls you'd expect anywhere else</h2>
   <p class="take">You can't read the code. You can ask for these.</p>
   <div class="grid5">
@@ -320,6 +346,7 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
     <div class="card ctl"><div class="ico">📦</div><div class="nm">What it installs and sends</div><div class="tw">= <b>vendor due diligence</b></div></div>
     <div class="card ctl"><div class="ico">🧪</div><div class="nm">Tests saved, rerun after changes</div><div class="tw">= <b>re-performing a test</b></div></div>
   </div>
+  <div class="means">👉 <b>What this shows:</b> each control is something you already expect in accounting. Ask Claude to build them into every script.</div>
 </section>
 
 <!-- ================= Prompts ================= -->
@@ -350,121 +377,239 @@ function every(key, ms, fn) { (timers[key] = timers[key] || []).push(setInterval
 function later(key, ms, fn) { (timers[key] = timers[key] || []).push(setTimeout(fn, ms)); }
 function stop(key) { (timers[key] || []).forEach(function (t) { clearInterval(t); clearTimeout(t); }); timers[key] = []; }
 
+// ======================================================================
+// Every animation is a timeline: render(t) draws the panel at time t (seconds).
+// The control bar under each panel plays, pauses, replays and scrubs it.
+// ======================================================================
+function clamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
+function ramp(t, start, len) { return clamp((t - start) / len, 0, 1); }
+function lerp(a, b, k) { return a + (b - a) * k; }
+
 // ---------- lanes ----------
-function startLanes() {
-  var sec = document.getElementById("lanes");
-  sec.querySelectorAll(".doc").forEach(function (d) { d.remove(); });
-  var lanes = sec.querySelectorAll(".lane"), n = 0;
-  lanes.forEach(function (l) { l.querySelector(".meter b").textContent = "0"; l._count = 0; });
-  function spawn() {
-    n++;
-    lanes.forEach(function (lane) {
-      var kind = lane.dataset.kind, track = lane.querySelector(".track");
-      var d = document.createElement("span");
-      d.className = "doc go"; d.textContent = "📄";
-      var judged = kind === "hybrid" && n % 4 === 0;
-      if (judged) d.classList.add("judge");
-      track.appendChild(d);
-      d.addEventListener("animationend", function () { d.remove(); });
-      if (kind === "ai" || judged) {
-        later("lanes", kind === "ai" ? 2100 : 2600, function () {
-          var b = lane.querySelector(".meter b");
-          lane._count++; b.textContent = lane._count;
-          b.classList.add("bump"); setTimeout(function () { b.classList.remove("bump"); }, 200);
-        });
-      }
-    });
-    if (n >= 20) stop("lanesSpawn");
+var LANE_DOCS = 16, LANE_GAP = 1.3, LANE_TRAVEL = 5;
+function laneBursts(kind) {
+  var out = [];
+  for (var n = 1; n <= LANE_DOCS; n++) {
+    var s = (n - 1) * LANE_GAP;
+    if (kind === "ai") out.push(s + 2.35);
+    if (kind === "hybrid" && n % 4 === 0) out.push(s + 3.1);
   }
-  spawn();
-  every("lanesSpawn", 1000, spawn);
+  return out;
+}
+function buildLanes() {
+  document.querySelectorAll("#lanes .lane").forEach(function (lane) {
+    var kind = lane.dataset.kind, track = lane.querySelector(".track");
+    lane._docs = []; lane._coins = []; lane._bursts = laneBursts(kind);
+    for (var n = 1; n <= LANE_DOCS; n++) {
+      var d = document.createElement("span");
+      d.className = "doc"; d.textContent = "📄"; d.style.opacity = 0;
+      d._judge = kind === "hybrid" && n % 4 === 0;
+      d._start = (n - 1) * LANE_GAP;
+      track.appendChild(d); lane._docs.push(d);
+    }
+    lane._bursts.forEach(function (bt) {
+      ["🪙", "💵"].forEach(function (e, k) {
+        var c = document.createElement("span");
+        c.className = "coin"; c.textContent = e; c.style.opacity = 0;
+        c._t = bt + k * 0.12; c._k = k;
+        track.appendChild(c); lane._coins.push(c);
+      });
+    });
+  });
+}
+function renderLanes(t) {
+  document.querySelectorAll("#lanes .lane").forEach(function (lane) {
+    var kind = lane.dataset.kind, track = lane.querySelector(".track");
+    var w = track.clientWidth, base = kind === "hybrid" ? 104 : 40;
+    lane._docs.forEach(function (d) {
+      var p = (t - d._start) / LANE_TRAVEL;
+      if (p < 0 || p > 1) { d.style.opacity = 0; return; }
+      d.style.left = lerp(70, w - 90, p) + "px";
+      d.style.opacity = Math.min(p / 0.06, (1 - p) / 0.1, 1);
+      var top = base;
+      if (d._judge) {
+        if (p >= 0.4 && p < 0.52) top = lerp(104, 36, (p - 0.4) / 0.12);
+        else if (p >= 0.52 && p < 0.72) top = 36;
+        else if (p >= 0.72 && p < 0.82) top = lerp(36, 104, (p - 0.72) / 0.1);
+      }
+      d.style.top = top + "px";
+    });
+    var st = lane.querySelector(".station.ai"), meter = lane.querySelector(".meter");
+    if (st) {
+      var tr = track.getBoundingClientRect(), sr = st.getBoundingClientRect(), mr = meter.getBoundingClientRect();
+      lane._coins.forEach(function (c) {
+        var q = (t - c._t) / 1.4;
+        if (q < 0 || q > 1) { c.style.opacity = 0; return; }
+        var x0 = sr.left - tr.left + sr.width / 2 - 13 + c._k * 18, y0 = sr.top - tr.top - 6;
+        var x1 = mr.left - tr.left + 20 + c._k * 22, y1 = mr.top - tr.top + 4;
+        var x, y, sc, op;
+        if (q < 0.15) { var k = q / 0.15; x = x0; y = y0 - 18 * k; sc = lerp(0.6, 1.2, k); op = k; }
+        else { var k2 = (q - 0.15) / 0.85; x = lerp(x0, x1, k2); y = lerp(y0 - 18, y1, k2); sc = lerp(1.2, 0.8, k2); op = 1 - k2 * k2; }
+        c.style.left = x + "px"; c.style.top = y + "px"; c.style.opacity = op; c.style.transform = "scale(" + sc + ")";
+      });
+      st.classList.toggle("lit", lane._bursts.some(function (b) { return t >= b && t < b + 0.5; }));
+    }
+    var count = lane._bursts.filter(function (b) { return t >= b + 1.1; }).length;
+    meter.querySelector("b").textContent = count;
+    meter.classList.toggle("bump", lane._bursts.some(function (b) { return t >= b + 1.1 && t < b + 1.55; }));
+  });
 }
 
-// ---------- same inputs ----------
+// ---------- run it again ----------
 var LLM_ANSWERS = [
   "Revenue fell 8% on two delayed invoices.",
   "Mostly timing: two invoices slipped into April.",
   "Lower billings, driven by delayed client invoices.",
   "An 8% dip, explained by invoice timing.",
 ];
-function startSame() {
-  var sr = document.getElementById("sumRuns"), lr = document.getElementById("llmRuns");
-  var so = document.getElementById("sumOut"), lo = document.getElementById("llmOut");
-  sr.innerHTML = ""; lr.innerHTML = ""; var i = 0, first = null;
-  function run() {
-    i++;
-    so.classList.remove("flash"); void so.offsetWidth; so.classList.add("flash");
-    var a = LLM_ANSWERS[(i - 1) % LLM_ANSWERS.length];
-    lo.style.opacity = 0;
-    setTimeout(function () { lo.textContent = a; lo.style.opacity = 1; }, 250);
-    if (first === null) first = a;
-    sr.insertAdjacentHTML("beforeend", '<span class="same">Run ' + i + ': same ✓</span>');
-    lr.insertAdjacentHTML("beforeend", '<span class="' + (i === 1 ? "same" : "diff") + '">Run ' + i + (i === 1 ? ": first" : ": different") + "</span>");
-    if (i >= 4) stop("same");
+function buildSame() {
+  var sh = document.getElementById("sumHist"), lh = document.getElementById("llmHist");
+  for (var i = 1; i <= 4; i++) {
+    sh.insertAdjacentHTML("beforeend", '<div class="hrow"><span class="n">Run ' + i + '</span><span class="v">4,300</span><span class="t ' + (i === 1 ? "first" : "same") + '">' + (i === 1 ? "first run" : "same ✓") + "</span></div>");
+    lh.insertAdjacentHTML("beforeend", '<div class="hrow"><span class="n">Run ' + i + '</span><span class="v">' + LLM_ANSWERS[i - 1] + '</span><span class="t ' + (i === 1 ? "first" : "diff") + '">' + (i === 1 ? "first run" : "different ✗") + "</span></div>");
   }
-  run(); every("same", 2200, run);
+}
+function renderSame(t) {
+  ["sumHist", "llmHist"].forEach(function (id) {
+    document.querySelectorAll("#" + id + " .hrow").forEach(function (r, k) {
+      var a = ramp(t, 0.5 + k * 2.4, 0.8);
+      r.style.opacity = a; r.style.transform = "translateY(" + (8 * (1 - a)) + "px)";
+    });
+  });
 }
 
-// ---------- what a script can't do ----------
+// ---------- a script looks in the same place ----------
+var SHEETS = [["Jan", "1,200", "450", "462"], ["Feb", "3,100", "75", "493"], ["Mar", "980", "1,020", "431"]];
+var LEASES = [
+  ["LEASE AGREEMENT", 1, "4. Rent: $4,250 / month", true],
+  ["Commercial Lease", 6, "Sched. B: Base Charge 51,000/yr*", false],
+  ["Sublease", 4, "Occupancy fee: see Exhibit C", false],
+];
 function buildCant() {
   var sheets = document.getElementById("sheets"), leases = document.getElementById("leases");
-  [["Jan", "1,200", "450"], ["Feb", "3,100", "75"], ["Mar", "980", "1,020"]].forEach(function (m) {
+  SHEETS.forEach(function (m) {
     sheets.insertAdjacentHTML("beforeend",
-      '<div class="sheet"><div class="cap">📊 ' + m[0] + ' export</div><table><tr><th>A</th><th>B</th><th>C · Amount</th></tr>' +
-      '<tr><td>1010</td><td>Rent</td><td class="col">' + m[1] + '</td></tr><tr><td>1020</td><td>Supplies</td><td class="col">' + m[2] +
-      '</td></tr><tr><td>1030</td><td>Travel</td><td class="col">' + (400 + m[0].length * 31) + '</td></tr><tr><td>1040</td><td>Software</td><td class="col">' + (90 + m[1].length * 7) + "</td></tr></table></div>");
+      '<div><div class="mini"><div class="ttl">' + m[0] + ' export</div><table><tr><th>A</th><th>C · Amt</th></tr>' +
+      '<tr><td>1010</td><td class="col">' + m[1] + '</td></tr><tr><td>1020</td><td class="col">' + m[2] +
+      '</td></tr><tr><td>1030</td><td class="col">' + m[3] + '</td></tr></table>' +
+      '<div class="spot"></div></div><div class="result" style="color:var(--good)">📜 Found it ✓</div></div>');
   });
-  sheets.insertAdjacentHTML("beforeend", '<div class="verdict" style="color:var(--good)">📜 Found it every time ✓</div>');
-  var L = [
-    ["LEASE AGREEMENT", 1, "4. Rent: $4,250 / month"],
-    ["Commercial Lease", 5, "Sched. B: Base Charge 51,000/yr*"],
-    ["Sublease", 3, "Occupancy fee, see Exhibit C"],
-  ];
-  L.forEach(function (l) {
+  LEASES.forEach(function (l) {
     var bars = "";
-    for (var k = 0; k < 9; k++) {
-      bars += k === l[1] ? '<div class="rent">' + l[2] + "</div>" : '<div class="bar" style="width:' + (55 + (k * 37) % 45) + '%"></div>';
-    }
-    leases.insertAdjacentHTML("beforeend", '<div class="lease"><div class="ttl">' + l[0] + "</div>" + bars + "</div>");
+    for (var k = 0; k < 9; k++) bars += k === l[1] ? '<div class="rent">' + l[2] + "</div>" : '<div class="bar" style="width:' + (55 + (k * 37) % 45) + '%"></div>';
+    var res = l[3] ? '<span style="color:var(--good)">📜 Found it ✓</span>'
+      : '<span style="color:var(--ai)">📜 Missed it ✗</span><br><span class="llm" style="color:var(--good)">🤖 LLM reads it ✓</span>';
+    leases.insertAdjacentHTML("beforeend",
+      '<div><div class="mini"><div class="ttl">' + l[0] + "</div>" + bars + '<div class="spot"></div></div><div class="result">' + res + "</div></div>");
   });
-  leases.insertAdjacentHTML("beforeend", '<div class="verdict" id="leaseVerdict"></div>');
 }
-function startCant() {
-  var sh = document.querySelectorAll("#sheets .sheet"), le = document.querySelectorAll("#leases .lease");
-  var v = document.getElementById("leaseVerdict"), i = 0;
-  var msgs = ['<span style="color:var(--good)">📜 Found it ✓</span>', '<span style="color:var(--ai)">📜 Not there ✗ · 🤖 reads it ✓</span>', '<span style="color:var(--ai)">📜 Not there ✗ · 🤖 reads it ✓</span>'];
-  function show() {
-    sh.forEach(function (s, k) { s.classList.toggle("on", k === i % 3); });
-    le.forEach(function (s, k) { s.classList.toggle("on", k === i % 3); });
-    v.innerHTML = msgs[i % 3];
-    i++;
-  }
-  show(); every("cant", 2400, show);
+function placeSpots() {
+  // The script always looks where the amount sits in the first document.
+  var cell = document.querySelector("#sheets .mini .col"), mini = cell.closest(".mini");
+  var col = mini.querySelectorAll(".col"), first = col[0], lastc = col[col.length - 1];
+  document.querySelectorAll("#sheets .spot").forEach(function (sp) {
+    sp.style.left = (first.offsetLeft + 10) + "px"; sp.style.right = "auto";
+    sp.style.width = (first.offsetWidth + 6) + "px";
+    sp.style.top = (first.offsetTop + first.closest("table").offsetTop - 4) + "px";
+    sp.style.height = (lastc.offsetTop + lastc.offsetHeight - first.offsetTop + 8) + "px";
+  });
+  var rent = document.querySelector("#leases .mini .rent");
+  document.querySelectorAll("#leases .spot").forEach(function (sp) {
+    sp.style.top = (rent.offsetTop - 5) + "px"; sp.style.height = (rent.offsetHeight + 10) + "px";
+  });
+}
+function renderCant(t) {
+  [document.querySelectorAll("#sheets > div"), document.querySelectorAll("#leases > div")].forEach(function (col) {
+    col.forEach(function (c, k) {
+      c.querySelector(".spot").style.opacity = ramp(t, 0.5 + k * 1.8, 0.5);
+      c.querySelector(".result").style.opacity = ramp(t, 1.2 + k * 1.8, 0.6);
+      var llm = c.querySelector(".llm");
+      if (llm) llm.style.opacity = ramp(t, 1.9 + k * 1.8, 0.6);
+    });
+  });
 }
 
-// ---------- hard inputs ----------
-var FLIPS = [
-  ["📄", "Text PDF", "📷", "Tilted phone photo"],
-  ["🏷️", "Amazon", "🔤", '<span class="mono">AMZN Mktp US*RT5<br>AMAZON.COM*2X4LK9</span>'],
-  ["📋", "5 vendor rules", "📜", "417 rules, still missing cases"],
-  ["📊", "Clean export", "🧩", "Merged cells, totals mid-table"],
-  ["🧾", "Total at the bottom", "🔁", "Vendor moved the Total"],
-  ["📁", "One file each", "🔒", "Duplicates, locked PDFs"],
+// ---------- hard inputs: each card morphs from what we picture to what arrives ----------
+var HARD = [
+  ["📄 Text PDF", "📷 Tilted phone photo", "photo"],
+  ["🏷️ One vendor name", "🔤 Five spellings of it", "names"],
+  ["📋 A few vendor rules", "📜 417 rules, still missing cases", "rules"],
+  ["📊 Clean export", "🧩 Merged title, two headers, subtotal mid-table", "export"],
+  ["🧾 Total at the bottom", "🔁 Vendor moved the Total", "invoice"],
+  ["📁 One file each", "🔒 Duplicates and locked PDFs", "files"],
 ];
+var NAMES = ["AMAZON.COM*2X4LK9", "AMZN Mktp US*RT5", "Amazon.com", "AMZN DIGITAL", "Amazon Web Svcs"];
+var RULES = ['"AMZN" → Supplies', '"AMAZON" → Supplies', '"UBER" → Travel', '"UBER EATS" → Meals', '"SQ *" → ???', '"TST*" → Meals?', '… 411 more'];
+function hardVisual(kind) {
+  var lines = function (n) { var h = ""; for (var i = 0; i < n; i++) h += '<div class="bar" style="width:' + (55 + (i * 37) % 45) + '%"></div>'; return h; };
+  if (kind === "photo") return '<div class="hv photo"><div class="pg"><div class="ttl">STATEMENT</div>' + lines(6) + '<div class="smudge"></div></div></div>';
+  if (kind === "names") return '<div class="hv names">' + NAMES.map(function (n) { return '<div class="nm"><span class="a">Amazon</span><span class="b mono">' + n + "</span></div>"; }).join("") + "</div>";
+  if (kind === "rules") return '<div class="hv rules"><div class="cnt"><b class="rc">5</b> rules</div>' + RULES.map(function (r, i) { return '<div class="rl mono' + (r.indexOf("?") >= 0 || r[0] === "…" ? " bad" : "") + '">' + r + "</div>"; }).join("") + "</div>";
+  if (kind === "export") return '<div class="hv export"><table><tr class="x merged"><td colspan="3">ACME – GL DETAIL</td></tr><tr class="x"><td colspan="3">Fiscal year 2026</td></tr><tr class="hd"><td>Acct</td><td>Desc</td><td>Amt</td></tr><tr><td>1010</td><td>Rent</td><td>4,250</td></tr><tr class="x sub"><td colspan="2">Subtotal Q1</td><td>12,750</td></tr><tr><td>1020</td><td>Supplies</td><td>482</td></tr></table></div>';
+  if (kind === "invoice") return '<div class="hv invoice"><div class="pg"><div class="ttl">INVOICE</div>' + lines(5) + '<div class="tot">Total $1,284.00</div><div class="look"></div></div></div>';
+  return '<div class="hv files"><div class="pg f1">📄<br>inv_0412.pdf</div><div class="pg f2">📄<br>inv_0412 (1).pdf</div><div class="pg f3">📄<br>inv_0413.pdf<div class="lock">🔒</div></div></div>';
+}
 function buildFlips() {
   var box = document.getElementById("flips");
-  FLIPS.forEach(function (f) {
-    box.insertAdjacentHTML("beforeend",
-      '<div class="flip"><div class="inner"><div class="face front"><div class="tag">Typical</div><div class="ico">' + f[0] +
-      '</div><div class="lab">' + f[1] + '</div></div><div class="face back"><div class="tag">⚠️ Hard</div><div class="ico">' + f[2] +
-      '</div><div class="lab">' + f[3] + "</div></div></div></div>");
+  HARD.forEach(function (h) {
+    box.insertAdjacentHTML("beforeend", '<div class="th" data-kind="' + h[2] + '">' + hardVisual(h[2]) +
+      '<div class="pair"><div class="typ"><div class="tag">We picture</div>' + h[0] + '</div><div class="arr">→</div><div class="hrd"><div class="tag">⚠️ What arrives</div>' + h[1] + "</div></div></div>");
   });
-  box.querySelectorAll(".flip").forEach(function (c) { c.addEventListener("click", function () { c.classList.toggle("flipped"); }); });
 }
-function startFlips() {
-  var cards = document.querySelectorAll("#flips .flip");
-  cards.forEach(function (c) { c.classList.remove("flipped"); });
-  cards.forEach(function (c, k) { later("hard", 700 + k * 700, function () { c.classList.add("flipped"); }); });
+function renderFlips(t) {
+  document.querySelectorAll("#flips .th").forEach(function (c, k) {
+    var a = ramp(t, 0.5 + k * 1.2, 1.2), e = a * a * (3 - 2 * a), kind = c.dataset.kind;
+    c.style.borderColor = a > 0.5 ? "var(--warn)" : "";
+    c.querySelector(".hrd").style.opacity = 0.3 + 0.7 * e;
+    c.querySelector(".arr").style.opacity = 0.3 + 0.7 * e;
+    if (kind === "photo") {
+      var pg = c.querySelector(".pg");
+      pg.style.transform = "rotate(" + (-13 * e) + "deg) scale(" + (1 - 0.08 * e) + ")";
+      pg.style.filter = "blur(" + (1.1 * e) + "px) brightness(" + (1 - 0.18 * e) + ")";
+      c.querySelector(".hv").style.background = "rgb(" + Math.round(lerp(13, 107, e)) + "," + Math.round(lerp(17, 79, e)) + "," + Math.round(lerp(23, 58, e)) + ")";
+      c.querySelector(".smudge").style.opacity = e;
+    } else if (kind === "names") {
+      c.querySelectorAll(".nm").forEach(function (n, i) {
+        var q = ramp(e, i * 0.12, 0.5);
+        n.querySelector(".a").style.opacity = 1 - q; n.querySelector(".b").style.opacity = q;
+      });
+    } else if (kind === "rules") {
+      var rows = c.querySelectorAll(".rl"), show = 2 + Math.round(e * (rows.length - 2));
+      rows.forEach(function (r, i) { r.style.opacity = i < show ? 1 : 0; });
+      c.querySelector(".rc").textContent = Math.round(lerp(5, 417, e * e));
+    } else if (kind === "export") {
+      c.querySelectorAll("tr.x").forEach(function (r) { r.style.opacity = e; });
+      c.querySelector("tr.sub").style.background = "rgba(210,153,34," + (0.45 * e) + ")";
+    } else if (kind === "invoice") {
+      var tot = c.querySelector(".tot"), look = c.querySelector(".look");
+      tot.style.top = lerp(118, 26, e) + "px";
+      look.style.opacity = e;
+    } else if (kind === "files") {
+      var f2 = c.querySelector(".f2");
+      f2.style.opacity = e; f2.style.transform = "translate(" + (lerp(-30, 0, e)) + "px, 0)";
+      c.querySelector(".lock").style.opacity = e;
+    }
+  });
+}
+
+// ---------- charts: lines draw, labels fade in ----------
+function renderDraw(sec, t) {
+  sec.querySelectorAll(".draw").forEach(function (p) {
+    var delay = p.classList.contains("d2") ? 0.5 : p.classList.contains("d3") ? 1 : p.classList.contains("d4") ? 1.5 : 0;
+    var k = ramp(t, delay, 2.2), e = 1 - Math.pow(1 - k, 3);
+    if (p.classList.contains("d4") && k >= 1) { p.style.strokeDasharray = "0.012 0.01"; p.style.strokeDashoffset = 0; }
+    else { p.style.strokeDasharray = 1; p.style.strokeDashoffset = 1 - e; }
+  });
+  sec.querySelectorAll(".pop").forEach(function (g) {
+    g.style.opacity = ramp(t, g.classList.contains("late") ? 3.2 : 2.6, 0.5);
+  });
+}
+
+// ---------- demo bars ----------
+function renderDemo(t) {
+  var k = ramp(t, 0.3, 1.6), e = 1 - Math.pow(1 - k, 3);
+  document.querySelectorAll("#demo .fill").forEach(function (f) { f.style.width = (+f.dataset.w * e) + "%"; });
+  document.querySelectorAll("#demo .num").forEach(function (n) { n.textContent = Math.round(+n.dataset.n * e); });
 }
 
 // ---------- charts ----------
@@ -477,94 +622,199 @@ function pathOf(fn, X, Y) {
   }
   return d;
 }
+// Hypothetical numbers, chosen only to show magnitude:
+// 5,000 tokens per document through the LLM; 300,000 tokens to build a script;
+// hybrid sends 1 document in 10 to the LLM; comparing two documents costs 20 tokens;
+// $10 per million tokens.
+var COST = {
+  maxDocs: 1000, maxTok: 5.5e6, perDoc: 5000, build: 3e5, share: 0.1, perPair: 20, perMillion: 10,
+  ai: function (n) { return n * 5000; },
+  script: function () { return 3e5; },
+  hybrid: function (n) { return 3e5 + 0.1 * n * 5000; },
+  pairs: function (n) { return n * (n - 1) / 2 * 20; },
+};
+function fmtTok(x) { return x >= 1e6 ? (x / 1e6).toFixed(x >= 1e7 ? 0 : 1) + "M" : Math.round(x / 1000) + "k"; }
+function fmtUsd(x) { var d = x / 1e6 * COST.perMillion; return "$" + (d >= 100 ? Math.round(d).toLocaleString() : d.toFixed(2)); }
 function costChart() {
-  var W = 1100, H = 420, x0 = 90, y0 = 30, w = 700, h = 330;
-  var X = function (v) { return x0 + v / 100 * w; }, Y = function (c) { return y0 + h - c / 100 * h; };
-  var build = 22;
-  var s = '<svg viewBox="0 0 ' + W + " " + H + '" style="width:100%;max-width:1200px;display:block">';
-  for (var k = 0; k <= 5; k++) s += '<line x1="' + x0 + '" x2="' + (x0 + w) + '" y1="' + (y0 + k * h / 5) + '" y2="' + (y0 + k * h / 5) + '" stroke="' + C.line + '"/>';
+  var W = 1200, H = 470, x0 = 120, y0 = 30, w = 700, h = 360;
+  var X = function (n) { return x0 + n / COST.maxDocs * w; }, Y = function (tok) { return y0 + h - tok / COST.maxTok * h; };
+  var s = '<svg viewBox="0 0 ' + W + " " + H + '" style="width:100%;max-width:1250px;display:block">';
+  for (var k = 0; k <= 5; k++) {
+    var tok = k * 1e6, yy = Y(tok);
+    s += '<line x1="' + x0 + '" x2="' + (x0 + w) + '" y1="' + yy + '" y2="' + yy + '" stroke="' + C.line + '"/>';
+    s += '<text x="' + (x0 - 10) + '" y="' + (yy - 2) + '" fill="' + C.muted + '" font-size="13" text-anchor="end">' + (k ? k + "M tokens" : "0") + '</text>';
+    if (k) s += '<text x="' + (x0 - 10) + '" y="' + (yy + 14) + '" fill="' + C.good + '" font-size="13" font-weight="700" text-anchor="end">' + fmtUsd(tok) + "</text>";
+  }
+  for (var d = 0; d <= COST.maxDocs; d += 250) {
+    s += '<text x="' + X(d) + '" y="' + (y0 + h + 20) + '" fill="' + C.muted + '" font-size="13" text-anchor="middle">' + d.toLocaleString() + "</text>";
+  }
   s += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + (y0 + h) + '" stroke="' + C.muted + '" stroke-width="2"/>';
   s += '<line x1="' + x0 + '" y1="' + (y0 + h) + '" x2="' + (x0 + w) + '" y2="' + (y0 + h) + '" stroke="' + C.muted + '" stroke-width="2"/>';
-  s += '<text x="30" y="' + (y0 + h / 2) + '" fill="' + C.text + '" font-size="20" font-weight="700" text-anchor="middle" transform="rotate(-90 30 ' + (y0 + h / 2) + ')">Tokens and $$$</text>';
-  s += '<text x="' + (x0 + w / 2) + '" y="' + (y0 + h + 34) + '" fill="' + C.text + '" font-size="17" font-weight="700" text-anchor="middle">Volume: records processed, run after run →</text>';
-  var lines = [
-    [function (v) { return 0.012 * v * v; }, C.warn, "d4", "6 5"],
-    [function (v) { return 0.9 * v; }, C.ai, "d1", ""],
-    [function (v) { return build + 0.15 * v; }, C.hybrid, "d2", ""],
-    [function () { return build; }, C.script, "d3", ""],
-  ];
-  lines.forEach(function (l) {
-    s += '<path class="draw ' + l[2] + '" pathLength="1" d="' + pathOf(l[0], X, Y) + '" fill="none" stroke="' + l[1] + '" stroke-width="5"' + (l[3] ? ' stroke-dasharray="1"' : "") + "/>";
+  s += '<text x="22" y="' + (y0 + h / 2) + '" fill="' + C.text + '" font-size="19" font-weight="700" text-anchor="middle" transform="rotate(-90 22 ' + (y0 + h / 2) + ')">Tokens and <tspan fill="' + C.good + '">$</tspan> in a year</text>';
+  s += '<text x="' + (x0 + w / 2) + '" y="' + (y0 + h + 46) + '" fill="' + C.text + '" font-size="16" font-weight="700" text-anchor="middle">Documents processed in a year →</text>';
+  function path(fn) {
+    var d = "";
+    for (var i = 0; i <= 200; i++) {
+      var n = i / 200 * COST.maxDocs, v = fn(n);
+      if (v > COST.maxTok) break;
+      d += (i ? "L" : "M") + X(n).toFixed(1) + "," + Y(v).toFixed(1);
+    }
+    return d;
+  }
+  [[COST.pairs, C.warn, "d4"], [COST.ai, C.ai, "d1"], [COST.hybrid, C.hybrid, "d2"], [COST.script, C.script, "d3"]].forEach(function (l) {
+    s += '<path class="draw ' + l[2] + '" pathLength="1" d="' + path(l[0]) + '" fill="none" stroke="' + l[1] + '" stroke-width="5"/>';
   });
-  var be = build / 0.9;
-  s += '<g class="pop"><circle cx="' + X(be) + '" cy="' + Y(build) + '" r="9" fill="#0d1117" stroke="' + C.text + '" stroke-width="3"/>';
-  s += '<text x="' + (X(be) + 4) + '" y="' + (Y(build) + 34) + '" fill="' + C.text + '" font-size="16" font-weight="700">Break-even</text></g>';
-  var lx = x0 + w + 18;
+  var be = COST.build / COST.perDoc;
+  s += '<g class="pop"><circle cx="' + X(be) + '" cy="' + Y(COST.build) + '" r="8" fill="#0d1117" stroke="' + C.text + '" stroke-width="3"/>';
+  s += '<text x="' + (X(be) - 8) + '" y="' + (Y(COST.build) - 46) + '" fill="' + C.text + '" font-size="15" font-weight="700">Break-even: ' + be + ' documents</text>' +
+       '<line x1="' + X(be) + '" y1="' + (Y(COST.build) - 40) + '" x2="' + X(be) + '" y2="' + (Y(COST.build) - 10) + '" stroke="' + C.text + '" stroke-width="2"/></g>';
+  var lx = x0 + w + 16;
   s += '<g class="pop late">';
-  s += '<text x="' + lx + '" y="' + (Y(90) + 6) + '" fill="' + C.ai + '" font-size="19" font-weight="800">🤖 AI in the loop</text><text x="' + lx + '" y="' + (Y(90) + 28) + '" fill="' + C.muted + '" font-size="15">variable: every item, every run</text>';
-  s += '<text x="' + (X(70)) + '" y="' + (y0 + 10) + '" fill="' + C.warn + '" font-size="16" font-weight="800" text-anchor="end">🤖 compares every item with every other</text>';
-  s += '<text x="' + lx + '" y="' + (Y(build + 15) + 6) + '" fill="' + C.hybrid + '" font-size="19" font-weight="800">🔀 Hybrid</text><text x="' + lx + '" y="' + (Y(build + 15) + 28) + '" fill="' + C.muted + '" font-size="15">fixed + a small variable</text>';
-  s += '<text x="' + lx + '" y="' + (Y(build) + 30) + '" fill="' + C.script + '" font-size="19" font-weight="800">📜 Scripting</text><text x="' + lx + '" y="' + (Y(build) + 52) + '" fill="' + C.muted + '" font-size="15">fixed: build once, then flat</text>';
-  s += "</g></svg>";
-  document.getElementById("costChart").innerHTML = s;
+  s += '<text x="' + lx + '" y="' + (Y(COST.ai(COST.maxDocs)) + 6) + '" fill="' + C.ai + '" font-size="18" font-weight="800">🤖 AI in the loop</text><text x="' + lx + '" y="' + (Y(COST.ai(COST.maxDocs)) + 26) + '" fill="' + C.muted + '" font-size="14">🔴 💸 5,000 tokens every document</text>';
+  s += '<text x="' + (X(560)) + '" y="' + (y0 + 14) + '" fill="' + C.warn + '" font-size="15" font-weight="800" text-anchor="end">⚠️ 💸💸 AI compares every pair</text>';
+  s += '<text x="' + lx + '" y="' + (Y(COST.hybrid(COST.maxDocs)) - 4) + '" fill="' + C.hybrid + '" font-size="18" font-weight="800">🔀 Hybrid</text><text x="' + lx + '" y="' + (Y(COST.hybrid(COST.maxDocs)) + 16) + '" fill="' + C.muted + '" font-size="14">🟡 build once + 1 doc in 10</text>';
+  s += '<text x="' + lx + '" y="' + (Y(COST.build) + 26) + '" fill="' + C.script + '" font-size="18" font-weight="800">📜 Scripting</text><text x="' + lx + '" y="' + (Y(COST.build) + 46) + '" fill="' + C.muted + '" font-size="14">🟢 300k tokens to build, then flat</text>';
+  s += "</g>";
+  // The volume marker moves left to right; the readout shows the values there.
+  s += '<g id="volMark" opacity="0"><line id="volLine" y1="' + y0 + '" y2="' + (y0 + h) + '" stroke="' + C.text + '" stroke-width="2" stroke-dasharray="5 4"/>';
+  s += '<circle id="volDot" cy="' + (y0 + h) + '" r="9" fill="' + C.text + '"/></g>';
+  s += "</svg>";
+  s += '<div id="volRead" class="readout"></div>';
+  s += '<p class="small">Hypothetical numbers to show magnitude: 5,000 tokens per document, 300,000 tokens to build a script, $10 per million tokens. Your numbers will differ.</p>';
+  var box = document.getElementById("costChart");
+  box.innerHTML = s;
+  box._X = X;
 }
+function renderCost(t) {
+  var sec = document.getElementById("cost");
+  renderDraw(sec, t);
+  var k = ramp(t, 4, 7), e = k * k * (3 - 2 * k), n = Math.round(e * COST.maxDocs);
+  var mark = document.getElementById("volMark"), X = document.getElementById("costChart")._X;
+  mark.setAttribute("opacity", t >= 4 ? 1 : 0);
+  document.getElementById("volLine").setAttribute("x1", X(n)); document.getElementById("volLine").setAttribute("x2", X(n));
+  document.getElementById("volDot").setAttribute("cx", X(n));
+  var rows = [["📜 Scripting", COST.script(n), C.script], ["🔀 Hybrid", COST.hybrid(n), C.hybrid], ["🤖 AI in the loop", COST.ai(n), C.ai], ["⚠️ AI compares every pair", COST.pairs(n), C.warn]];
+  document.getElementById("volRead").innerHTML = t < 4 ? "" :
+    '<div class="rhead">At <b>' + n.toLocaleString() + "</b> documents a year</div>" +
+    rows.map(function (r) { return '<div class="rrow"><span style="color:' + r[2] + ';font-weight:800">' + r[0] + '</span><span>' + fmtTok(r[1]) + ' tokens</span><span class="usd">' + fmtUsd(r[1]) + "</span></div>"; }).join("");
+}
+
 // The dashed every-item-against-every-other line needs its own dash pattern after drawing.
+// Hypothetical yearly costs in dollars ($10 per million tokens), chosen to show magnitude.
 var PANELS = [
-  ["💳", "Categorize card lines", "3,000 lines a month", function (v) { return 0.9 * v; }, function (v) { return 18 + 0.12 * v; }, 80, "Large", C.good],
-  ["🔁", "Find duplicate payments", "5,000 payments a year", function (v) { return 0.011 * v * v; }, function (v) { return 15 + 0.1 * v; }, 80, "Largest", C.good],
-  ["🧾", "Pull W-2 amounts", "15 forms a year", function (v) { return 0.9 * v; }, function () { return 45; }, 15, "Not yet", C.warn],
-  ["✉️", "Answer client emails", "30 emails a month", function (v) { return 0.8 * v; }, function (v) { return 6 + 0.8 * v; }, 60, "None", C.muted],
+  { ico: "💳", title: "Categorize card lines", vol: "3,000 lines a month", unit: "lines", you: 36000, max: 45000,
+    pic: '<div class="pic stmt"><div><span>AMZN Mktp US*RT5</span><b>38.12</b></div><div><span>UBER *TRIP</span><b>23.80</b></div><div><span>SQ *BLUE HERON</span><b>9.75</b></div></div>',
+    today: function (n) { return n * 0.01; }, after: function (n) { return 3 + n * 0.001; }, badge: "🟢 Large return", color: C.good },
+  { ico: "🔁", title: "Find duplicate payments", vol: "5,000 payments a year", unit: "payments", you: 5000, max: 5600,
+    pic: '<div class="pic dup"><div class="chip">INV-0412 · ACME Inc · $1,284.00</div><div class="chip">INV-0412 · Acme, Inc. · $1,284.00</div></div>',
+    today: function (n) { return n * (n - 1) / 2 * 20 / 1e6 * 10; }, after: function (n) { return 3 + n * 0.002; }, badge: "🟢🟢 Largest return", color: C.good },
+  { ico: "🧾", title: "Pull W-2 amounts", vol: "15 forms a year", unit: "forms", you: 15, max: 150,
+    pic: '<div class="pic w2"><div class="hd">W-2 Wage and Tax Statement</div><div><span>1 Wages</span><b>52,400.00</b></div><div><span>2 Fed. tax withheld</span><b>6,118.00</b></div></div>',
+    today: function (n) { return n * 0.03; }, after: function (n) { return 3 + n * 0.002; }, badge: "🟠 Not yet", color: C.warn },
+  { ico: "✉️", title: "Answer client emails", vol: "30 emails a month", unit: "emails", you: 360, max: 450,
+    pic: '<div class="pic mail">hi! quick q, we moved the shop to my sister\'s garage in march, do we still deduct the lease?</div>',
+    today: function (n) { return n * 0.04; }, after: function (n) { return 3 + n * 0.04; }, badge: "⚪ No return", color: C.muted },
 ];
+function money(d) { return "$" + (d >= 100 ? Math.round(d).toLocaleString() : d.toFixed(2)); }
 function panels() {
   var box = document.getElementById("panels"), html = "";
-  PANELS.forEach(function (p) {
-    var W = 320, H = 210, x0 = 20, y0 = 10, w = 290, h = 170;
-    var X = function (v) { return x0 + v / 100 * w; }, Y = function (c) { return y0 + h - c / 100 * h; };
-    var you = p[5], ct = p[3](you), ca = p[4](you);
+  PANELS.forEach(function (p, i) {
+    var W = 330, H = 250, x0 = 52, y0 = 12, w = 262, h = 160;
+    var top = Math.max(p.today(p.max), p.after(p.max)) * 1.05;
+    var X = function (n) { return x0 + n / p.max * w; }, Y = function (d) { return y0 + h - Math.min(d, top) / top * h; };
+    p._X = X; p._Y = Y;
+    function path(fn) { var d = ""; for (var k = 0; k <= 120; k++) { var n = k / 120 * p.max; d += (k ? "L" : "M") + X(n).toFixed(1) + "," + Y(fn(n)).toFixed(1); } return d; }
     var s = '<svg viewBox="0 0 ' + W + " " + H + '" style="width:100%">';
     s += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + (y0 + h) + '" stroke="' + C.muted + '" stroke-width="2"/><line x1="' + x0 + '" y1="' + (y0 + h) + '" x2="' + (x0 + w) + '" y2="' + (y0 + h) + '" stroke="' + C.muted + '" stroke-width="2"/>';
-    s += '<path class="draw d1" pathLength="1" d="' + pathOf(p[3], X, Y) + '" fill="none" stroke="' + C.ai + '" stroke-width="4"/>';
-    s += '<path class="draw d2" pathLength="1" d="' + pathOf(p[4], X, Y) + '" fill="none" stroke="' + C.hybrid + '" stroke-width="4"/>';
-    s += '<g class="pop"><line x1="' + X(you) + '" y1="' + y0 + '" x2="' + X(you) + '" y2="' + (y0 + h) + '" stroke="' + C.text + '" stroke-dasharray="4 4" stroke-width="2"/>';
-    s += '<text x="' + X(you) + '" y="' + (y0 + h + 18) + '" fill="' + C.text + '" font-size="14" font-weight="800" text-anchor="middle">you</text>';
-    if (Math.abs(ct - ca) > 8) s += '<line x1="' + (X(you) + 8) + '" y1="' + Y(Math.min(ct, 100)) + '" x2="' + (X(you) + 8) + '" y2="' + Y(ca) + '" stroke="' + (ct > ca ? C.good : C.warn) + '" stroke-width="7"/>';
-    s += "</g></svg>";
-    html += '<div class="card"><div class="pname">' + p[0] + " " + p[1] + '</div><div class="small">' + p[2] + "</div>" + s +
-      '<div style="text-align:center"><span class="badge" style="color:' + p[7] + ";border-color:" + p[7] + '">Return: ' + p[6] + "</span></div></div>";
+    s += '<text x="' + (x0 - 6) + '" y="' + (y0 + 10) + '" fill="' + C.good + '" font-size="12" font-weight="700" text-anchor="end">' + money(top) + '</text><text x="' + (x0 - 6) + '" y="' + (y0 + h) + '" fill="' + C.good + '" font-size="12" font-weight="700" text-anchor="end">$0</text>';
+    s += '<text x="14" y="' + (y0 + h / 2) + '" fill="' + C.text + '" font-size="12" font-weight="700" text-anchor="middle" transform="rotate(-90 14 ' + (y0 + h / 2) + ')"><tspan fill="' + C.good + '">$</tspan> in a year</text>';
+    s += '<text x="' + x0 + '" y="' + (y0 + h + 16) + '" fill="' + C.muted + '" font-size="12" text-anchor="middle">0</text><text x="' + (x0 + w) + '" y="' + (y0 + h + 32) + '" fill="' + C.muted + '" font-size="12" text-anchor="end">' + p.max.toLocaleString() + '</text>';
+    s += '<text x="' + (x0 + w / 2) + '" y="' + (y0 + h + 50) + '" fill="' + C.text + '" font-size="12" font-weight="700" text-anchor="middle">' + p.unit + ' in a year →</text>';
+    s += '<path class="draw d1" pathLength="1" d="' + path(p.today) + '" fill="none" stroke="' + C.ai + '" stroke-width="4"/>';
+    s += '<path class="draw d2" pathLength="1" d="' + path(p.after) + '" fill="none" stroke="' + C.hybrid + '" stroke-width="4"/>';
+    s += '<g class="mk" opacity="0"><line class="mline" y1="' + y0 + '" y2="' + (y0 + h) + '" stroke="' + C.text + '" stroke-dasharray="4 4" stroke-width="2"/>';
+    s += '<line class="gap" stroke-width="7"/><text class="you" y="' + (y0 + h + 16) + '" fill="' + C.text + '" font-size="13" font-weight="800" text-anchor="middle">you</text></g>';
+    s += "</svg>";
+    html += '<div class="card wf" data-i="' + i + '"><div class="pname">' + p.ico + " " + p.title + '</div><div class="small">' + p.vol + "</div>" + p.pic + s +
+      '<div class="wread"></div><div style="text-align:center;min-height:34px"><span class="badge" style="opacity:0;color:' + p.color + ";border-color:" + p.color + '">' + p.badge + "</span></div></div>";
   });
-  box.innerHTML = '<div class="small" style="grid-column:1/-1;margin-top:-8px"><span style="color:' + C.ai + ';font-weight:700">━ today (all AI)</span> &nbsp; <span style="color:' + C.hybrid + ';font-weight:700">━ after converting</span> &nbsp; <span style="color:' + C.good + ';font-weight:700">▌ saved</span></div>' + html;
+  box.innerHTML = '<div class="small" style="grid-column:1/-1;margin-top:-8px"><span style="color:' + C.ai + ';font-weight:700">━ today: all AI 💸</span> &nbsp; <span style="color:' + C.hybrid + ';font-weight:700">━ after converting</span> &nbsp; <span style="color:' + C.good + ';font-weight:700">▌ saved</span> &nbsp; <span style="color:' + C.warn + ';font-weight:700">▌ costs more</span> &nbsp; Hypothetical $ at $10 per million tokens.</div>' + html;
+}
+function renderPanels(t) {
+  var sec = document.getElementById("first");
+  renderDraw(sec, t);
+  sec.querySelectorAll(".wf").forEach(function (card) {
+    var p = PANELS[+card.dataset.i], k = ramp(t, 2.4, 3), e = k * k * (3 - 2 * k), n = Math.round(e * p.you);
+    var mk = card.querySelector(".mk"), x = p._X(n), a = p.today(n), b = p.after(n);
+    mk.setAttribute("opacity", t >= 2.4 ? 1 : 0);
+    var ml = card.querySelector(".mline"); ml.setAttribute("x1", x); ml.setAttribute("x2", x);
+    card.querySelector(".you").setAttribute("x", x);
+    var g = card.querySelector(".gap");
+    g.setAttribute("x1", x + 7); g.setAttribute("x2", x + 7); g.setAttribute("y1", p._Y(a)); g.setAttribute("y2", p._Y(b));
+    g.setAttribute("stroke", a >= b ? C.good : C.warn); g.setAttribute("opacity", Math.abs(p._Y(a) - p._Y(b)) > 3 ? 1 : 0);
+    var diff = a - b;
+    card.querySelector(".wread").innerHTML = t < 2.4 ? "" :
+      '<div><span style="color:' + C.ai + '">Today</span> <b>' + money(a) + '</b></div><div><span style="color:' + C.hybrid + '">After</span> <b>' + money(b) + "</b></div>" +
+      '<div><span style="color:' + (diff >= 0 ? C.good : C.warn) + '">' + (diff >= 0 ? "Saved" : "Costs more") + '</span> <b style="color:' + (diff >= 0 ? C.good : C.warn) + '">' + money(Math.abs(diff)) + "</b></div>";
+    card.querySelector(".badge").style.opacity = ramp(t, 5.6, 0.6);
+  });
 }
 
 // ---------- hybrid patterns ----------
+// Each pattern starts with every step done by the LLM. On play, the steps that a
+// script can do turn blue one by one, and the chart shows the tokens that remain.
+// [icon, label, final kind ("a" stays LLM, "s" becomes a script, "o" LLM once, then script), share of today's tokens]
 var PIPES = [
-  ["AI extracts → script processes", [["a", "📄", "messy PDFs"], ["a", "🤖", "pull fields"], ["s", "⚙️", "check + total"], ["s", "📊", "Excel form"]]],
-  ["Script filters → AI judges", [["s", "🏦", "all lines"], ["s", "⚙️", "reconcile"], ["a", "🤖", "explain exceptions"], ["s", "✉️", "client note"]]],
-  ["Rules first → AI for leftovers", [["s", "💳", "3,000 lines"], ["s", "⚙️", "vendor rules"], ["a", "🤖", "leftovers only"], ["s", "➕", "new rules"]]],
-  ["AI first → promote to a script", [["a", "🤖", "do it a few times"], ["a", "🔎", "spot the pattern"], ["s", "📜", "write the script"], ["s", "♻️", "no tokens per run"]]],
+  ["AI extracts → script processes", [["📄", "read messy PDFs", "a", 0.35], ["🤖", "pull fields", "a", 0.25], ["⚙️", "check + total", "s", 0.2], ["📊", "fill Excel form", "s", 0.2]]],
+  ["Script filters → AI judges", [["🏦", "load all lines", "s", 0.4], ["⚙️", "reconcile", "s", 0.35], ["🤖", "explain exceptions", "a", 0.15], ["✉️", "client note", "s", 0.1]]],
+  ["Rules first → AI for leftovers", [["💳", "read 3,000 lines", "s", 0.3], ["⚙️", "apply vendor rules", "s", 0.4], ["🤖", "leftovers only", "a", 0.2], ["➕", "save new rules", "s", 0.1]]],
+  ["AI first → promote to a script", [["🤖", "AI does it a few times", "o", 0.4], ["🔎", "spot the pattern", "o", 0.2], ["📜", "write the script", "s", 0.2], ["♻️", "script runs it after", "s", 0.2]]],
 ];
+var PIPE_STEP = 1.1, PIPE_START = 0.8;
 function pipes() {
   var html = "";
   PIPES.forEach(function (p, k) {
-    var nodes = p[1].map(function (n) { return '<div class="node ' + n[0] + '"><span class="i">' + n[1] + "</span>" + n[2] + "</div>"; }).join('<span class="arrow">→</span>');
-    html += '<div class="card"><div class="pname">' + p[0] + '</div><div class="pipe"><span class="dot" style="animation-delay:' + (k * 0.6) + 's"></span>' + nodes + "</div></div>";
+    var nodes = p[1].map(function (n) { return '<div class="node a" data-final="' + n[2] + '"><span class="i">' + n[0] + "</span>" + n[1] + '<span class="who">🤖 LLM</span></div>'; }).join('<span class="arrow">→</span>');
+    html += '<div class="card pcard" data-k="' + k + '"><div class="pname">' + p[0] + '</div><div class="pipe">' + nodes + "</div>" +
+      '<div class="pchart"><svg viewBox="0 0 300 150" style="width:100%"></svg><div class="pread"></div></div></div>';
   });
   document.getElementById("pipes").innerHTML = html;
 }
-
-// ---------- demo bars ----------
-function startDemo() {
-  document.querySelectorAll("#demo .fill").forEach(function (f) { f.style.width = "0"; });
-  document.querySelectorAll("#demo .num").forEach(function (n) { n.textContent = "0"; });
-  later("demo", 150, function () {
-    document.querySelectorAll("#demo .fill").forEach(function (f) { f.style.width = f.dataset.w + "%"; });
-    document.querySelectorAll("#demo .num").forEach(function (n) {
-      var target = +n.dataset.n, t0 = performance.now();
-      (function tick(t) {
-        var k = Math.min(1, (t - t0) / 1600);
-        n.textContent = Math.round(target * k);
-        if (k < 1) requestAnimationFrame(tick);
-      })(t0);
+function pipeState(p, t) {
+  // How far each convertible step has turned into a script, in order.
+  var j = 0, remaining = 0, built = 0;
+  p[1].forEach(function (n) {
+    var k = 0;
+    if (n[2] !== "a") { k = ramp(t, PIPE_START + j * PIPE_STEP, 0.8); j++; }
+    n._k = k;
+    remaining += n[3] * (1 - k);
+    built += (n[2] !== "a" ? 1 : 0) * k;
+  });
+  return { remaining: remaining, build: 0.08 * built };
+}
+function renderPipes(t) {
+  document.querySelectorAll("#pipes .pcard").forEach(function (card) {
+    var p = PIPES[+card.dataset.k], st = pipeState(p, t);
+    card.querySelectorAll(".node").forEach(function (el, i) {
+      var n = p[1][i], k = n._k, fin = n[2];
+      var col = fin === "o" ? "#8b949e" : C.script;
+      el.style.borderColor = k > 0.5 ? col : C.ai;
+      el.style.color = k > 0.5 ? col : C.ai;
+      el.style.background = "rgba(" + (k > 0.5 ? (fin === "o" ? "139,148,158" : "88,166,255") : "248,81,73") + "," + (0.08 + 0.1 * Math.sin(Math.PI * k)) + ")";
+      el.querySelector(".who").textContent = k > 0.5 ? (fin === "o" ? "🤖 once, then done" : "📜 script") : "🤖 LLM";
     });
+    var W = 300, H = 150, x0 = 34, y0 = 8, w = 250, h = 110;
+    var X = function (v) { return x0 + v * w; }, Y = function (c) { return y0 + h - Math.min(c, 1) * h; };
+    var s = '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + (y0 + h) + '" stroke="' + C.muted + '" stroke-width="2"/><line x1="' + x0 + '" y1="' + (y0 + h) + '" x2="' + (x0 + w) + '" y2="' + (y0 + h) + '" stroke="' + C.muted + '" stroke-width="2"/>';
+    s += '<text x="12" y="' + (y0 + h / 2) + '" fill="' + C.text + '" font-size="11" font-weight="700" text-anchor="middle" transform="rotate(-90 12 ' + (y0 + h / 2) + ')">LLM tokens</text>';
+    s += '<text x="' + (x0 + w / 2) + '" y="' + (y0 + h + 22) + '" fill="' + C.text + '" font-size="11" font-weight="700" text-anchor="middle">documents processed →</text>';
+    s += '<line x1="' + X(0) + '" y1="' + Y(0) + '" x2="' + X(1) + '" y2="' + Y(1) + '" stroke="' + C.ai + '" stroke-width="3" stroke-dasharray="5 4" opacity=".55"/>';
+    s += '<line x1="' + X(0) + '" y1="' + Y(st.build) + '" x2="' + X(1) + '" y2="' + Y(st.build + st.remaining) + '" stroke="' + C.hybrid + '" stroke-width="4"/>';
+    s += '<text x="' + (X(1) - 40) + '" y="' + (Y(1) + 6) + '" fill="' + C.ai + '" font-size="11" text-anchor="end">all LLM (before)</text>';
+    card.querySelector("svg").innerHTML = s;
+    var pct = Math.round(st.remaining * 100), good = pct <= 30;
+    card.querySelector(".pread").innerHTML = '<div class="small">Tokens per run vs. all LLM</div><div class="big" style="color:' + (pct >= 99 ? C.ai : good ? C.good : C.warn) + '">' + pct + '%</div><div class="small">' +
+      (pct >= 99 ? "🔴 💸 every step uses tokens" : pct === 0 ? "🟢 no tokens per run" : good ? "🟢 most of the work is free" : "🟡 the LLM still does the heavy part") + "</div>";
   });
 }
 
@@ -623,36 +873,53 @@ function votes() {
   });
 }
 
-// ---------- start each panel when it scrolls into view ----------
-var STARTERS = { lanes: startLanes, same: startSame, cant: startCant, hard: startFlips, demo: startDemo };
-function play(sec) {
-  stop(sec.id); stop(sec.id + "Spawn");
-  sec.classList.remove("in"); void sec.offsetWidth; sec.classList.add("in");
-  if (STARTERS[sec.id]) STARTERS[sec.id]();
+// ---------- the control bar: play / pause, replay, scrub ----------
+var TIMELINES = {
+  lanes: { dur: (LANE_DOCS - 1) * LANE_GAP + LANE_TRAVEL + 1.6, render: renderLanes },
+  same: { dur: 9, render: renderSame },
+  cant: { dur: 7.2, render: renderCant },
+  hard: { dur: 8, render: renderFlips },
+  cost: { dur: 11.5, render: renderCost },
+  first: { dur: 6.5, render: renderPanels },
+  patterns: { dur: PIPE_START + 3 * PIPE_STEP + 1.4, render: renderPipes },
+  demo: { dur: 2.2, render: renderDemo },
+};
+function fmt(s) { return (Math.floor(s / 60)) + ":" + ("0" + Math.floor(s % 60)).slice(-2); }
+function makeControls(sec) {
+  var tl = TIMELINES[sec.id];
+  var bar = document.createElement("div");
+  bar.className = "ctrl";
+  bar.innerHTML = '<button class="play" title="Play or pause">▶</button><button class="again" title="Back to the start">⏮</button>' +
+    '<input type="range" min="0" max="1000" value="0" aria-label="Scrub through the animation"><span class="time">0:00 / ' + fmt(tl.dur) + "</span>";
+  sec.appendChild(bar);
+  var play = bar.querySelector(".play"), again = bar.querySelector(".again"), range = bar.querySelector("input"), time = bar.querySelector(".time");
+  var t = 0, playing = false, last = 0;
+  function draw() {
+    tl.render(t);
+    range.value = Math.round(t / tl.dur * 1000);
+    time.textContent = fmt(t) + " / " + fmt(tl.dur);
+    play.textContent = playing ? "⏸ Pause" : (t >= tl.dur ? "▶ Play again" : (t > 0 ? "▶ Resume" : "▶ Play"));
+    play.classList.toggle("idle", !playing);
+  }
+  function tick(now) {
+    if (!playing) return;
+    t += (now - last) / 1000; last = now;
+    if (t >= tl.dur) { t = tl.dur; playing = false; }
+    draw();
+    if (playing) requestAnimationFrame(tick);
+  }
+  function start() { if (t >= tl.dur) t = 0; playing = true; last = performance.now(); draw(); requestAnimationFrame(tick); }
+  play.onclick = function () { if (playing) { playing = false; draw(); } else start(); };
+  again.onclick = function () { playing = false; t = 0; draw(); };
+  range.oninput = function () { playing = false; t = range.value / 1000 * tl.dur; draw(); };
+  sec._start = start;
+  sec._showEnd = function () { t = tl.dur; draw(); };
+  draw();
 }
-buildCant(); buildFlips(); costChart(); panels(); pipes(); prompts(); votes();
-// The every-item-against-every-other curve is dashed once drawn.
-document.querySelectorAll("#costChart .d4").forEach(function (p) {
-  p.addEventListener("animationend", function () { p.style.strokeDasharray = "0.012 0.01"; });
-});
-document.querySelectorAll("section.anim").forEach(function (sec) {
-  sec.querySelector(".replay").addEventListener("click", function () { play(sec); });
-});
-if (REDUCED || !("IntersectionObserver" in window)) {
-  document.querySelectorAll("section.anim").forEach(function (sec) {
-    sec.classList.add("in");
-    if (sec.id === "demo") startDemo();
-    if (sec.id === "cant") { startCant(); stop("cant"); }
-    if (sec.id === "hard") document.querySelectorAll("#flips .flip").forEach(function (c) { c.classList.add("flipped"); });
-  });
-} else {
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (en) {
-      if (en.isIntersecting && !en.target._played) { en.target._played = true; play(en.target); }
-    });
-  }, { threshold: 0.35 });
-  document.querySelectorAll("section.anim").forEach(function (sec) { io.observe(sec); });
-}
+buildLanes(); buildSame(); buildCant(); placeSpots(); window.addEventListener('resize', placeSpots); buildFlips(); costChart(); panels(); pipes(); prompts(); votes();
+document.querySelectorAll("section.anim").forEach(makeControls);
+// Nothing plays on its own: each panel waits for its Play button.
 </script>
+
 </body>
 </html>

@@ -13,7 +13,6 @@
 - AI helping you **build** a script doesn't make it AI in the loop.
 - Writing tests and sample data with AI is part of building, so it's scripting too.
 
-> 📜 **Scripting in action:** every diagram in these materials was drawn by a script an LLM wrote (`images/make_illustrations.py`). Now a person or any LLM can change the script, and redrawing every diagram uses no tokens.
 
 ## What "deterministic" means
 

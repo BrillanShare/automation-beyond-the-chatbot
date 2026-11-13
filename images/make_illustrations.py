@@ -82,7 +82,9 @@ def wave(x, y, w, amp, pattern):
     for i in range(int(w)):
         a = pattern(i)
         pts.append(f"{x + i},{y - a * amp:.1f}")
-    return f'<polyline points="{" ".join(pts)}" fill="none" stroke="#8fd3ff" stroke-width="1.6"/>\n'
+    # class "wiggle" gives the waveform a subtle, slow pulse (see data_types)
+    return (f'<polyline class="wiggle" style="transform-origin:{x + w / 2}px {y}px" points="{" ".join(pts)}" '
+            f'fill="none" stroke="#8fd3ff" stroke-width="1.6"/>\n')
 
 
 def arrow(x1, y1, x2, y2, color=MUTED):
@@ -174,6 +176,9 @@ def data_types():
     b += t(770, y + 58, "Client voicemail:", 13, TEXT)
     b += t(770, y + 76, "a punctuated", 13, TEXT)
     b += t(770, y + 94, "transcript", 13, TEXT)
+    b = ('<style>.wiggle{animation:wig 1.6s ease-in-out infinite}'
+         '@keyframes wig{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.8)}}'
+         '@media (prefers-reduced-motion: reduce){.wiggle{animation:none}}</style>\n') + b
     return svg(960, 650, "Data type doesn't decide the bucket", b)
 
 
