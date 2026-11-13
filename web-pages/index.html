@@ -41,6 +41,8 @@ a { color: var(--script); }
 .ctrl button.play { background: #1f6feb; border-color: #1f6feb; width: auto; height: 42px; padding: 0 22px; font-size: 18px; font-weight: 800; }
 .ctrl button.play.idle { box-shadow: 0 0 0 4px #1f6feb44; }
 .ctrl input[type=range] { flex: 1; accent-color: #58a6ff; height: 6px; cursor: pointer; }
+.ctrl.cardbar { margin: 10px 0; padding: 6px 10px; gap: 8px; }
+.ctrl.cardbar button.play { height: 36px; padding: 0 16px; font-size: 16px; }
 .ctrl .time { font-family: Consolas, Menlo, monospace; font-size: 13px; color: var(--muted); min-width: 92px; text-align: right; }
 
 /* ---------- plain-language takeaway under each visual ---------- */
@@ -390,7 +392,7 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 <!-- ================= Controls ================= -->
 <section class="anim" id="controls">
   <h2>Ask for the controls you'd expect anywhere else</h2>
-  <p class="take">You can't read the code, but you can ask for these. ✅ The starter CLAUDE.md already asks Claude for all ten. Each card shows a prompt to check or fix a script you already have, ready to edit and copy (same numbers as the prompt card).</p>
+  <p class="take">You can't read the code, but you can ask for these. ✅ The starter CLAUDE.md already asks Claude for all ten. Press ▶ on any card to play its story. Each card shows a prompt to check or fix a script you already have, ready to edit and copy (same numbers as the prompt card).</p>
   <div class="ctlgrid">
 
     <div class="card ctl2" data-p="13">
@@ -518,15 +520,6 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 
   </div>
   <div class="means">👉 <b>What this shows:</b> each control is something you already expect in accounting. The starter CLAUDE.md asks for all of them; the prompt on each card checks or fixes a script you already have.</div>
-</section>
-
-<!-- ================= Demo ================= -->
-<section class="anim" id="demo">
-  <h2>Demo: where each line goes</h2>
-  <p class="take">Press play: each line drops into the LLM row or the script row, and the total row adds them up.</p>
-  <div class="grid2" id="demoCards"></div>
-  <div class="means">👉 <b>What this shows:</b> matching bank lines needs no judgment, so the script does every line and the total is all blue: 🟢 nothing goes to the LLM. Categorizing card lines needs judgment for 9 of the 40, so hybrid sends only those 9 to the LLM: 💰 about 4× fewer tokens than all AI.</div>
-  <p class="small" style="margin:10px 0 0">Running a finished script uses no tokens. Keep what it prints short, because anything Claude reads back uses tokens.</p>
 </section>
 
 <!-- ================= Prompts ================= -->
@@ -821,53 +814,6 @@ function renderDraw(sec, t) {
   });
 }
 
-// ---------- demo: each line drops into the LLM row or the script row ----------
-var DEMOS = [
-  { title: "🏦 Match bank lines to the ledger", n: 30, setups: [["🤖 All AI", function () { return "a"; }], ["📜 All script", function () { return "s"; }]],
-    verdict: '<div class="verdict good">✅ 30 → 0 lines to the LLM: 🟢 free every month after</div>' },
-  { title: "💳 Categorize credit card lines", n: 40, setups: [["🤖 All AI", function () { return "a"; }], ["🔀 Hybrid", function (i) { return [3, 8, 12, 17, 21, 26, 30, 34, 38].indexOf(i) >= 0 ? "a" : "s"; }]],
-    verdict: '<div class="verdict good">✅ 40 → 9 lines to the LLM: 💰 about 4× fewer tokens</div>' },
-];
-var DEMO_GAP = 0.13;
-function buildDemo() {
-  var box = document.getElementById("demoCards"), html = "";
-  DEMOS.forEach(function (d, di) {
-    html += '<div class="card"><div class="pname">' + d.title + '</div><div class="setups">';
-    d.setups.forEach(function (st, si) {
-      html += '<div class="setup" data-d="' + di + '" data-s="' + si + '"><div class="sname">' + st[0] + "</div>" +
-        '<div class="crow"><span class="cl" style="color:var(--ai)">🤖 LLM</span><div class="cells a"></div><b class="cn a">0</b></div>' +
-        '<div class="crow"><span class="cl" style="color:var(--script)">📜 Script</span><div class="cells s"></div><b class="cn s">0</b></div>' +
-        '<div class="crow total"><span class="cl">= Total</span><div class="cells t"></div><b class="cn t">0</b></div></div>';
-    });
-    html += "</div>" + d.verdict + "</div>";
-  });
-  box.innerHTML = html;
-  document.querySelectorAll("#demo .setup").forEach(function (el) {
-    var d = DEMOS[+el.dataset.d], st = d.setups[+el.dataset.s];
-    for (var i = 0; i < d.n; i++) {
-      var kind = st[1](i);
-      var c = document.createElement("span"); c.className = "cell " + kind; c.style.opacity = 0;
-      el.querySelector(".cells." + kind).appendChild(c);
-      var tc = document.createElement("span"); tc.className = "cell " + kind; tc.style.opacity = 0;
-      el.querySelector(".cells.t").appendChild(tc);
-      c._t = tc._t = 0.4 + i * DEMO_GAP;
-    }
-  });
-}
-function renderDemo(t) {
-  document.querySelectorAll("#demo .setup").forEach(function (el) {
-    ["a", "s", "t"].forEach(function (k) {
-      var n = 0;
-      el.querySelectorAll(".cells." + k + " .cell").forEach(function (c) {
-        var q = ramp(t, c._t + (k === "t" ? 0.25 : 0), 0.35);
-        c.style.opacity = q; c.style.transform = "translate(" + (-24 * (1 - q)) + "px," + (k === "t" ? -14 * (1 - q) : 0) + "px)";
-        if (q >= 1) n++;
-      });
-      el.querySelector(".cn." + k).textContent = n;
-    });
-  });
-}
-
 // ---------- charts ----------
 function pathOf(fn, X, Y) {
   var d = "";
@@ -1100,20 +1046,21 @@ function buildControls() {
   });
 }
 var MONTHS = ["Nov 13, 2026", "Dec 1, 2026", "Dec 15, 2026", "Jan 1, 2027", "Jan 20, 2027", "Feb 3, 2027"];
-function renderControls(t) {
-  document.querySelectorAll("#controls [data-at]").forEach(function (el) {
+// Each controls card has its own Play bar, so this draws one card at time t.
+function renderControls(card, t) {
+  card.querySelectorAll("[data-at]").forEach(function (el) {
     var a = ramp(t, +el.dataset.at, 0.5);
     el.style.opacity = a; el.style.transform = "translateY(" + (6 * (1 - a)) + "px)";
   });
-  document.querySelectorAll("#controls [data-shake]").forEach(function (el) {
+  card.querySelectorAll("[data-shake]").forEach(function (el) {
     var q = t - +el.dataset.shake;
     el.style.transform = q > 0 && q < 0.4 ? "scale(1.35)" : "scale(1)";
   });
-  document.querySelectorAll("#controls [data-wreck]").forEach(function (el) {
+  card.querySelectorAll("[data-wreck]").forEach(function (el) {
     var a = ramp(t, +el.dataset.wreck, 0.5);
     el.style.transform = "rotate(" + (-6 * a) + "deg)";
   });
-  var d = document.querySelector("#controls .today");
+  var d = card.querySelector(".today");
   if (d) {
     var i = Math.min(MONTHS.length - 1, Math.floor(ramp(t, 0.6, 2.2) * (MONTHS.length - 1) + 0.0001));
     d.textContent = MONTHS[i];
@@ -1195,17 +1142,15 @@ var TIMELINES = {
   cost: { dur: 11.5, render: renderCost },
   first: { dur: FIRST_START + 3 * FIRST_STEP + 3.2, render: renderPanels },
   patterns: { dur: PIPE_START + 3 * PIPE_STEP + 1.4, render: renderPipes },
-  demo: { dur: 0.4 + 40 * DEMO_GAP + 1, render: renderDemo },
-  controls: { dur: 4.2, render: renderControls },
 };
 function fmt(s) { return (Math.floor(s / 60)) + ":" + ("0" + Math.floor(s % 60)).slice(-2); }
-function makeControls(sec) {
-  var tl = TIMELINES[sec.id];
+function makeControls(sec, tl, before) {
+  tl = tl || TIMELINES[sec.id];
   var bar = document.createElement("div");
-  bar.className = "ctrl";
+  bar.className = before ? "ctrl cardbar" : "ctrl";
   bar.innerHTML = '<button class="play" title="Play or pause">▶</button><button class="again" title="Back to the start">⏮</button>' +
     '<input type="range" min="0" max="1000" value="0" aria-label="Scrub through the animation"><span class="time">0:00 / ' + fmt(tl.dur) + "</span>";
-  sec.appendChild(bar);
+  if (before) sec.insertBefore(bar, before); else sec.appendChild(bar);
   var play = bar.querySelector(".play"), again = bar.querySelector(".again"), range = bar.querySelector("input"), time = bar.querySelector(".time");
   var t = 0, playing = false, last = 0;
   function draw() {
@@ -1230,8 +1175,12 @@ function makeControls(sec) {
   sec._showEnd = function () { t = tl.dur; draw(); };
   draw();
 }
-buildLanes(); buildDemo(); buildControls(); buildDtypes(); buildSame(); buildCant(); placeSpots(); window.addEventListener('resize', placeSpots); buildFlips(); costChart(); panels(); pipes(); prompts(); votes();
-document.querySelectorAll("section.anim").forEach(makeControls);
+buildLanes(); buildControls(); buildDtypes(); buildSame(); buildCant(); placeSpots(); window.addEventListener('resize', placeSpots); buildFlips(); costChart(); panels(); pipes(); prompts(); votes();
+document.querySelectorAll("section.anim").forEach(function (sec) { if (TIMELINES[sec.id]) makeControls(sec); });
+// The controls cards each play their own story.
+document.querySelectorAll("#controls .ctl2").forEach(function (card) {
+  makeControls(card, { dur: 4.2, render: function (t) { renderControls(card, t); } }, card.querySelector(".bottom"));
+});
 // Show each prompt in full: grow every box to fit its text.
 document.querySelectorAll(".pbox textarea").forEach(function (ta) { ta.style.height = "auto"; ta.style.height = (ta.scrollHeight + 4) + "px"; });
 // Nothing plays on its own: each panel waits for its Play button.
