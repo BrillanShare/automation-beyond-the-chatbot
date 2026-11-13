@@ -276,18 +276,23 @@ button.btn:disabled { opacity: .5; cursor: default; }
 .vote .task { font-weight: 700; font-size: 16px; min-height: 48px; }
 .vote .hint { font-size: 14px; color: var(--muted); margin-top: 6px; }
 .vote .ans { margin-top: 8px; }
-.vote .row { display: flex; gap: 8px; margin-top: 10px; }
+.vote .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 10px; }
+.vote { display: flex; flex-direction: column; }
+.vote .scales { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 4px 0 2px; }
+.vote .sc { background: #0d1117; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 13px; font-weight: 700; cursor: pointer; }
+.vote .sc.on { color: var(--text); border-color: #58a6ff; background: #1f6feb33; }
+.vote .sc.static { cursor: default; }
+.vote .vplot { margin-top: 6px; }
+.vote .vleg { font-size: 13px; font-weight: 700; margin-top: 2px; }
 footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--muted); font-size: 15px; }
 
 /* ---------- a treat for reaching the bottom ---------- */
-.pond { position: relative; max-width: 1500px; margin: 0 auto; height: 70px; overflow: hidden; }
-.frog { position: absolute; bottom: 6px; left: 0; font-size: 30px; animation: hopAcross 14s linear infinite alternate; }
-.frog::after { content: ""; }
-@keyframes hopAcross { from { left: 2%; } to { left: 94%; } }
-.frog { --h: 0; }
-.pond .frog { animation: hopAcross 14s linear infinite alternate, hop .7s ease-out infinite; }
-@keyframes hop { 0%, 100% { bottom: 6px; } 45% { bottom: 34px; } }
-@media (prefers-reduced-motion: reduce) { .pond .frog { animation: none; left: 48%; } }
+.pond { position: relative; max-width: 1500px; margin: 0 auto; height: 80px; overflow: hidden; }
+.frog { position: absolute; bottom: 6px; left: 4%; font-size: 32px; }
+/* Hops across once each time the reader reaches the very bottom. */
+.pond.go .frog { animation: hopAcross 3.2s linear forwards, hop .64s ease-in-out 5; }
+@keyframes hopAcross { from { left: 4%; } to { left: 90%; } }
+@keyframes hop { 0%, 100% { bottom: 6px; } 45% { bottom: 40px; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -548,7 +553,7 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 <!-- ================= Vote ================= -->
 <section>
   <h2>Sort these: which bucket?</h2>
-  <p class="take">Vote first, then hints, then the answer. The buckets:
+  <p class="take">Pick a volume, vote, then use the hints, the plot or the answer. Switch the volume: for some tasks the answer changes. The buckets:
     <span class="chip c-script">📜 Scripting</span> <span class="chip c-hybrid">🔀 Hybrid</span> <span class="chip c-ai">🤖 AI in the loop</span>
     · Not hard and fast: the details and your volume can change the answer.</p>
   <div class="grid4" id="votes"></div>
@@ -556,10 +561,10 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 
 </main>
 
-<div class="pond" aria-hidden="true" title="You made it to the bottom!"><span class="frog">🐸</span></div>
 <footer>
   Full text: <a href="../cheat-sheet.md">cheat sheet</a> · <a href="../handout.md">handout</a> · <a href="../demo.md">demo</a> · <a href="../prompt-card.md">prompt card</a> · <a href="../starter-claude-md/CLAUDE.md">starter CLAUDE.md</a> · <a href="../homework.md">homework</a> · <a href="text.html">all of it on one page</a>
 </footer>
+<div class="pond" aria-hidden="true" title="You made it to the bottom!"><span class="frog">🐸</span></div>
 
 <script>
 var REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1182,38 +1187,103 @@ function prompts() {
 }
 
 // ---------- vote ----------
-// [icon, task, hints, buckets (in order of likelihood), why, how volume changes it]
+// Each task can come at more than one volume, and the answer can change with it.
+// cost: hypothetical tokens in a year for n items, one function per design that fits.
+// scales: [label, items a year, buckets (most likely first), why]
+function pairs(n) { return n * (n - 1) / 2; }
 var VOTES = [
-  ["⏰", "Email clients 30 days before their deadline", ["Where do the deadlines come from?", "Same wording for every client?"], ["s"], "Fixed rule: deadline minus 30 days, same template.", "Any volume: a script, since nothing needs judgment."],
-  ["✍️", "A personal year-end note to each client", ["Which part pulls figures, which part writes?", "New wording each time?"], ["h"], "The script pulls each client's figures; AI writes the note from only those.", "A few clients: just ask AI. Hundreds: hybrid keeps the tokens to the writing."],
-  ["🔁", "Flag possible duplicate payments", ["Same number and amount twice?", "\"ACME Inc\" vs \"Acme, Inc.\"?"], ["s", "h"], "Exact matches are rules. Near-matches (spelling, a cent off) may need AI for the leftovers.", "Thousands of payments: comparing every pair with AI explodes in cost, so script first."],
-  ["🎙️", "Voicemails → tasks with name and due date", ["Speech to text: LLM or local model?", "Picking out a due date: rules or understanding?"], ["h"], "A local speech-to-text model (zero tokens), then AI picks out the name and due date.", "A handful a week: AI alone is fine. Many a day: hybrid."],
-  ["📈", "Monthly KPI summary from the GL export", ["Same columns every month?", "Same formulas every month?"], ["s"], "Same export, same calculations every month.", "Any volume: a script; Excel may already do it."],
-  ["🧾", "Box amounts from uploaded W-2s", ["All text PDFs from one provider?", "Any phone photos?"], ["h", "s"], "Text PDFs → script; scans and photos → local OCR or AI. All text PDFs from one provider → pure script.", "15 a year: below break-even, leave it with AI. Hundreds: convert."],
-  ["💳", "Categorize 3,000 card lines", ["How many would a lookup table catch?", "What happens to the rules list?"], ["h"], "Rules first, AI for the leftovers; good AI answers become new rules.", "3,000 a month: big savings. 50 a month: AI alone may be fine."],
-  ["🤔", "Is this receipt deductible for this client?", ["Can you list every case in advance?", "Who signs off?"], ["a"], "Judgment about this client's business, and a person signs off.", "Any volume: AI to draft, a person to decide."],
+  { ico: "⏰", task: "Email clients 30 days before their deadline", hints: ["Where do the deadlines come from?", "Same wording for every client?"],
+    cost: { a: function (n) { return 1500 * n; }, s: function () { return 100000; } },
+    scales: [["10 clients a year", 10, ["a", "s"], "At 10 a year, drafting each email with AI costs pennies. A script is still more reliable: it never forgets a client."],
+             ["400 clients a year", 400, ["s"], "Fixed rule: deadline minus 30 days, same template. Nothing needs judgment, so a script."]] },
+  { ico: "✍️", task: "A personal year-end note to each client", hints: ["Which part pulls figures, which part writes?", "New wording each time?"],
+    cost: { a: function (n) { return 3000 * n; }, h: function (n) { return 150000 + 1500 * n; } },
+    scales: [["12 clients", 12, ["a"], "A dozen notes: ask AI, with each client's figures pasted in."],
+             ["800 clients", 800, ["h"], "The script pulls each client's figures; AI writes only the note. Fewer tokens, and no figure is made up."]] },
+  { ico: "🔁", task: "Flag possible duplicate payments", hints: ["Same number and amount twice?", "\"ACME Inc\" vs \"Acme, Inc.\"?"],
+    cost: { a: function (n) { return 20 * pairs(n); }, h: function (n) { return 300000 + 50 * n; }, s: function () { return 300000; } },
+    scales: [["50 payments a year", 50, ["a"], "50 payments is about 1,200 pairs: cheap for AI to check by reading them."],
+             ["5,000 payments a year", 5000, ["s", "h"], "5,000 payments is 12.5 million pairs, so comparing every pair with AI explodes. Exact matches are rules; AI only for the near-matches the rules flag."]] },
+  { ico: "🎙️", task: "Voicemails → tasks with name and due date", hints: ["Speech to text: LLM or local model?", "Picking out a due date: rules or understanding?"],
+    cost: { a: function (n) { return 4000 * n; }, h: function (n) { return 200000 + 500 * n; } },
+    scales: [["5 a week", 260, ["a", "h"], "A handful a week: AI alone is fine."],
+             ["50 a day", 18000, ["h"], "A local speech-to-text model (zero tokens) writes the transcript; AI only picks out the name and due date."]] },
+  { ico: "📈", task: "Monthly KPI summary from the GL export", hints: ["Same columns every month?", "Same formulas every month?"],
+    cost: { a: function (n) { return 20000 * n; }, s: function () { return 150000; } },
+    scales: [["12 a year", 12, ["s"], "Same export, same calculations every month: a script, or Excel may already do it. The point is the same answer every time, not the tokens."]] },
+  { ico: "🧾", task: "Box amounts from uploaded W-2s", hints: ["All text PDFs from one provider?", "Any phone photos?"],
+    cost: { a: function (n) { return 5000 * n; }, h: function (n) { return 300000 + 800 * n; }, s: function () { return 300000; } },
+    scales: [["15 a year", 15, ["a"], "15 a year is below break-even: building a script costs more than it saves. Leave it with AI and check the numbers."],
+             ["600 a year", 600, ["h", "s"], "Text PDFs → script; scans and photos → local OCR or AI. All text PDFs from one provider → pure script."]] },
+  { ico: "💳", task: "Categorize card lines", hints: ["How many would a lookup table catch?", "What happens to the rules list?"],
+    cost: { a: function (n) { return 120 * n; }, h: function (n) { return 250000 + 12 * n; } },
+    scales: [["50 a month", 600, ["a"], "50 lines a month: AI alone is fine, and cheap."],
+             ["3,000 a month", 36000, ["h"], "Rules first, AI for the leftovers; good AI answers become new rules, so the leftovers shrink."]] },
+  { ico: "🤔", task: "Is this receipt deductible for this client?", hints: ["Can you list every case in advance?", "Who signs off?"],
+    cost: { a: function (n) { return 3000 * n; } },
+    scales: [["Any volume", 200, ["a"], "Judgment about this client's business: AI drafts, a person decides. No script can list every case."]] },
 ];
 var BUCKET = { s: ["📜 Scripting", C.script], h: ["🔀 Hybrid", C.hybrid], a: ["🤖 AI in the loop", C.ai] };
+function tok(x) { return x >= 1e6 ? (x / 1e6).toFixed(1) + "M" : x >= 1000 ? Math.round(x / 1000) + "k" : Math.round(x) + ""; }
+function usd(x) { var d = x / 1e6 * 10; return "$" + (d >= 100 ? Math.round(d).toLocaleString() : d >= 1 ? d.toFixed(0) : d.toFixed(2)); }
+// A small yearly-cost chart for one task, with each volume marked and the chosen one bold.
+function votePlot(v, sel) {
+  var W = 300, H = 170, x0 = 44, y0 = 10, w = 238, h = 118;
+  var maxN = v.scales[v.scales.length - 1][1] * 1.15;
+  var kinds = ["a", "h", "s"].filter(function (k) { return v.cost[k]; });
+  var top = 0; kinds.forEach(function (k) { top = Math.max(top, v.cost[k](maxN)); }); top *= 1.05;
+  var X = function (n) { return x0 + n / maxN * w; }, Y = function (t) { return y0 + h - Math.min(t, top) / top * h; };
+  var o = '<svg viewBox="0 0 ' + W + " " + H + '" style="width:100%">';
+  o += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + (y0 + h) + '" stroke="' + C.muted + '" stroke-width="1.5"/><line x1="' + x0 + '" y1="' + (y0 + h) + '" x2="' + (x0 + w) + '" y2="' + (y0 + h) + '" stroke="' + C.muted + '" stroke-width="1.5"/>';
+  o += '<text x="' + (x0 - 4) + '" y="' + (y0 + 8) + '" font-size="10" fill="' + C.good + '" font-weight="700" text-anchor="end">' + usd(top) + '</text><text x="' + (x0 - 4) + '" y="' + (y0 + h) + '" font-size="10" fill="' + C.good + '" font-weight="700" text-anchor="end">$0</text>';
+  o += '<text x="' + (x0 + w / 2) + '" y="' + (H - 4) + '" font-size="10" fill="' + C.text + '" font-weight="700" text-anchor="middle">items a year →</text>';
+  kinds.forEach(function (k) {
+    var d = ""; for (var i = 0; i <= 80; i++) { var n = i / 80 * maxN; d += (i ? "L" : "M") + X(n).toFixed(1) + "," + Y(v.cost[k](n)).toFixed(1); }
+    o += '<path d="' + d + '" fill="none" stroke="' + BUCKET[k][1] + '" stroke-width="3"/>';
+  });
+  v.scales.forEach(function (sc, i) {
+    var x = X(sc[1]), on = i === sel;
+    o += '<line x1="' + x + '" y1="' + y0 + '" x2="' + x + '" y2="' + (y0 + h) + '" stroke="' + C.text + '" stroke-dasharray="3 3" stroke-width="' + (on ? 2 : 1) + '" opacity="' + (on ? 1 : 0.35) + '"/>';
+    o += '<text x="' + Math.min(x, x0 + w - 2) + '" y="' + (y0 + h + 14) + '" font-size="10" fill="' + C.text + '" font-weight="' + (on ? 800 : 400) + '" opacity="' + (on ? 1 : 0.5) + '" text-anchor="' + (x > x0 + w - 30 ? "end" : "middle") + '">' + sc[0] + "</text>";
+  });
+  o += "</svg>";
+  var n = v.scales[sel][1];
+  o += '<div class="vleg">At ' + v.scales[sel][0] + ": " + kinds.map(function (k) { return '<span style="color:' + BUCKET[k][1] + '">' + BUCKET[k][0] + " " + usd(v.cost[k](n)) + "</span>"; }).join(" · ") + "</div>";
+  return o + '<div class="small">Hypothetical tokens at $10 per million, including the one-time tokens to build.</div>';
+}
 function votes() {
   var box = document.getElementById("votes");
   VOTES.forEach(function (v, k) {
-    box.insertAdjacentHTML("beforeend", '<div class="card vote" data-k="' + k + '"><div style="font-size:30px">' + v[0] + '</div><div class="task">' + v[1] +
-      '</div><div class="hints"></div><div class="ans"></div><div class="row"><button class="btn ghost hintb">Hint</button><button class="btn ansb">Answer</button></div></div>');
+    var sc = v.scales.length > 1 ? '<div class="scales"><span class="small">Volume:</span> ' + v.scales.map(function (s, i) { return '<button class="sc' + (i ? "" : " on") + '" data-s="' + i + '">' + s[0] + "</button>"; }).join("") + "</div>"
+      : '<div class="scales"><span class="small">Volume:</span> <span class="sc on static">' + v.scales[0][0] + "</span></div>";
+    box.insertAdjacentHTML("beforeend", '<div class="card vote" data-k="' + k + '" data-s="0"><div style="font-size:30px">' + v.ico + '</div><div class="task">' + v.task + "</div>" + sc +
+      '<div class="hints"></div><div class="vplot"></div><div class="ans"></div><div class="row"><button class="btn ghost hintb">💡 Hint</button><button class="btn ghost plotb">📈 Plot</button><button class="btn ansb">Answer</button></div></div>');
   });
+  function draw(card) {
+    var v = VOTES[+card.dataset.k], sel = +card.dataset.s;
+    if (card.dataset.plot) card.querySelector(".vplot").innerHTML = votePlot(v, sel);
+    if (card.dataset.ans) {
+      var s = v.scales[sel];
+      card.querySelector(".ans").innerHTML = '<div class="small">At ' + s[0] + ":</div>" + '<div class="buckets">' + s[2].map(function (b, i) {
+        return (i ? '<span class="or">or</span>' : "") + '<span class="badge" style="color:' + BUCKET[b][1] + ";border-color:" + BUCKET[b][1] + ";background:" + BUCKET[b][1] + '22">' + BUCKET[b][0] + "</span>";
+      }).join("") + '</div><div class="why">' + s[3] + "</div>" + (v.scales.length > 1 ? '<div class="vol">📈 Switch the volume above to see how the answer changes.</div>' : "");
+    }
+  }
   box.addEventListener("click", function (e) {
     var card = e.target.closest(".vote"); if (!card) return;
     var v = VOTES[+card.dataset.k];
+    if (e.target.classList.contains("sc") && !e.target.classList.contains("static")) {
+      card.dataset.s = e.target.dataset.s;
+      card.querySelectorAll(".sc").forEach(function (b) { b.classList.toggle("on", b === e.target); });
+      draw(card);
+    }
     if (e.target.classList.contains("hintb")) {
       var hs = card.querySelector(".hints"), n = hs.children.length;
-      if (n < v[2].length) hs.insertAdjacentHTML("beforeend", '<div class="hint">💡 ' + v[2][n] + "</div>");
-      if (n + 1 >= v[2].length) e.target.disabled = true;
+      if (n < v.hints.length) hs.insertAdjacentHTML("beforeend", '<div class="hint">💡 ' + v.hints[n] + "</div>");
+      if (n + 1 >= v.hints.length) e.target.disabled = true;
     }
-    if (e.target.classList.contains("ansb")) {
-      card.querySelector(".ans").innerHTML = '<div class="buckets">' + v[3].map(function (b, i) {
-        return (i ? '<span class="or">or</span>' : "") + '<span class="badge" style="color:' + BUCKET[b][1] + ";border-color:" + BUCKET[b][1] + ";background:" + BUCKET[b][1] + '22">' + BUCKET[b][0] + "</span>";
-      }).join("") + '</div><div class="why">' + v[4] + '</div><div class="vol">📈 ' + v[5] + "</div>";
-      e.target.disabled = true;
-    }
+    if (e.target.classList.contains("plotb")) { card.dataset.plot = 1; e.target.disabled = true; draw(card); }
+    if (e.target.classList.contains("ansb")) { card.dataset.ans = 1; e.target.disabled = true; draw(card); }
   });
 }
 
@@ -1270,6 +1340,17 @@ document.querySelectorAll("#controls .ctl2").forEach(function (card) {
 // Show each prompt in full: grow every box to fit its text.
 document.querySelectorAll(".pbox textarea").forEach(function (ta) { ta.style.height = "auto"; ta.style.height = (ta.scrollHeight + 4) + "px"; });
 // Nothing plays on its own: each panel waits for its Play button.
+// The frog hops once when the reader reaches the very bottom, and again on the next visit there.
+(function () {
+  var pond = document.querySelector(".pond"), atBottom = false;
+  function check() {
+    var bottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+    if (bottom && !atBottom) { pond.classList.remove("go"); void pond.offsetWidth; pond.classList.add("go"); }
+    if (!bottom && atBottom && window.scrollY + window.innerHeight < document.documentElement.scrollHeight - 60) pond.classList.remove("go");
+    if (bottom) atBottom = true; else if (window.scrollY + window.innerHeight < document.documentElement.scrollHeight - 60) atBottom = false;
+  }
+  window.addEventListener("scroll", check, { passive: true });
+})();
 </script>
 
 </body>
