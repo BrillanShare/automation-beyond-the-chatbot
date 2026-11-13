@@ -33,3 +33,11 @@ Copy and adapt. The starter [CLAUDE.md](https://code.claude.com/docs/en/memory) 
 ## Large files
 
 > This file is large. Don't read all of it. Write a script that pulls out only the part you need to see.
+
+## Review a script like an auditor
+
+> Before I rely on this script, review it as an auditor would. Tell me in plain language: what it does with rows it can't process; whether rows and totals in equal rows and totals out; how money is stored and rounded, and whether that matches Excel; what happens if I run it twice; whether it changes any input file; which values are fixed in the code; what it installs and whether it sends data anywhere; and what happens at 10× the data. Flag anything you'd fix.
+
+## How does it grow?
+
+> What happens to run time and tokens at 10× the data? Does any step compare every item with every other item?

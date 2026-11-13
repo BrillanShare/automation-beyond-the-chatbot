@@ -37,6 +37,14 @@
 - Big files: a script reads them for free; pasting them into chat burns tokens.
 - Hybrid: send the LLM only the slice that needs judgment.
 
+## Before you rely on a script
+
+- Fail loudly: rows it can't process go on a list, never skipped silently
+- Control totals: rows in = rows out + rejected; amounts tie
+- Money math: how is it rounded, and does it match Excel?
+- Safe to run twice; never overwrites an input without asking first
+- Growth: what happens to run time and tokens at 10× the data?
+
 ## The prompt to use first
 
 > Before building anything: restate this task as inputs → outputs. List the hard inputs, not only the typical ones. Propose the design with the least AI in the loop. Label each step Scripting, Local model or AI in the loop, and say why. Rate each step's tokens per run: none, small or large. Wait for my OK.

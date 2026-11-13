@@ -344,9 +344,75 @@ def demo_tokens():
     return svg(960, 340, "Demo: lines sent to the LLM each month, three ways", b)
 
 
+# ------------------------------------------------- cost-volume chart (growth)
+def cost_volume():
+    """Laid out like a cost-volume (break-even) chart: fixed vs. variable cost."""
+    b = DEFS
+    x0, y0, w, h = 110, 70, 560, 330          # plot area
+    X = lambda v: x0 + v / 100 * w            # volume 0..100
+    Y = lambda c: y0 + h - c / 100 * h        # cost 0..100
+    b += t(480, 34, "How cost grows with volume", 18, TEXT, "700", "middle")
+    b += t(480, 54, "Illustrative shapes, not to scale", 12, MUTED, anchor="middle")
+    for k in range(6):                         # gridlines, like an Excel chart
+        gy = y0 + k * h / 5
+        b += f'<line x1="{x0}" y1="{gy}" x2="{x0 + w}" y2="{gy}" stroke="#30363d"/>\n'
+    b += f'<line x1="{x0}" y1="{y0}" x2="{x0}" y2="{y0 + h}" stroke="{MUTED}" stroke-width="2"/>\n'
+    b += f'<line x1="{x0}" y1="{y0 + h}" x2="{x0 + w}" y2="{y0 + h}" stroke="{MUTED}" stroke-width="2"/>\n'
+    b += (f'<text x="34" y="{y0 + h / 2}" font-size="17" fill="{TEXT}" font-weight="700" text-anchor="middle" '
+          f'transform="rotate(-90 34 {y0 + h / 2})">Tokens and $$$</text>\n')
+    b += t(x0 + w / 2, y0 + h + 34, "Volume: documents or rows processed, run after run", 14, TEXT, "700", "middle")
+    b += t(x0, y0 + h + 16, "0", 11, MUTED, anchor="middle") + t(x0 + w, y0 + h + 16, "more", 11, MUTED, anchor="end")
+
+    build = 22
+    script = lambda v: build
+    hybrid = lambda v: build + 0.15 * v
+    ai = lambda v: 0.9 * v
+    pairs = lambda v: 0.012 * v * v
+
+    def line(fn, color, width=3.5, dash=""):
+        pts = []
+        for i in range(0, 1001):
+            v = i / 10
+            c = fn(v)
+            if c > 100:
+                break
+            pts.append(f"{X(v):.1f},{Y(c):.1f}")
+        d = f' stroke-dasharray="{dash}"' if dash else ""
+        return f'<polyline points="{" ".join(pts)}" fill="none" stroke="{color}" stroke-width="{width}"{d}/>\n'
+
+    b += line(pairs, AMBER, dash="7 5") + line(ai, AI) + line(hybrid, HYBRID) + line(script, SCRIPT)
+
+    # Fixed cost bracket on the axis
+    b += f'<line x1="{x0 - 10}" y1="{Y(0)}" x2="{x0 - 10}" y2="{Y(build)}" stroke="{SCRIPT}" stroke-width="2"/>\n'
+    b += f'<line x1="{x0 - 15}" y1="{Y(build)}" x2="{x0 - 5}" y2="{Y(build)}" stroke="{SCRIPT}" stroke-width="2"/>\n'
+    b += t(X(52), Y(build) + 19, "Fixed cost: tokens to build the script, once", 12, SCRIPT)
+
+    # Break-even: where AI in the loop passes the script's build cost
+    be = build / 0.9
+    b += f'<line x1="{X(be)}" y1="{Y(build)}" x2="{X(be)}" y2="{y0 + h}" stroke="{TEXT}" stroke-dasharray="3 4"/>\n'
+    b += f'<circle cx="{X(be)}" cy="{Y(build)}" r="6" fill="{BG}" stroke="{TEXT}" stroke-width="2.5"/>\n'
+    b += t(X(be) + 12, Y(8), "Break-even:", 12, TEXT, "700")
+    b += t(X(be) + 12, Y(8) + 15, "the script has paid for itself", 12, TEXT)
+
+    # Direct labels at the right, in the order the lines end
+    lx = x0 + w + 14
+    px = X(84)
+    b += t(px, y0 + 6, "AI compares every item", 13, AMBER, "700", "end")
+    b += t(px, y0 + 23, "with every other item:", 13, AMBER, "700", "end")
+    b += t(px, y0 + 39, "cost grows with the square", 12, MUTED, anchor="end")
+    b += t(lx, Y(ai(100)) + 2, "AI in the loop", 13, AI, "700")
+    b += t(lx, Y(ai(100)) + 19, "variable cost: every item,", 12, MUTED)
+    b += t(lx, Y(ai(100)) + 34, "every run", 12, MUTED)
+    b += t(lx, Y(hybrid(100)) - 4, "Hybrid", 13, HYBRID, "700")
+    b += t(lx, Y(hybrid(100)) + 13, "fixed cost + a small variable cost", 12, MUTED)
+    b += t(lx, Y(build) + 12, "Scripting", 13, SCRIPT, "700")
+    b += t(lx, Y(build) + 29, "fixed cost only: flat", 12, MUTED)
+    return svg(960, 450, "Cost-volume chart: how tokens and dollars grow with volume", b)
+
+
 def main():
     for name, fn in [("data-types.svg", data_types), ("script-cant.svg", script_cant),
-                     ("io-lens.svg", io_lens), ("hard-inputs.svg", hard_inputs), ("demo-tokens.svg", demo_tokens)]:
+                     ("io-lens.svg", io_lens), ("hard-inputs.svg", hard_inputs), ("demo-tokens.svg", demo_tokens), ("cost-volume.svg", cost_volume)]:
         (OUT / name).write_text(fn(), encoding="utf-8")
         print("wrote", name)
 

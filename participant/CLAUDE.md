@@ -22,7 +22,8 @@ Instructions for Claude. Put this file in the folder you work in with Claude Cod
 4. Label every step: **Scripting**, **Local model** or **AI in the loop**, and say why.
 5. Rate each step's tokens per run: **none / small / large**. Say what makes the cost grow (number of documents, file size).
 6. If more than one design is reasonable, compare two or three. Rank them by tokens per run, reliability on the hard inputs, and how hard they are to maintain.
-7. Wait for my OK before building.
+7. Say what happens to run time and tokens at 10× the data. Flag any step that compares every item with every other item.
+8. Wait for my OK before building.
 
 ## When building
 
@@ -35,6 +36,19 @@ Instructions for Claude. Put this file in the folder you work in with Claude Cod
 - Before writing the script, agree with me on what "done" looks like: sample inputs, including hard ones, and the expected outputs.
 - Give me numbered steps to run it.
 - Keep client personal information and passwords or keys out of scripts and out of prompts.
+
+## Controls every script needs
+
+- **Fail loudly.** Never skip a row silently. Write rows the script can't process to a review list, with the reason.
+- **Control totals.** After each run, report rows in, rows out and rows rejected, and whether the amounts tie.
+- **Money math.** Store money as exact decimals, not floating point. State the rounding rule, and match Excel's ROUND unless I say otherwise.
+- **Safe to run twice.** A rerun must not create duplicate entries.
+- **Never overwrite or delete an input file without asking first.** Write results to a new file.
+- **Text that looks like numbers.** Read account numbers, IDs and ZIP codes as text. Tell me how dates are read.
+- **Settings out of the code.** Keep rates, thresholds and cutoff dates in a settings file, not inside the script.
+- **Run log.** Each run records the date, input file, row counts and script version.
+- **What it installs and sends.** Before running, tell me what the script installs and whether it sends data anywhere.
+- **After any change,** rerun the earlier sample inputs and tell me if any result changed.
 
 ## When I ask you to do a task directly in chat
 
