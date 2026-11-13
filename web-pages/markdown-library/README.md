@@ -1,6 +1,6 @@
 # web-pages/markdown-library/
 
-Third-party code used by `../text.html`. Don't edit.
+Third-party code used by `../legacy-text-only.html`. Don't edit.
 
 | File | What it is |
 |---|---|

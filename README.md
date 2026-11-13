@@ -19,7 +19,7 @@ Workshop materials for advanced AI users in accounting: when to script, when to 
 | `prompt-card.md` | Prompts to copy and adapt |
 | `starter-claude-md/CLAUDE.md` | Starter instructions for Claude that apply the workshop's principles |
 | `homework.md` | Homework: a Python script as the output |
-| `web-pages/text.html` | All the Markdown handouts on one page |
+| `web-pages/legacy-text-only.html` | Legacy text-only page: all the Markdown handouts on one page |
 
 GitHub and Claude both show the `.md` files formatted, with the diagrams.
 
@@ -54,9 +54,9 @@ Instructions for Claude when it works on this repo are in the root `CLAUDE.md`. 
 |---|---|
 | `index.html` | Opens `web-pages/index.html`, so there's a start page in the root |
 | `CLAUDE.md` | Rules for working on this repo (not the starter file) |
-| `web-pages/rebuild_text_page.py` | Rebuilds `web-pages/text.html` from the Markdown and stamps the build time in its banner. Python only. |
+| `web-pages/rebuild_pages.py` | Rebuilds `web-pages/legacy-text-only.html` from the Markdown, copies the prompts from `prompt-card.md` into `web-pages/index.html`, and stamps the build time in both. Python only. |
 | `images/` | Diagrams and illustrations used in the handouts |
 | `images/make_illustrations.py` | Draws most of the diagrams in `images/` |
-| `web-pages/markdown-library/` | [marked](https://github.com/markedjs/marked), used by `text.html` to show Markdown (MIT license) |
+| `web-pages/markdown-library/` | [marked](https://github.com/markedjs/marked), used by `legacy-text-only.html` to show Markdown (MIT license) |
 
-After editing a Markdown handout, run `python web-pages/rebuild_text_page.py`.
+After editing a Markdown handout, run `python web-pages/rebuild_pages.py`.
