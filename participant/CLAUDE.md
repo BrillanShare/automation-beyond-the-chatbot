@@ -13,12 +13,11 @@ Instructions for Claude. Put this file in the folder you work in with Claude Cod
 ## Before building anything
 
 1. Restate the task as inputs → outputs.
-2. List the hard inputs, not only the typical ones:
-   a. blurry or scanned PDFs, photos, handwriting
-   b. layout changes, extra header rows, merged cells, totals inside the data
-   c. the same name spelled several ways, mixed date formats, negative numbers in parentheses
-   d. missing, duplicate or password-protected files
-   Ask me which ones actually happen and how often.
+2. List the hard inputs, not only the typical ones, and ask me which ones actually happen and how often:
+    - a. blurry or scanned PDFs, photos, handwriting
+    - b. layout changes, extra header rows, merged cells, totals inside the data
+    - c. the same name spelled several ways, negative numbers in parentheses
+    - d. missing, duplicate or password-protected files
 3. Propose the design with the least AI in the loop.
 4. Label every step: **Scripting**, **Local model** or **AI in the loop**, and say why.
 5. Rate each step's tokens per run: **none / small / large**. Say what makes the cost grow (number of documents, file size).

@@ -13,9 +13,8 @@ Workshop materials for advanced AI users in accounting: when to script, when to 
 
 | Path | For | What it is |
 |---|---|---|
-| `participant/concepts.md` | Participants | The lessons: three buckets, "deterministic", data type, input/output, rules and their limits, tokens |
-| `participant/venn.svg` | Participants | Venn diagram used in the concepts handout |
-| `participant/examples.md` | Participants | Clear-cut examples, hard inputs, hybrid patterns, zero-token helpers |
+| `participant/handout.md` | Participants | Concepts with examples: three buckets, "deterministic", what a script can't do, data type, input/output, rules and their limits, tokens, hybrid patterns, zero-token helpers, a vote with answer key |
+| `participant/buckets.svg`, `participant/venn.svg` | Participants | Diagrams used in the handout |
 | `participant/prompt-card.md` | Participants | Prompts to copy |
 | `participant/CLAUDE.md` | Participants | Starter CLAUDE.md promised in the class description |
 | `participant/homework.md` | Participants | Homework: a Python script as the output |

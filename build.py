@@ -8,13 +8,13 @@ import html
 from pathlib import Path
 
 import markdown
+from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).parent
 
 # (file, title, audience) in the order they appear on the page
 PAGES = [
-    ("participant/concepts.md", "Concepts", "Participants"),
-    ("participant/examples.md", "Examples", "Participants"),
+    ("participant/handout.md", "Concepts and examples", "Participants"),
     ("participant/prompt-card.md", "Prompt card", "Participants"),
     ("participant/CLAUDE.md", "Starter CLAUDE.md", "Participants"),
     ("participant/homework.md", "Homework", "Participants"),
@@ -39,20 +39,71 @@ section { border-bottom: 1px solid #30363d; padding-bottom: 28px; margin-bottom:
 h1, h2, h3 { line-height: 1.25; }
 table { border-collapse: collapse; width: 100%; table-layout: auto; margin: 10px 0; }
 th, td { border: 1px solid #30363d; padding: 6px 10px; text-align: left; vertical-align: top;
-  overflow-wrap: anywhere; }
+  overflow-wrap: break-word; }
 th { background: #161b22; }
 code { background: #161b22; padding: 1px 5px; border-radius: 4px; }
 blockquote { margin: 10px 0; padding: 8px 14px; border-left: 4px solid #3fb950; background: #161b22; }
 img { max-width: min(100%, 900px); height: auto; }
+ol ul { list-style: none; padding-left: 1.4em; }
+.c-script { background: #1f6feb26; } .c-script-h { background: #1f6feb55; }
+.c-ai { background: #f8514926; } .c-ai-h { background: #f8514955; }
+.c-hybrid { background: #8957e530; } .c-hybrid-h { background: #8957e560; }
+.c-local { background: #2ea2a326; } .c-local-h { background: #2ea2a355; }
+.c-warn { background: #d2992226; } .c-warn-h { background: #d2992255; }
+.t-good { background: #2ea04333; color: #56d364; font-weight: 600; }
+.t-bad { background: #f8514926; }
+details { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 8px 14px; }
+summary { cursor: pointer; color: #58a6ff; font-weight: 600; }
 """
 
 
 def render(path):
     text = (ROOT / path).read_text(encoding="utf-8")
-    body = markdown.markdown(text, extensions=["tables", "fenced_code", "sane_lists"])
+    body = markdown.markdown(text, extensions=["tables", "fenced_code", "sane_lists", "md_in_html"])
     # Image paths in handouts are relative to their own folder.
     folder = Path(path).parent.as_posix()
-    return body.replace('src="venn.svg"', f'src="{folder}/venn.svg"')
+    for svg in ("venn.svg", "buckets.svg"):
+        body = body.replace(f'src="{svg}"', f'src="{folder}/{svg}"')
+    return color_tables(body)
+
+
+# Color carries meaning: blue = scripting, red = AI in the loop,
+# purple = hybrid, teal = local model, amber = hard input.
+HEADER_CLASSES = [
+    ("ai-in-the-loop", "c-ai"), ("ai in the loop", "c-ai"),
+    ("scripting", "c-script"), ("hybrid", "c-hybrid"),
+    ("local model", "c-local"), ("hard input", "c-warn"),
+]
+CELL_PREFIXES = [("📜", "c-script"), ("🤖", "c-ai"), ("🔀", "c-hybrid"), ("💻", "c-local")]
+
+
+def color_tables(body):
+    soup = BeautifulSoup(body, "html.parser")
+    for table in soup.find_all("table"):
+        headers = [th.get_text().strip().lower() for th in table.find_all("th")]
+        col_class = {}
+        for i, h in enumerate(headers):
+            for key, cls in HEADER_CLASSES:
+                if key in h:
+                    col_class[i] = cls
+                    break
+        for i, th in enumerate(table.find_all("th")):
+            if i in col_class:
+                th["class"] = th.get("class", []) + [col_class[i] + "-h"]
+        for tr in table.find_all("tr"):
+            for i, td in enumerate(tr.find_all("td")):
+                text = td.get_text().strip()
+                cls = col_class.get(i)
+                for prefix, pcls in CELL_PREFIXES:
+                    if text.startswith(prefix):
+                        cls = pcls
+                if text in ("None", "✅ Yes"):
+                    cls = "t-good"
+                if text.startswith("❌"):
+                    cls = "t-bad"
+                if cls:
+                    td["class"] = td.get("class", []) + [cls]
+    return str(soup)
 
 
 def main():

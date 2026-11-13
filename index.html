@@ -16,13 +16,24 @@ section { border-bottom: 1px solid #30363d; padding-bottom: 28px; margin-bottom:
 h1, h2, h3 { line-height: 1.25; }
 table { border-collapse: collapse; width: 100%; table-layout: auto; margin: 10px 0; }
 th, td { border: 1px solid #30363d; padding: 6px 10px; text-align: left; vertical-align: top;
-  overflow-wrap: anywhere; }
+  overflow-wrap: break-word; }
 th { background: #161b22; }
 code { background: #161b22; padding: 1px 5px; border-radius: 4px; }
 blockquote { margin: 10px 0; padding: 8px 14px; border-left: 4px solid #3fb950; background: #161b22; }
 img { max-width: min(100%, 900px); height: auto; }
-</style></head><body><nav><h1>Automation beyond the chatbot</h1><div class="group">Participants</div><a href="#s0">Concepts</a><a href="#s1">Examples</a><a href="#s2">Prompt card</a><a href="#s3">Starter CLAUDE.md</a><a href="#s4">Homework</a><div class="group">Instructor only</div><a href="#s5">Run of show</a></nav><main><section id="s0"><span class="badge Participants">Participants</span> <span class="src">participant/concepts.md</span><h1>Concepts: script or AI?</h1>
+ol ul { list-style: none; padding-left: 1.4em; }
+.c-script { background: #1f6feb26; } .c-script-h { background: #1f6feb55; }
+.c-ai { background: #f8514926; } .c-ai-h { background: #f8514955; }
+.c-hybrid { background: #8957e530; } .c-hybrid-h { background: #8957e560; }
+.c-local { background: #2ea2a326; } .c-local-h { background: #2ea2a355; }
+.c-warn { background: #d2992226; } .c-warn-h { background: #d2992255; }
+.t-good { background: #2ea04333; color: #56d364; font-weight: 600; }
+.t-bad { background: #f8514926; }
+details { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 8px 14px; }
+summary { cursor: pointer; color: #58a6ff; font-weight: 600; }
+</style></head><body><nav><h1>Automation beyond the chatbot</h1><div class="group">Participants</div><a href="#s0">Concepts and examples</a><a href="#s1">Prompt card</a><a href="#s2">Starter CLAUDE.md</a><a href="#s3">Homework</a><div class="group">Instructor only</div><a href="#s4">Run of show</a></nav><main><section id="s0"><span class="badge Participants">Participants</span> <span class="src">participant/handout.md</span><h1>Script or AI? Concepts and examples</h1>
 <h2>Three buckets</h2>
+<p><img alt="Three buckets: what happens at build time and at run time" src="participant/buckets.svg"/></p>
 <table>
 <thead>
 <tr>
@@ -33,17 +44,17 @@ img { max-width: min(100%, 900px); height: auto; }
 </thead>
 <tbody>
 <tr>
-<td><strong>Scripting</strong></td>
-<td>Code runs. AI may have written the code, its tests and its sample data, but no LLM runs now.</td>
-<td>None</td>
+<td class="c-script">📜 Scripting</td>
+<td>Code runs on your computer. AI may have written the code, its tests and its sample data, but no LLM runs now.</td>
+<td class="t-good">None</td>
 </tr>
 <tr>
-<td><strong>AI in the loop</strong></td>
+<td class="c-ai">🤖 AI in the loop</td>
 <td>An LLM is called every time the task runs.</td>
 <td>Small to large, every run</td>
 </tr>
 <tr>
-<td><strong>Hybrid</strong></td>
+<td class="c-hybrid">🔀 Hybrid</td>
 <td>Some steps are scripting, some are AI in the loop.</td>
 <td>Only for the AI steps</td>
 </tr>
@@ -55,19 +66,33 @@ img { max-width: min(100%, 900px); height: auto; }
 </ul>
 <h2>What "deterministic" means</h2>
 <p><strong>Strict definition: deterministic means the same inputs always give the same output.</strong></p>
-<p><img alt="Venn diagram: where procedures fall" src="participant/venn.svg" /></p>
-<ul>
-<li><strong>Same inputs → same output:</strong> <code>=SUM()</code>, a tax-bracket lookup, matching invoice numbers.</li>
-<li><strong>Also depends on the clock, the internet or a file:</strong> <code>=NOW()</code>, today's stock price, today's exchange rate.</li>
-<li><strong>Random on purpose:</strong> <code>=RAND()</code>, random IDs, an audit sample.</li>
-<li><strong>AI in the loop:</strong> always non-deterministic.</li>
-<li><strong>Scripting covers three of the four regions.</strong> Being deterministic is not the same as being a script.</li>
-</ul>
-<h3>Determinism doesn't decide the bucket</h3>
-<ul>
-<li>Many scripts aren't deterministic (clock, internet, randomness), and they're still scripts.</li>
-<li>Ask "does any step need an LLM's judgment at run time?" instead.</li>
-</ul>
+<p><img alt="Venn diagram: where procedures fall" src="participant/venn.svg"/></p>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🟢 Same inputs → same output</td>
+<td><code>=SUM()</code>, a tax-bracket lookup, matching invoice numbers</td>
+</tr>
+<tr>
+<td>🟠 Also depends on the clock, the internet or a file</td>
+<td><code>=NOW()</code>, today's stock price, today's exchange rate</td>
+</tr>
+<tr>
+<td>🎲 Random on purpose</td>
+<td><code>=RAND()</code>, random IDs, an audit sample</td>
+</tr>
+<tr>
+<td>🔴 AI in the loop</td>
+<td>Every LLM call: never deterministic</td>
+</tr>
+</tbody>
+</table>
 <h3>Randomness in LLMs</h3>
 <ul>
 <li>Built into how an LLM picks each word</li>
@@ -76,233 +101,287 @@ img { max-width: min(100%, 900px); height: auto; }
 <li>A tiny change in the input → possibly a different whole answer</li>
 <li>What you type isn't the whole input: the app adds its own instructions, the date, memory, earlier messages</li>
 </ul>
+<h2>What a script can't do</h2>
+<p>A script needs you to say <strong>in advance</strong> where to look and what to do with what it finds.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Changes from run to run</th>
+<th>Script still works?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>📊 Monthly Excel export</td>
+<td>The <strong>values</strong>. Column C is always the amount; the steps are always the same.</td>
+<td class="t-good">✅ Yes</td>
+</tr>
+<tr>
+<td>📄 A client's lease</td>
+<td>The <strong>shape and wording</strong>. The rent clause can be anywhere, phrased any way, with an exception in a footnote.</td>
+<td class="t-bad">❌ No: finding it means understanding what the words mean</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Different values, same shape</strong> → scripting</li>
+<li><strong>Different shape or wording, same meaning to find</strong> → AI in the loop</li>
+</ul>
 <h2>Data type doesn't decide the bucket</h2>
 <table>
 <thead>
 <tr>
 <th>Data type</th>
-<th>Scripting example</th>
-<th>AI-in-the-loop example</th>
+<th class="c-script-h">📜 Scripting example</th>
+<th class="c-ai-h">🤖 AI-in-the-loop example</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Numbers</strong></td>
-<td>Totals, reconciliations, depreciation schedules</td>
-<td>Reading figures off a messy scanned statement</td>
+<td>🔢 Numbers</td>
+<td class="c-script">Totals, reconciliations, depreciation schedules</td>
+<td class="c-ai">Reviewing a trial balance for balances that look misclassified for this kind of business (a large "office supplies" balance at a consulting firm)</td>
 </tr>
 <tr>
-<td><strong>Language</strong></td>
-<td>Find-and-replace, templated engagement letters, a date in a fixed-format file name</td>
-<td>Drafting a client explanation of a variance</td>
+<td>💬 Language</td>
+<td class="c-script">Find-and-replace, templated engagement letters, a date in a fixed-format file name</td>
+<td class="c-ai">Drafting a client explanation of a variance</td>
 </tr>
 <tr>
-<td><strong>Images</strong></td>
-<td>Removing a plain background by color</td>
-<td>Reading a crumpled receipt photo</td>
+<td>🖼️ Images</td>
+<td class="c-script">Removing a plain background by color</td>
+<td class="c-ai">Reading a crumpled receipt photo</td>
 </tr>
 <tr>
-<td><strong>Audio</strong></td>
-<td>Detecting a sound (a clap, a beep)</td>
-<td>A punctuated transcript of a client call</td>
+<td>🎙️ Audio</td>
+<td class="c-script">Detecting a sound (a clap, a beep)</td>
+<td class="c-ai">A punctuated transcript of a client call</td>
 </tr>
 </tbody>
 </table>
 <h2>The input/output lens defines the task, but doesn't decide the bucket</h2>
 <ul>
 <li><strong>Use it to describe the task:</strong> what goes in, what has to come out, in what format.</li>
-<li><strong>Don't use it to pick the bucket:</strong> two tasks with the same input and output can land in different buckets.</li>
-<li>Same input: PDF statements. Same output: a filled Excel form.</li>
-<li>Text-based PDFs from one bank → scripting.</li>
-<li>Scans and photos from many banks → hybrid.</li>
+<li><strong>Don't use it to pick the bucket:</strong> the same input and output can land in different buckets.</li>
 </ul>
-<h2>Rules for deciding, and their limits</h2>
-<p><strong>Rules of thumb:</strong>
-- Fixed format, known cases, clear rules → scripting
-- Open-ended language, varied documents, judgment calls → AI in the loop
-- Mostly fixed, with some messy cases → hybrid</p>
-<p><strong>Why they're hard to apply:</strong> we picture the typical input, not the hard ones.
-- A scanned or tilted statement instead of a text PDF
-- A vendor that changed its invoice layout
-- The same vendor three ways: "Amazon", "AMZN Mktp US", "Amazon.com*2X4"
-- 03/04: March 4 or April 3?
-- Negative numbers in parentheses, currency symbols, a totals row inside the data
-- Merged cells and two header rows in an Excel export
-- Duplicate files, password-protected PDFs, a table split across pages</p>
-<p><strong>So:</strong> agree on the design with Claude <strong>before</strong> building anything.
-- Ask for the hard inputs, not only the typical ones.
-- Ask for the design with the least AI in the loop.
-- Ask Claude to compare designs by tokens per run: none / small / large.
-- See the prompt card and the starter CLAUDE.md.</p>
-<h2>Tokens</h2>
-<ul>
-<li><strong>AI in the loop:</strong> tokens spent on every run</li>
-<li><strong>Scripting:</strong> tokens spent once, to build; zero per run after that</li>
-<li><strong>Scale:</strong> 500 invoices through AI in the loop = 500 rounds of tokens; through a script = build once, then free</li>
-<li><strong>Big files make it worse.</strong> Pasting a large spreadsheet into chat burns tokens just to read it. A script reads it on your computer for free.</li>
-<li><strong>Hybrid:</strong> send only the slice that needs judgment to the LLM; let the script do the rest</li>
-</ul>
-<h2>Zero-token helpers: local machine learning models a script can call</h2>
-<ul>
-<li>Not LLMs. They run on your computer. Zero tokens.</li>
-<li>Narrow: each one does one job.</li>
-<li>Setting them up takes real technical knowledge. Claude can carry most of it, but expect some back-and-forth.</li>
-<li>Examples are on the examples handout.</li>
-</ul>
-<h2>Testing (if there's time)</h2>
-<ul>
-<li>Testability comes from written-down code you can run on controlled inputs, not from being deterministic.</li>
-<li><strong>Random IDs:</strong> test the properties: right length and format, no duplicates in 10,000 runs.</li>
-<li><strong>Today's stock price:</strong> test the calculation with a fake price source that always returns $100.</li>
-<li><strong>Due-date reminders:</strong> test with the clock frozen ("pretend today is April 10").</li>
-<li><strong>Audit sample:</strong> record the random seed in the workpapers so the sample can be reproduced.</li>
-</ul></section><section id="s1"><span class="badge Participants">Participants</span> <span class="src">participant/examples.md</span><h1>Examples</h1>
-<h2>Clear-cut: scripting</h2>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Output</th>
+<th>Variation</th>
+<th>Bucket</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PDF bank statements</td>
+<td>Filled Excel form</td>
+<td>Text-based PDFs from one bank</td>
+<td class="c-script">📜 Scripting</td>
+</tr>
+<tr>
+<td>PDF bank statements</td>
+<td>Filled Excel form</td>
+<td>Scans and phone photos from many banks</td>
+<td class="c-hybrid">🔀 Hybrid</td>
+</tr>
+</tbody>
+</table>
+<h2>Clear-cut examples</h2>
 <table>
 <thead>
 <tr>
 <th>Task</th>
-<th>Why it's scripting</th>
+<th>Bucket</th>
+<th>Why</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Match bank transactions to the ledger by amount, date and reference</td>
+<td class="c-script">📜 Scripting</td>
 <td>Fixed rules; same data in, same matches out</td>
 </tr>
 <tr>
 <td>Roll forward a depreciation schedule</td>
+<td class="c-script">📜 Scripting</td>
 <td>Pure calculation; Excel already does this</td>
 </tr>
 <tr>
 <td>Rename and file 200 PDFs by client ID from a system export</td>
+<td class="c-script">📜 Scripting</td>
 <td>The ID is in a fixed place in each file name</td>
 </tr>
 <tr>
 <td>Combine monthly CSV exports from the same system into one workbook</td>
+<td class="c-script">📜 Scripting</td>
 <td>Same columns every month</td>
 </tr>
 <tr>
-<td>Check an invoice-number sequence for gaps</td>
-<td>Pure rule</td>
-</tr>
-<tr>
-<td>Fill the same Excel template from a structured export</td>
-<td>Field-to-cell mapping never changes</td>
-</tr>
-<tr>
 <td>Convert balances at today's published exchange rate</td>
-<td>Depends on the internet, so not deterministic, but no judgment</td>
+<td class="c-script">📜 Scripting</td>
+<td>Depends on the internet, but needs no judgment</td>
 </tr>
 <tr>
 <td>Pick a random audit sample</td>
+<td class="c-script">📜 Scripting</td>
 <td>Random on purpose; record the seed so the sample can be reproduced</td>
 </tr>
-</tbody>
-</table>
-<h2>Clear-cut: AI in the loop</h2>
-<table>
-<thead>
-<tr>
-<th>Task</th>
-<th>Why it needs an LLM every run</th>
-</tr>
-</thead>
-<tbody>
 <tr>
 <td>Draft a client email explaining a variance</td>
-<td>Writing new language for each client</td>
+<td class="c-ai">🤖 AI in the loop</td>
+<td>New wording for each client and situation</td>
 </tr>
 <tr>
 <td>Summarize the key terms of a 40-page lease</td>
-<td>Every lease is worded differently</td>
+<td class="c-ai">🤖 AI in the loop</td>
+<td>The terms can be anywhere, worded any way</td>
 </tr>
 <tr>
 <td>Answer a client's free-form question</td>
-<td>The question is different every time</td>
+<td class="c-ai">🤖 AI in the loop</td>
+<td>No way to list the questions in advance</td>
 </tr>
 <tr>
 <td>Turn meeting notes into action items</td>
-<td>Open-ended language in, judgment about what counts as an action</td>
+<td class="c-ai">🤖 AI in the loop</td>
+<td>Deciding what counts as an action means understanding the conversation</td>
 </tr>
 </tbody>
 </table>
-<h2>Hard inputs that change the call</h2>
+<h2>Rules for deciding, and their limits</h2>
+<p><strong>Rules of thumb:</strong></p>
+<ul>
+<li>Same shape every time, known cases → 📜 Scripting</li>
+<li>Open-ended wording, varied documents, judgment calls → 🤖 AI in the loop</li>
+<li>Mostly the same shape, with some messy cases → 🔀 Hybrid</li>
+</ul>
+<p><strong>Why they're hard to apply:</strong> we picture the typical input, not the hard ones.</p>
 <table>
 <thead>
 <tr>
-<th>Task that looks like scripting</th>
-<th>Hard input that's easy to overlook</th>
+<th class="c-script-h">Task that looks like scripting</th>
+<th class="c-warn-h">⚠️ Hard input that's easy to overlook</th>
 <th>What it does to the design</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Pull totals from bank statement PDFs</td>
-<td>Some statements are scans or phone photos</td>
-<td>Text extraction fails on those; add a local OCR model or AI in the loop for them only</td>
+<td class="c-script">Pull totals from bank statement PDFs</td>
+<td class="c-warn">📷 Some statements are scans or phone photos</td>
+<td>Text extraction fails on those; add a local model or AI in the loop for those files only</td>
 </tr>
 <tr>
-<td>Categorize credit card transactions by vendor</td>
-<td>"Amazon", "AMZN Mktp US", "Amazon.com*2X4"</td>
-<td>Rules need a lookup table that grows; unmatched ones need a review path</td>
+<td class="c-script">Categorize credit card transactions by vendor</td>
+<td class="c-warn">🔤 "Amazon", "AMZN Mktp US", "Amazon.com*2X4"</td>
+<td>Rules need a <strong>lookup table that grows</strong>; unmatched lines need a review path</td>
 </tr>
 <tr>
-<td>Read invoice dates</td>
-<td>03/04/2026: March or April?</td>
-<td>Need a rule per vendor, or a check that flags ambiguous dates</td>
+<td class="c-script">Categorize transactions from free-text memo lines</td>
+<td class="c-warn">🌀 Hundreds of wordings, abbreviations and typos</td>
+<td>The script <strong>grows to an enormous size and still misses cases</strong>; that's the signal to move to hybrid</td>
 </tr>
 <tr>
-<td>Import a client's Excel export</td>
-<td>Merged cells, two header rows, a totals row in the middle</td>
-<td>Script needs cleanup steps, tested on real exports</td>
+<td class="c-script">Import a client's Excel export</td>
+<td class="c-warn">🧩 Merged cells, two header rows, a totals row in the middle</td>
+<td>The script needs cleanup steps, tested on real exports</td>
 </tr>
 <tr>
-<td>Fill a form from vendor invoices</td>
-<td>Vendor changed its invoice layout</td>
+<td class="c-script">Fill a form from vendor invoices</td>
+<td class="c-warn">🔁 A vendor changed its invoice layout</td>
 <td>Fixed-position rules break silently; add a check that catches missing fields</td>
 </tr>
 <tr>
-<td>Process a folder of client documents</td>
-<td>Duplicates, password-protected PDFs</td>
-<td>Script needs to detect and list them, not skip them silently</td>
+<td class="c-script">Process a folder of client documents</td>
+<td class="c-warn">🔒 Duplicates, password-protected PDFs</td>
+<td>The script needs to detect and list them, not skip them silently</td>
 </tr>
 </tbody>
 </table>
+<p><strong>So:</strong> agree on the design with Claude <strong>before</strong> building anything.</p>
+<ul>
+<li>Ask for the hard inputs, not only the typical ones.</li>
+<li>Ask for the design with the least AI in the loop.</li>
+<li>Ask Claude to compare designs by tokens per run: none / small / large.</li>
+<li>See the prompt card and the starter CLAUDE.md.</li>
+</ul>
+<h2>Tokens</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th class="c-script-h">📜 Scripting</th>
+<th class="c-hybrid-h">🔀 Hybrid</th>
+<th class="c-ai-h">🤖 AI in the loop</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tokens to build</td>
+<td class="c-script">Once</td>
+<td class="c-hybrid">Once</td>
+<td class="c-ai">A prompt</td>
+</tr>
+<tr>
+<td>Tokens per run</td>
+<td class="t-good">None</td>
+<td class="c-hybrid">Small: only the slice that needs judgment</td>
+<td class="c-ai">Large: every run</td>
+</tr>
+<tr>
+<td>500 invoices</td>
+<td class="c-script">Build once, then free</td>
+<td class="c-hybrid">500 small calls</td>
+<td class="c-ai">500 full calls</td>
+</tr>
+<tr>
+<td>A large spreadsheet</td>
+<td class="c-script">The script reads it on your computer for free</td>
+<td class="c-hybrid">The script sends only the rows that need judgment</td>
+<td class="c-ai">Pasting it into chat burns tokens just to read it</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Big files make it worse.</strong> Pasting a large spreadsheet into chat burns tokens just to read it.</li>
+<li><strong>Hybrid:</strong> send only the slice that needs judgment to the LLM; let the script do the rest.</li>
+</ul>
 <h2>Hybrid patterns</h2>
 <p>Agree on the split for each one before building.</p>
 <table>
 <thead>
 <tr>
 <th>Pattern</th>
-<th>Scripting part</th>
-<th>AI-in-the-loop part</th>
+<th class="c-script-h">📜 Scripting part</th>
+<th class="c-ai-h">🤖 AI-in-the-loop part</th>
 <th>The seam</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>AI extracts → script processes</strong></td>
-<td>Validate, total, fill the Excel form</td>
-<td>Pull fields from messy PDFs into a CSV</td>
+<td class="c-script">Validate, total, fill the Excel form</td>
+<td class="c-ai">Pull fields from messy PDFs into a CSV</td>
 <td>Fixed CSV columns; the script rejects rows that fail checks</td>
 </tr>
 <tr>
 <td><strong>Script filters → AI judges</strong></td>
-<td>Run the reconciliation, find the exceptions</td>
-<td>Draft the explanation for only the exceptions</td>
+<td class="c-script">Run the reconciliation, find the exceptions</td>
+<td class="c-ai">Draft the explanation for only the exceptions</td>
 <td>The script sends only the exception rows, not the whole file</td>
 </tr>
 <tr>
 <td><strong>Rules first, AI for leftovers</strong></td>
-<td>Categorize by vendor rules (most transactions)</td>
-<td>Categorize only the unmatched ones</td>
+<td class="c-script">Categorize by vendor rules (most transactions)</td>
+<td class="c-ai">Categorize only the unmatched ones</td>
 <td>Unmatched list → AI → review list; good answers become new rules</td>
 </tr>
 <tr>
 <td><strong>AI first, then promote to script</strong></td>
-<td>Later: the script that replaced the AI step</td>
-<td>Early: do the task with AI a few times</td>
+<td class="c-script">Later: the script that replaced the AI step</td>
+<td class="c-ai">Early: do the task with AI a few times</td>
 <td>Once the pattern is stable, ask Claude to turn it into a script</td>
 </tr>
 </tbody>
@@ -315,34 +394,34 @@ img { max-width: min(100%, 900px); height: auto; }
 <thead>
 <tr>
 <th>Need</th>
-<th>Local model (examples)</th>
+<th class="c-local-h">💻 Local model</th>
 <th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Text from scanned documents</td>
-<td>Tesseract</td>
+<td class="c-local">Tesseract</td>
 <td>Struggles with poor scans and handwriting</td>
 </tr>
 <tr>
 <td>Speech to text</td>
-<td>whisper.cpp, Vosk</td>
+<td class="c-local">whisper.cpp, Vosk</td>
 <td>Runs offline; larger models need a stronger computer</td>
 </tr>
 <tr>
 <td>Categorize transactions from the firm's own past entries</td>
-<td>scikit-learn</td>
+<td class="c-local">scikit-learn</td>
 <td>Needs enough past examples to learn from</td>
 </tr>
 <tr>
 <td>Find names, dates and amounts in text</td>
-<td>spaCy</td>
+<td class="c-local">spaCy</td>
 <td>Accuracy depends on the type of text</td>
 </tr>
 <tr>
 <td>Remove an image background</td>
-<td>rembg</td>
+<td class="c-local">rembg</td>
 <td>Downloads a model file on first run</td>
 </tr>
 </tbody>
@@ -351,7 +430,113 @@ img { max-width: min(100%, 900px); height: auto; }
 <li>Not LLMs. They run on your computer. Zero tokens.</li>
 <li>Narrow: each one does one job.</li>
 <li>Setting them up takes real technical knowledge. Claude can carry most of it, but expect some back-and-forth.</li>
-</ul></section><section id="s2"><span class="badge Participants">Participants</span> <span class="src">participant/prompt-card.md</span><h1>Prompt card</h1>
+</ul>
+<h2>Sort these: discuss and vote</h2>
+<p>For each task, vote: 📜 Scripting, 🤖 AI in the loop or 🔀 Hybrid. Then ask: what hard inputs could change the answer?</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Task</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Email every client a reminder 30 days before their filing deadline</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Write a personal year-end note to each client about their year</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Flag possible duplicate vendor payments</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Turn client voicemails into tasks with the client's name and a due date</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Build a monthly KPI summary from the general ledger export</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Pull box amounts from W-2s that clients upload</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Categorize 3,000 credit card lines from their memo text</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Decide whether a receipt is a deductible business expense for this client</td>
+</tr>
+</tbody>
+</table>
+<details>
+<summary>Answer key (open after voting)</summary>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Bucket</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td class="c-script">📜 Scripting</td>
+<td>Depends on the clock, but the rule is fixed: date minus 30 days, same template</td>
+</tr>
+<tr>
+<td>2</td>
+<td class="c-hybrid">🔀 Hybrid</td>
+<td>The script pulls each client's figures; AI writes the note from only those figures</td>
+</tr>
+<tr>
+<td>3</td>
+<td class="c-script">📜 Scripting, maybe 🔀 Hybrid</td>
+<td>Exact matches are rules; near-matches ("ACME Inc" vs "Acme, Inc.") may need AI for leftovers</td>
+</tr>
+<tr>
+<td>4</td>
+<td class="c-hybrid">🔀 Hybrid</td>
+<td>A local speech-to-text model (zero tokens), then AI to pick out the name and due date from the transcript</td>
+</tr>
+<tr>
+<td>5</td>
+<td class="c-script">📜 Scripting</td>
+<td>Same export, same calculations every month</td>
+</tr>
+<tr>
+<td>6</td>
+<td class="c-hybrid">🔀 Hybrid</td>
+<td>Text PDFs → script; scans and photos → local OCR or AI; the script checks totals either way</td>
+</tr>
+<tr>
+<td>7</td>
+<td class="c-hybrid">🔀 Hybrid</td>
+<td>Rules first, AI for leftovers; the rules list grows from the AI's reviewed answers</td>
+</tr>
+<tr>
+<td>8</td>
+<td class="c-ai">🤖 AI in the loop, plus a person</td>
+<td>Judgment about this client's business; a person signs off</td>
+</tr>
+</tbody>
+</table>
+</details>
+<h2>Testing (if there's time)</h2>
+<ul>
+<li>Testability comes from written-down code you can run on controlled inputs.</li>
+<li><strong>Random IDs:</strong> test the properties: right length and format, no duplicates in 10,000 runs.</li>
+<li><strong>Today's stock price:</strong> test the calculation with a fake price source that always returns $100.</li>
+<li><strong>Due-date reminders:</strong> test with the clock frozen ("pretend today is April 10").</li>
+<li><strong>Audit sample:</strong> record the random seed in the workpapers so the sample can be reproduced.</li>
+</ul></section><section id="s1"><span class="badge Participants">Participants</span> <span class="src">participant/prompt-card.md</span><h1>Prompt card</h1>
 <p>Copy and adapt. The starter CLAUDE.md already includes the first one.</p>
 <h2>Agree on the design first</h2>
 <blockquote>
@@ -384,7 +569,7 @@ img { max-width: min(100%, 900px); height: auto; }
 <h2>Large files</h2>
 <blockquote>
 <p>This file is large. Don't read all of it. Write a script that pulls out only the part you need to see.</p>
-</blockquote></section><section id="s3"><span class="badge Participants">Participants</span> <span class="src">participant/CLAUDE.md</span><h1>Starter CLAUDE.md: Automation beyond the chatbot</h1>
+</blockquote></section><section id="s2"><span class="badge Participants">Participants</span> <span class="src">participant/CLAUDE.md</span><h1>Starter CLAUDE.md: Automation beyond the chatbot</h1>
 <p>Instructions for Claude. Put this file in the folder you work in with Claude Code, or paste it into a Claude Project's instructions.</p>
 <h2>Words we use</h2>
 <ul>
@@ -397,12 +582,13 @@ img { max-width: min(100%, 900px); height: auto; }
 <h2>Before building anything</h2>
 <ol>
 <li>Restate the task as inputs → outputs.</li>
-<li>List the hard inputs, not only the typical ones:
-   a. blurry or scanned PDFs, photos, handwriting
-   b. layout changes, extra header rows, merged cells, totals inside the data
-   c. the same name spelled several ways, mixed date formats, negative numbers in parentheses
-   d. missing, duplicate or password-protected files
-   Ask me which ones actually happen and how often.</li>
+<li>List the hard inputs, not only the typical ones, and ask me which ones actually happen and how often:<ul>
+<li>a. blurry or scanned PDFs, photos, handwriting</li>
+<li>b. layout changes, extra header rows, merged cells, totals inside the data</li>
+<li>c. the same name spelled several ways, negative numbers in parentheses</li>
+<li>d. missing, duplicate or password-protected files</li>
+</ul>
+</li>
 <li>Propose the design with the least AI in the loop.</li>
 <li>Label every step: <strong>Scripting</strong>, <strong>Local model</strong> or <strong>AI in the loop</strong>, and say why.</li>
 <li>Rate each step's tokens per run: <strong>none / small / large</strong>. Say what makes the cost grow (number of documents, file size).</li>
@@ -425,28 +611,38 @@ img { max-width: min(100%, 900px); height: auto; }
 <ul>
 <li>If it looks repeatable and would cost fewer tokens as a script, say so before doing it.</li>
 <li>If a file is large, offer a script that pulls out only the part that needs your judgment.</li>
-</ul></section><section id="s4"><span class="badge Participants">Participants</span> <span class="src">participant/homework.md</span><h1>Homework</h1>
+</ul></section><section id="s3"><span class="badge Participants">Participants</span> <span class="src">participant/homework.md</span><h1>Homework</h1>
 <p><strong>Output: a Python script that runs one step of a real workflow with no AI in the loop.</strong></p>
 <ol>
-<li>Pick one workflow from your firm.
-   a. Use one you do often, so the token savings matter.
-   b. Use made-up or anonymized sample data, not client data.</li>
-<li>Agree on the design with Claude.
-   a. Use the starter CLAUDE.md, or the "Agree on the design first" prompt.
-   b. Make sure Claude lists the hard inputs.
-   c. Pick the design with the least AI in the loop.</li>
-<li>Define "done."
-   a. Have Claude write sample inputs, including hard ones.
-   b. Write down the expected output for each.</li>
-<li>Build the scripting part.
-   a. Have Claude write the script.
-   b. Run it on the sample inputs and compare with the expected outputs.
-   c. Ask Claude to explain the script in plain language.</li>
-<li>Bring back:
-   a. the design (which steps are scripting, local model, AI in the loop)
-   b. the script
-   c. one hard input that surprised you</li>
-</ol></section><section id="s5"><span class="badge Instructor">Instructor only</span> <span class="src">instructor/run-of-show.md</span><h1>Run of show (60 minutes)</h1>
+<li>Pick one workflow from your firm.<ul>
+<li>a. Use one you do often, so the token savings matter.</li>
+<li>b. Use made-up or anonymized sample data, not client data.</li>
+</ul>
+</li>
+<li>Agree on the design with Claude.<ul>
+<li>a. Use the starter CLAUDE.md, or the "Agree on the design first" prompt.</li>
+<li>b. Make sure Claude lists the hard inputs.</li>
+<li>c. Pick the design with the least AI in the loop.</li>
+</ul>
+</li>
+<li>Define "done."<ul>
+<li>a. Have Claude write sample inputs, including hard ones.</li>
+<li>b. Write down the expected output for each.</li>
+</ul>
+</li>
+<li>Build the scripting part.<ul>
+<li>a. Have Claude write the script.</li>
+<li>b. Run it on the sample inputs and compare with the expected outputs.</li>
+<li>c. Ask Claude to explain the script in plain language.</li>
+</ul>
+</li>
+<li>Bring back:<ul>
+<li>a. the design (which steps are scripting, local model, AI in the loop)</li>
+<li>b. the script</li>
+<li>c. one hard input that surprised you</li>
+</ul>
+</li>
+</ol></section><section id="s4"><span class="badge Instructor">Instructor only</span> <span class="src">instructor/run-of-show.md</span><h1>Run of show (60 minutes)</h1>
 <p>Instructor-only. Not copied to the public participant repo.</p>
 <h2>Roles</h2>
 <ul>
@@ -469,19 +665,19 @@ img { max-width: min(100%, 900px); height: auto; }
 <td>0:00–0:10</td>
 <td>Concepts</td>
 <td>Three buckets, the deterministic definition and Venn diagram, "data type doesn't decide", tokens. Run 3–4 clear-cut examples.</td>
-<td>concepts.md, examples.md (clear-cut tables)</td>
+<td>handout.md (through "Clear-cut examples")</td>
 </tr>
 <tr>
 <td>0:10–0:40</td>
 <td>Participant workflows</td>
-<td>Go deep on 2–3 participants' workflows. Run the "Agree on the design first" prompt live. Point out hard inputs and the scripting / AI-in-the-loop split. Remaining workflows: point to the handouts.</td>
+<td>Go deep on 2–3 participants' workflows. Run the "Agree on the design first" prompt live. Point out hard inputs and the scripting / AI-in-the-loop split. Remaining workflows: point to the handout. If participants bring few workflows, use "Sort these: discuss and vote".</td>
 <td>prompt-card.md, CLAUDE.md</td>
 </tr>
 <tr>
 <td>0:40–0:55</td>
 <td>Hybrid patterns</td>
 <td>Use a participant workflow where one fits; otherwise the examples handout. Agree on the split for each pattern. Mention zero-token helpers.</td>
-<td>examples.md (hybrid, hard inputs, zero-token helpers)</td>
+<td>handout.md (hard inputs, hybrid patterns, zero-token helpers)</td>
 </tr>
 <tr>
 <td>0:55–1:00</td>
@@ -493,7 +689,8 @@ img { max-width: min(100%, 900px); height: auto; }
 </table>
 <h2>If time runs short</h2>
 <ul>
-<li>Skip the testing section of concepts.md.</li>
+<li>Skip the testing section of handout.md.</li>
+<li>Skip the vote; the answer key is in the handout.</li>
 <li>Cover zero-token helpers in one sentence and point to the handout.</li>
 </ul>
 <h2>Live-demo checklist</h2>
