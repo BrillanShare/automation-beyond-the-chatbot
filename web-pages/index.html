@@ -227,6 +227,12 @@ svg text { font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
 .pbox .prow { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 6px; }
 #prompts .pt { font-size: 17px; }
 
+/* ---------- vote answers ---------- */
+.buckets { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.buckets .or { color: var(--muted); font-size: 13px; }
+.vote .why { margin-top: 8px; font-size: 15px; }
+.vote .vol { margin-top: 6px; font-size: 14px; color: var(--muted); }
+
 /* ---------- prompts and vote ---------- */
 .prompt { display: flex; align-items: center; gap: 12px; }
 .prompt .pi { font-size: 30px; }
@@ -504,7 +510,9 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 <!-- ================= Vote ================= -->
 <section>
   <h2>Sort these: which bucket?</h2>
-  <p class="take">Vote first. Then hints, then the answer.</p>
+  <p class="take">Vote first, then hints, then the answer. The buckets:
+    <span class="chip c-script">📜 Scripting</span> <span class="chip c-hybrid">🔀 Hybrid</span> <span class="chip c-ai">🤖 AI in the loop</span>
+    · Not hard and fast: the details and your volume can change the answer.</p>
   <div class="grid4" id="votes"></div>
 </section>
 
@@ -1073,16 +1081,18 @@ function prompts() {
 }
 
 // ---------- vote ----------
+// [icon, task, hints, buckets (in order of likelihood), why, how volume changes it]
 var VOTES = [
-  ["⏰", "Email clients 30 days before their deadline", ["Where do the deadlines come from?", "Same wording for every client?"], "📜 Scripting", "Fixed rule: deadline minus 30 days, same template.", C.script],
-  ["✍️", "A personal year-end note to each client", ["Which part pulls figures, which part writes?", "New wording each time?"], "🔀 Hybrid", "Script pulls the figures; AI writes the note.", C.hybrid],
-  ["🔁", "Flag possible duplicate payments", ["Same number and amount twice?", "\"ACME Inc\" vs \"Acme, Inc.\"?"], "📜 Script, maybe 🔀 Hybrid", "Exact matches are rules; near-matches may need AI.", C.script],
-  ["🎙️", "Voicemails → tasks with name and due date", ["Speech to text: LLM or local model?", "Picking out a due date: rules or understanding?"], "🔀 Hybrid", "💻 Local speech-to-text, then AI picks out the details.", C.hybrid],
-  ["📈", "Monthly KPI summary from the GL export", ["Same columns every month?", "Same formulas every month?"], "📜 Scripting", "Same export, same calculations.", C.script],
-  ["🧾", "Box amounts from uploaded W-2s", ["All text PDFs from one provider?", "Any phone photos?"], "🔀 Hybrid", "Text PDFs → script; photos → local OCR or AI.", C.hybrid],
-  ["💳", "Categorize 3,000 card lines", ["How many would a lookup table catch?", "What happens to the rules list?"], "🔀 Hybrid", "Rules first, AI for leftovers.", C.hybrid],
-  ["🤔", "Is this receipt deductible for this client?", ["Can you list every case in advance?", "Who signs off?"], "🤖 AI + a person", "Judgment about this client's business.", C.ai],
+  ["⏰", "Email clients 30 days before their deadline", ["Where do the deadlines come from?", "Same wording for every client?"], ["s"], "Fixed rule: deadline minus 30 days, same template.", "Any volume: a script, since nothing needs judgment."],
+  ["✍️", "A personal year-end note to each client", ["Which part pulls figures, which part writes?", "New wording each time?"], ["h"], "The script pulls each client's figures; AI writes the note from only those.", "A few clients: just ask AI. Hundreds: hybrid keeps the tokens to the writing."],
+  ["🔁", "Flag possible duplicate payments", ["Same number and amount twice?", "\"ACME Inc\" vs \"Acme, Inc.\"?"], ["s", "h"], "Exact matches are rules. Near-matches (spelling, a cent off) may need AI for the leftovers.", "Thousands of payments: comparing every pair with AI explodes in cost, so script first."],
+  ["🎙️", "Voicemails → tasks with name and due date", ["Speech to text: LLM or local model?", "Picking out a due date: rules or understanding?"], ["h"], "A local speech-to-text model (zero tokens), then AI picks out the name and due date.", "A handful a week: AI alone is fine. Many a day: hybrid."],
+  ["📈", "Monthly KPI summary from the GL export", ["Same columns every month?", "Same formulas every month?"], ["s"], "Same export, same calculations every month.", "Any volume: a script; Excel may already do it."],
+  ["🧾", "Box amounts from uploaded W-2s", ["All text PDFs from one provider?", "Any phone photos?"], ["h", "s"], "Text PDFs → script; scans and photos → local OCR or AI. All text PDFs from one provider → pure script.", "15 a year: below break-even, leave it with AI. Hundreds: convert."],
+  ["💳", "Categorize 3,000 card lines", ["How many would a lookup table catch?", "What happens to the rules list?"], ["h"], "Rules first, AI for the leftovers; good AI answers become new rules.", "3,000 a month: big savings. 50 a month: AI alone may be fine."],
+  ["🤔", "Is this receipt deductible for this client?", ["Can you list every case in advance?", "Who signs off?"], ["a"], "Judgment about this client's business, and a person signs off.", "Any volume: AI to draft, a person to decide."],
 ];
+var BUCKET = { s: ["📜 Scripting", C.script], h: ["🔀 Hybrid", C.hybrid], a: ["🤖 AI in the loop", C.ai] };
 function votes() {
   var box = document.getElementById("votes");
   VOTES.forEach(function (v, k) {
@@ -1098,7 +1108,9 @@ function votes() {
       if (n + 1 >= v[2].length) e.target.disabled = true;
     }
     if (e.target.classList.contains("ansb")) {
-      card.querySelector(".ans").innerHTML = '<span class="badge" style="color:' + v[5] + ";border-color:" + v[5] + '">' + v[3] + '</span><div class="hint">' + v[4] + "</div>";
+      card.querySelector(".ans").innerHTML = '<div class="buckets">' + v[3].map(function (b, i) {
+        return (i ? '<span class="or">or</span>' : "") + '<span class="badge" style="color:' + BUCKET[b][1] + ";border-color:" + BUCKET[b][1] + ";background:" + BUCKET[b][1] + '22">' + BUCKET[b][0] + "</span>";
+      }).join("") + '</div><div class="why">' + v[4] + '</div><div class="vol">📈 ' + v[5] + "</div>";
       e.target.disabled = true;
     }
   });
