@@ -1,10 +1,10 @@
 """Rebuild the copies of the Markdown that the web pages carry.
 
-text.html shows a copy of the Markdown files in the folder above, and
+legacy-text-only.html shows a copy of the Markdown files in the folder above, and
 index.html shows a copy of the prompts in prompt-card.md. Neither updates by
 itself. Run this when you've edited the Markdown and want the pages to match:
 
-    python rebuild_text_page.py
+    python rebuild_pages.py
 
 It needs only Python; nothing to install. It also stamps the date and time it
 ran into each page, so readers can see how current the copy is.
@@ -16,7 +16,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 MARKDOWN_FOLDER = HERE.parent
-PAGE = HERE / "text.html"
+PAGE = HERE / "legacy-text-only.html"
 INDEX = HERE / "index.html"
 
 
@@ -67,10 +67,10 @@ def main():
         flags=re.S,
     )
     if count != 1:
-        raise SystemExit("Couldn't find the saved-copy markers in text.html")
+        raise SystemExit("Couldn't find the saved-copy markers in legacy-text-only.html")
     built = datetime.now().astimezone().strftime("%b %d, %Y %I:%M %p %Z").replace(" 0", " ")
-    PAGE.write_text(stamp(html, built, "text.html"), encoding="utf-8")
-    print(f"Rebuilt text.html from {len(files)} Markdown files ({built})")
+    PAGE.write_text(stamp(html, built, "legacy-text-only.html"), encoding="utf-8")
+    print(f"Rebuilt legacy-text-only.html from {len(files)} Markdown files ({built})")
     n = rebuild_index(built)
     print(f"Copied {n} prompts from prompt-card.md into index.html")
 
