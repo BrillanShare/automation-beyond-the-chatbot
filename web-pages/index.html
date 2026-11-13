@@ -47,6 +47,8 @@ a { color: var(--script); }
 
 /* ---------- plain-language takeaway under each visual ---------- */
 .means { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 12px 0 18px; padding: 10px 16px; border-left: 4px solid var(--good); background: #2ea04314; border-radius: 6px; font-size: 16px; }
+.wf .subtake { min-height: 52px; display: flex; align-items: center; justify-content: center; text-align: center; }
+.subtake { margin-top: 10px; padding: 6px 12px; border-left: 3px solid var(--good); background: #2ea04314; border-radius: 6px; font-weight: 700; font-size: 15px; opacity: 0; }
 .means .mp { display: inline-block; padding: 4px 12px; border-radius: 999px; background: #0d1117; border: 1px solid var(--line); font-weight: 600; }
 .means b { color: var(--good); margin-right: 4px; }
 
@@ -114,9 +116,9 @@ a { color: var(--script); }
 .rent { background: #fff1a8; border-radius: 4px; padding: 6px 8px; font-weight: 700; font-size: 16px; }
 .spot { position: absolute; left: 6px; right: 6px; border: 3px dashed var(--script); border-radius: 6px; opacity: 0; transition: opacity .6s; }
 .result { margin-top: 10px; text-align: center; font-weight: 800; font-size: 17px; min-height: 64px; opacity: 0; position: relative; z-index: 3; }
-.tag { display: inline-block; padding: 6px 14px; border-radius: 999px; font-size: 18px; font-weight: 900; border: 2px solid; box-shadow: 0 4px 14px #0009; opacity: 0; }
-.tag.ok { color: var(--good); border-color: var(--good); background: #12261a; }
-.tag.miss { color: var(--ai); border-color: var(--ai); background: #2d1214; }
+.ftag { display: inline-block; padding: 6px 14px; border-radius: 999px; font-size: 18px; font-weight: 900; border: 2px solid; box-shadow: 0 4px 14px #0009; opacity: 0; }
+.ftag.ok { color: var(--good); border-color: var(--good); background: #12261a; }
+.ftag.miss { color: var(--ai); border-color: var(--ai); background: #2d1214; }
 .result .llm { display: inline-block; margin-top: 6px; }
 .on .spot, .result.on { opacity: 1; }
 
@@ -227,6 +229,13 @@ svg text { font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
 /* ---------- controls ---------- */
 .ctlgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px 36px; margin-top: 10px; }
 .ctl2 { display: flex; flex-direction: column; gap: 16px; padding: 22px 24px; }
+/* Each card spans six shared rows (header, story, play bar, bottom line, note, prompt) so play bars and copy buttons line up side by side. */
+@supports (grid-template-rows: subgrid) {
+  .ctl2 { display: grid; grid-template-rows: subgrid; grid-row: span 6; row-gap: 16px; align-content: start; }
+  .ctl2 > .stage2 { height: 100%; box-sizing: border-box; }
+  .ctl2 > .pbox { display: flex; flex-direction: column; margin-top: 0; }
+  .ctl2 > .pbox textarea { flex: 1; }
+}
 .ctl2 .cnum { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; min-width: 40px; height: 32px; padding: 0 8px; border-radius: 8px; background: #1f6feb; color: #fff; font: 800 17px Georgia, "Times New Roman", serif; }
 .chead { display: flex; gap: 12px; align-items: center; }
 .chead .ico { font-size: 34px; }
@@ -721,13 +730,13 @@ function buildCant() {
       '<div><div class="mini"><div class="ttl">' + m[0] + ' export</div><table><tr><th>A</th><th>C · Amt</th></tr>' +
       '<tr><td>1010</td><td class="col">' + m[1] + '</td></tr><tr><td>1020</td><td class="col">' + m[2] +
       '</td></tr><tr><td>1030</td><td class="col">' + m[3] + '</td></tr></table>' +
-      '<div class="spot"></div></div><div class="result"><span class="tag ok">📜 Found it ✓</span></div></div>');
+      '<div class="spot"></div></div><div class="result"><span class="ftag ok">📜 Found it ✓</span></div></div>');
   });
   LEASES.forEach(function (l) {
     var bars = "";
     for (var k = 0; k < 9; k++) bars += k === l[1] ? '<div class="rent">' + l[2] + "</div>" : '<div class="bar" style="width:' + (55 + (k * 37) % 45) + '%"></div>';
-    var res = l[3] ? '<span class="tag ok">📜 Found it ✓</span>'
-      : '<span class="tag miss">😟 📜 Missed it ✗</span><br><span class="llm" style="color:var(--good)">🤖 LLM reads it ✓</span>';
+    var res = l[3] ? '<span class="ftag ok">📜 Found it ✓</span>'
+      : '<span class="ftag miss">😟 📜 Missed it ✗</span><br><span class="llm" style="color:var(--good)">🤖 LLM reads it ✓</span>';
     leases.insertAdjacentHTML("beforeend",
       '<div><div class="mini"><div class="ttl">' + l[0] + "</div>" + bars + '<div class="spot"></div></div><div class="result">' + res + "</div></div>");
   });
@@ -748,7 +757,7 @@ function placeSpots() {
   });
   // Each tag starts on the spot the script looked at, then moves down to its place.
   document.querySelectorAll("#sheets > div, #leases > div").forEach(function (c) {
-    var tag = c.querySelector(".tag"), sp = c.querySelector(".spot"), old = tag.style.transform;
+    var tag = c.querySelector(".ftag"), sp = c.querySelector(".spot"), old = tag.style.transform;
     tag.style.transform = "none";
     var r = tag.getBoundingClientRect(), q = sp.getBoundingClientRect();
     tag._dx = (q.left + q.width / 2) - (r.left + r.width / 2);
@@ -762,7 +771,7 @@ function renderCant(t) {
   if (TIMELINES.cant) TIMELINES.cant._t = t;
   [document.querySelectorAll("#sheets > div"), document.querySelectorAll("#leases > div")].forEach(function (col) {
     col.forEach(function (c, k) {
-      var t0 = 0.5 + k * CANT_STEP, tag = c.querySelector(".tag"), miss = tag.classList.contains("miss");
+      var t0 = 0.5 + k * CANT_STEP, tag = c.querySelector(".ftag"), miss = tag.classList.contains("miss");
       c.querySelector(".spot").style.opacity = ramp(t, t0, 0.5);
       c.querySelector(".result").style.opacity = 1;
       // Appear on the spot, (shake if it missed), then move down to its place.
@@ -802,12 +811,12 @@ function renderDtypes(t) {
 
 // ---------- hard inputs: each card morphs from what we picture to what arrives ----------
 var HARD = [
-  ["📄 Text PDF", "📷 Tilted phone photo", "photo"],
-  ["🏷️ One vendor name", "🔤 Five spellings of it", "names"],
-  ["📋 A few vendor rules", "📜 417 rules, still missing cases", "rules"],
-  ["📊 Clean export", "🧩 Merged title, two headers, subtotal mid-table", "export"],
-  ["🧾 Total at the bottom", "🔁 Vendor moved the Total", "invoice"],
-  ["📁 One file each", "🔒 Duplicates and locked PDFs", "files"],
+  ["📄 Text PDF", "📷 Tilted phone photo", "photo", "Fixed positions fail: needs OCR or AI"],
+  ["🏷️ One vendor name", "🔤 Five spellings of it", "names", "Exact match misses most of them"],
+  ["📋 A few vendor rules", "📜 417 rules, still missing cases", "rules", "Rules never finish: AI for the leftovers"],
+  ["📊 Clean export", "🧩 Merged title, two headers, subtotal mid-table", "export", "Clean the table before the script reads it"],
+  ["🧾 Total at the bottom", "🔁 Vendor moved the Total", "invoice", "\"Look at the bottom\" breaks"],
+  ["📁 One file each", "🔒 Duplicates and locked PDFs", "files", "Plan for duplicates and errors up front"],
 ];
 var NAMES = ["AMAZON.COM*2X4LK9", "AMZN Mktp US*RT5", "Amazon.com", "AMZN DIGITAL", "Amazon Web Svcs"];
 var RULES = ['"AMZN" → Supplies', '"AMAZON" → Supplies', '"UBER" → Travel', '"UBER EATS" → Meals', '"SQ *" → ???', '"TST*" → Meals?', '… 411 more'];
@@ -824,7 +833,7 @@ function buildFlips() {
   var box = document.getElementById("flips");
   HARD.forEach(function (h) {
     box.insertAdjacentHTML("beforeend", '<div class="th" data-kind="' + h[2] + '">' + hardVisual(h[2]) +
-      '<div class="pair"><div class="typ"><div class="tag">We picture</div>' + h[0] + '</div><div class="arr">→</div><div class="hrd"><div class="tag">⚠️ What arrives</div>' + h[1] + "</div></div></div>");
+      '<div class="pair"><div class="typ"><div class="tag">We picture</div>' + h[0] + '</div><div class="arr">→</div><div class="hrd"><div class="tag">⚠️ What arrives</div>' + h[1] + '</div></div><div class="subtake">👉 ' + h[3] + "</div></div>");
   });
 }
 function renderFlips(t) {
@@ -833,6 +842,7 @@ function renderFlips(t) {
     c.style.borderColor = a > 0.5 ? "var(--warn)" : "";
     c.querySelector(".hrd").style.opacity = 0.3 + 0.7 * e;
     c.querySelector(".arr").style.opacity = 0.3 + 0.7 * e;
+    c.querySelector(".subtake").style.opacity = ramp(t, 0.5 + k * 1.6 + 2.2, 0.6);
     if (kind === "photo") {
       var pg = c.querySelector(".pg");
       pg.style.transform = "rotate(" + (-13 * e) + "deg) scale(" + (1 - 0.08 * e) + ")";
@@ -970,16 +980,16 @@ var FIRST_START = 2.4, FIRST_STEP = 1.6;
 var PANELS = [
   { ico: "💳", title: "Categorize card lines", vol: "3,000 lines a month", unit: "lines", you: 36000, max: 45000,
     pic: '<div class="pic stmt"><div><span>AMZN Mktp US*RT5</span><b>38.12</b></div><div><span>UBER *TRIP</span><b>23.80</b></div><div><span>SQ *BLUE HERON</span><b>9.75</b></div></div>',
-    today: function (n) { return n * 0.01; }, after: function (n) { return 3 + n * 0.001; }, badge: "🟢 Large return", color: C.good },
+    today: function (n) { return n * 0.01; }, after: function (n) { return 3 + n * 0.001; }, badge: "🟢 Large return", color: C.good, take: "Steep line, high volume: convert" },
   { ico: "🔁", title: "Find duplicate payments", vol: "5,000 payments a year", unit: "payments", you: 5000, max: 5600,
     pic: '<div class="pic dup"><div class="chip">INV-0412 · ACME Inc · $1,284.00</div><div class="chip">INV-0412 · Acme, Inc. · $1,284.00</div></div>',
-    today: function (n) { return n * (n - 1) / 2 * 20 / 1e6 * 10; }, after: function (n) { return 3 + n * 0.002; }, badge: "🟢🟢 Largest return", color: C.good },
+    today: function (n) { return n * (n - 1) / 2 * 20 / 1e6 * 10; }, after: function (n) { return 3 + n * 0.002; }, badge: "🟢🟢 Largest return", color: C.good, take: "Every-pair cost explodes: convert first" },
   { ico: "🧾", title: "Pull W-2 amounts", vol: "15 forms a year", unit: "forms", you: 15, max: 150,
     pic: '<div class="pic w2"><div class="hd">W-2 Wage and Tax Statement</div><div><span>1 Wages</span><b>52,400.00</b></div><div><span>2 Fed. tax withheld</span><b>6,118.00</b></div></div>',
-    today: function (n) { return n * 0.03; }, after: function (n) { return 3 + n * 0.002; }, badge: "🟠 Not yet", color: C.warn },
+    today: function (n) { return n * 0.03; }, after: function (n) { return 3 + n * 0.002; }, badge: "🟠 Not yet", color: C.warn, take: "15 a year: building costs more than it saves" },
   { ico: "✉️", title: "Answer client emails", vol: "30 emails a month", unit: "emails", you: 360, max: 450,
     pic: '<div class="pic mail">hi! quick q, we moved the shop to my sister\'s garage in march, do we still deduct the lease?</div>',
-    today: function (n) { return n * 0.04; }, after: function (n) { return 3 + n * 0.04; }, badge: "⚪ No return", color: C.muted },
+    today: function (n) { return n * 0.04; }, after: function (n) { return 3 + n * 0.04; }, badge: "⚪ No return", color: C.muted, take: "Every email needs AI: nothing to save" },
 ];
 function money(d) { return "$" + (d >= 100 ? Math.round(d).toLocaleString() : d.toFixed(2)); }
 function panels() {
@@ -1002,7 +1012,7 @@ function panels() {
     s += '<line class="gap" stroke-width="7"/><text class="you" y="' + (y0 + h + 16) + '" fill="' + C.text + '" font-size="13" font-weight="800" text-anchor="middle">you</text></g>';
     s += "</svg>";
     html += '<div class="card wf" data-i="' + i + '"><div class="pname">' + p.ico + " " + p.title + '</div><div class="small">' + p.vol + "</div>" + p.pic + s +
-      '<div class="wread"></div><div class="badgebox"><span class="badge" style="opacity:0;color:' + p.color + ";border-color:" + p.color + '">' + p.badge + "</span></div></div>";
+      '<div class="wread"></div><div class="badgebox"><span class="badge" style="opacity:0;color:' + p.color + ";border-color:" + p.color + '">' + p.badge + '</span><div class="subtake">👉 ' + p.take + "</div></div></div>";
   });
   box.innerHTML = '<div class="small" style="grid-column:1/-1;margin-top:-8px"><span style="color:' + C.ai + ';font-weight:700">━ today: all AI 💸</span> &nbsp; <span style="color:' + C.hybrid + ';font-weight:700">━ after converting</span> &nbsp; <span style="color:' + C.good + ';font-weight:700">▌ saved</span> &nbsp; <span style="color:' + C.warn + ';font-weight:700">▌ costs more</span> &nbsp; Hypothetical $ at $10 per million tokens.</div>' + html;
 }
@@ -1025,6 +1035,7 @@ function renderPanels(t) {
       '<div><span style="color:' + C.ai + '">Today</span> <b>' + money(a) + '</b></div><div><span style="color:' + C.hybrid + '">After</span> <b>' + money(b) + "</b></div>" +
       '<div><span style="color:' + (diff >= 0 ? C.good : C.warn) + '">' + (diff >= 0 ? "Saved" : "Costs more") + '</span> <b style="color:' + (diff >= 0 ? C.good : C.warn) + '">' + money(Math.abs(diff)) + "</b></div>";
     card.querySelector(".badge").style.opacity = ramp(t, t0 + 2.1, 0.6);
+    card.querySelector(".subtake").style.opacity = ramp(t, t0 + 2.4, 0.6);
   });
 }
 
@@ -1033,25 +1044,25 @@ function renderPanels(t) {
 // script can do turn blue one by one, and the chart shows the tokens that remain.
 // [icon, label, final kind ("a" stays LLM, "s" becomes a script, "o" LLM once, then script), share of today's tokens]
 var PIPES = [
-  ["AI extracts → script processes", [["📄", "read messy PDFs", "a", 0.35], ["🤖", "pull fields", "a", 0.25], ["⚙️", "check + total", "s", 0.2], ["📊", "fill Excel form", "s", 0.2]]],
-  ["Script filters → AI judges", [["🏦", "load all lines", "s", 0.4], ["⚙️", "reconcile", "s", 0.35], ["🤖", "explain exceptions", "a", 0.15], ["✉️", "client note", "s", 0.1]]],
-  ["Rules first → AI for leftovers", [["💳", "read 3,000 lines", "s", 0.3], ["⚙️", "apply vendor rules", "s", 0.4], ["🤖", "leftovers only", "a", 0.2], ["➕", "save new rules", "s", 0.1]]],
-  ["AI first → promote to a script", [["🤖", "AI does it a few times", "o", 0.4], ["🔎", "spot the pattern", "o", 0.2], ["📜", "write the script", "s", 0.2], ["♻️", "script runs it after", "s", 0.2]]],
+  ["AI extracts → script processes", "AI only reads; the script does the math", [["📄", "read messy PDFs", "a", 0.35], ["🤖", "pull fields", "a", 0.25], ["⚙️", "check + total", "s", 0.2], ["📊", "fill Excel form", "s", 0.2]]],
+  ["Script filters → AI judges", "AI sees only the exceptions", [["🏦", "load all lines", "s", 0.4], ["⚙️", "reconcile", "s", 0.35], ["🤖", "explain exceptions", "a", 0.15], ["✉️", "client note", "s", 0.1]]],
+  ["Rules first → AI for leftovers", "Leftovers shrink as rules grow", [["💳", "read 3,000 lines", "s", 0.3], ["⚙️", "apply vendor rules", "s", 0.4], ["🤖", "leftovers only", "a", 0.2], ["➕", "save new rules", "s", 0.1]]],
+  ["AI first → promote to a script", "AI once, then 0 tokens per run", [["🤖", "AI does it a few times", "o", 0.4], ["🔎", "spot the pattern", "o", 0.2], ["📜", "write the script", "s", 0.2], ["♻️", "script runs it after", "s", 0.2]]],
 ];
 var PIPE_STEP = 1.1, PIPE_START = 0.8;
 function pipes() {
   var html = "";
   PIPES.forEach(function (p, k) {
-    var nodes = p[1].map(function (n) { return '<div class="node a" data-final="' + n[2] + '"><span class="i">' + n[0] + "</span>" + n[1] + '<span class="who">🤖 LLM</span><span class="cash">$</span></div>'; }).join('<span class="arrow">→</span>');
+    var nodes = p[2].map(function (n) { return '<div class="node a" data-final="' + n[2] + '"><span class="i">' + n[0] + "</span>" + n[1] + '<span class="who">🤖 LLM</span><span class="cash">$</span></div>'; }).join('<span class="arrow">→</span>');
     html += '<div class="card pcard" data-k="' + k + '"><div class="pname">' + p[0] + '</div><div class="pipe">' + nodes + "</div>" +
-      '<div class="pchart"><svg viewBox="0 0 300 150" style="width:100%"></svg><div class="pread"></div></div></div>';
+      '<div class="pchart"><svg viewBox="0 0 300 150" style="width:100%"></svg><div class="pread"></div></div><div class="subtake">👉 ' + p[1] + "</div></div>";
   });
   document.getElementById("pipes").innerHTML = html;
 }
 function pipeState(p, t) {
   // How far each convertible step has turned into a script, in order.
   var j = 0, remaining = 0, built = 0;
-  p[1].forEach(function (n) {
+  p[2].forEach(function (n) {
     var k = 0;
     if (n[2] !== "a") { k = ramp(t, PIPE_START + j * PIPE_STEP, 0.8); j++; }
     n._k = k;
@@ -1063,8 +1074,9 @@ function pipeState(p, t) {
 function renderPipes(t) {
   document.querySelectorAll("#pipes .pcard").forEach(function (card) {
     var p = PIPES[+card.dataset.k], st = pipeState(p, t);
+    card.querySelector(".subtake").style.opacity = ramp(t, PIPE_START + 3 * PIPE_STEP + 0.4, 0.6);
     card.querySelectorAll(".node").forEach(function (el, i) {
-      var n = p[1][i], k = n._k, fin = n[2];
+      var n = p[2][i], k = n._k, fin = n[2];
       var col = fin === "o" ? "#8b949e" : C.script;
       el.style.borderColor = k > 0.5 ? col : C.ai;
       el.style.color = k > 0.5 ? col : C.ai;
