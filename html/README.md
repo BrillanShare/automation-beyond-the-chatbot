@@ -1,4 +1,6 @@
-# Web pages
+# html/
+
+The web pages. The repo root's `index.html` opens `index.html` here.
 
 | File | What it is |
 |---|---|
