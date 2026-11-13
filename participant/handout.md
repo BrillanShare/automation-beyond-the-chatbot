@@ -150,7 +150,7 @@ One unit = the tokens for one item or one comparison.
 Converting a task from all AI to hybrid or script takes effort. The return depends on two things together:
 
 - **The shape of today's line:** how the tokens grow as you process more lines, documents or clients.
-- **Your volume:** how many you process, and how often.
+- **Your volume over a year:** how many per run × how often you run it. 100 records every day is about 36,000 a year.
 
 A steep line doesn't matter at a tiny volume. A gentle line matters a lot at a large one.
 
@@ -168,6 +168,8 @@ A steep line doesn't matter at a tiny volume. A gentle line matters a lot at a l
 - **Does converting change the shape of the line, or only nudge it?** A changed shape is worth more than a small drop.
 - **Is your volume past break-even?** If not, leave the task with AI and check again when the volume grows.
 - **Several candidates?** Get this picture for each one, then convert the one with the biggest gap at your volume first.
+- **Volume first, chart second.** A chart drawn before your volume is known shows nothing useful. If the lines are close at your volume, the answer is "leave it," and no chart is needed.
+- **One exception to the yearly total:** a step that compares every item with every other depends on how many are in one run, not on the total for the year.
 
 There's no rule for "big enough" that fits every firm. Ask Claude to work it out for your task and your volume. The prompt card has three prompts for this: "Is it worth converting?", "Plot it" and "Which one first?"
 

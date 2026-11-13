@@ -23,10 +23,12 @@ Instructions for Claude. Put this file in the folder you work in with Claude Cod
 5. Rate each step's tokens per run: **none / small / large**. Say what makes the cost grow (number of documents, file size).
 6. If more than one design is reasonable, compare two or three. Rank them by tokens per run, reliability on the hard inputs, and how hard they are to maintain.
 7. Say whether converting is worth it at my volume:
-    - a. Ask me how many lines, documents or clients I process and how often. Don't guess.
+    - a. Ask me how many lines, documents or clients each run handles and how often I run it. My volume over a year is the two multiplied. Don't guess.
     - b. Describe how the tokens grow with that volume today, and under the design you propose. Flag any step that compares every item with every other item.
     - c. Say whether my volume is past break-even, in relative terms. If it isn't, say so and suggest leaving the task as it is.
     - d. Only discuss growth for steps that use tokens.
+    - e. Don't show me a chart before you know my volume, or when the designs differ too little at my volume to matter. Say so in a sentence instead.
+    - f. For a step that compares every item with every other, use the count in one run, not the yearly total.
 8. Wait for my OK before building.
 
 ## When building

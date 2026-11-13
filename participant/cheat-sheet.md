@@ -39,7 +39,8 @@
 
 ## Is it worth converting?
 
-- Return = the shape of today's token line × your volume
+- Return = the shape of today's token line × your volume (how many per run × how often)
+- Volume first, chart second
 - Converting that changes the shape beats converting that nudges it
 - Below break-even: leave it with AI, check again when volume grows
 - Ask Claude to plot it for your task ("Plot it" on the prompt card)
