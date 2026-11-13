@@ -186,15 +186,52 @@ svg text { font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
 .cn { font-size: 18px; text-align: right; } .cn.a { color: var(--ai); } .cn.s { color: var(--script); }
 
 /* ---------- controls ---------- */
-.ctl { text-align: center; }
-.ctl .ico { font-size: 36px; }
-.ctl .nm { font-weight: 800; font-size: 16px; margin: 4px 0; }
-.ctl .tw { font-size: 13px; color: var(--muted); }
-.ctl .tw b { color: var(--text); font-weight: 600; }
-.alarm { margin-top: 8px; font-weight: 900; font-size: 13px; padding: 4px 6px; border-radius: 6px; }
-.alarm.red { color: #fff; background: var(--ai); }
-.alarm.yel { color: #1b1300; background: var(--warn); }
-.tie { font-family: Consolas, Menlo, monospace; font-size: 13px; margin-top: 8px; color: var(--good); }
+.ctlgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ctl2 { display: flex; flex-direction: column; gap: 10px; }
+.chead { display: flex; gap: 12px; align-items: center; }
+.chead .ico { font-size: 34px; }
+.chead .nm { font-weight: 800; font-size: 19px; }
+.chead .tw { font-size: 15px; color: var(--muted); }
+.stage2 { background: #0d1117; border-radius: 10px; padding: 12px; min-height: 150px; font-size: 15px; }
+.stage2.two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.term { background: #161b22; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; display: flex; flex-direction: column; gap: 4px; }
+.term .tt, .flow .tt { font-weight: 800; color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .06em; }
+.ok { color: var(--good); font-weight: 700; } .bad { color: var(--ai); font-weight: 700; }
+.fail { color: #fff; background: var(--ai); font-weight: 900; padding: 3px 6px; border-radius: 4px; }
+.warnl { color: #1b1300; background: var(--warn); font-weight: 800; padding: 3px 6px; border-radius: 4px; }
+.okc { color: var(--good); font-weight: 800; } .badc { color: var(--ai); font-weight: 800; } .warnc { color: var(--warn); font-weight: 800; }
+.big { font-size: 16px; }
+.eq { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; justify-content: center; }
+.eq .tok { background: var(--paper); color: var(--ink); border-radius: 8px; padding: 10px 14px; font-weight: 800; font-size: 20px; }
+.eq .tok.warnc { background: #ffe2b8; } .eq .tok.okc { background: #c9f2d0; color: #116329; }
+.eq .op { font-size: 26px; font-weight: 800; color: var(--muted); }
+.money { display: flex; flex-direction: column; gap: 6px; }
+.mrow { display: flex; justify-content: space-between; align-items: center; gap: 10px; background: #161b22; border-radius: 6px; padding: 6px 10px; }
+.mrow b { font-size: 17px; }
+.pb { display: inline-block; background: #1f6feb; color: #fff; border-radius: 50%; width: 22px; height: 22px; text-align: center; line-height: 22px; font-size: 12px; }
+.flow { background: #161b22; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; display: flex; flex-direction: column; gap: 8px; }
+.frow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.docx { position: relative; background: var(--paper); color: var(--ink); border-radius: 4px; padding: 6px 8px; font-weight: 700; font-size: 14px; }
+.docx.newf { background: #c9f2d0; }
+.wreck { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: #f85149e6; color: #fff; font-weight: 900; border-radius: 4px; font-size: 13px; }
+.rulecard { background: var(--paper); color: var(--ink); border-radius: 6px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
+.q { font-weight: 800; color: var(--warn); margin-bottom: 6px; }
+.small2 { font-size: 13px; }
+.bottom { font-size: 15px; }
+.ctlfoot { border-top: 1px solid var(--line); padding-top: 8px; font-size: 14px; color: var(--muted); } .ctlfoot b { color: var(--text); }
+@media (max-width: 1100px) { .ctlgrid { grid-template-columns: 1fr; } }
+
+/* ---------- editable prompts ---------- */
+.pbox { margin-top: 8px; }
+.pbox textarea { width: 100%; box-sizing: border-box; background: #0d1117; color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 10px; font: 15px/1.45 "Segoe UI", Helvetica, Arial, sans-serif; resize: vertical; }
+.pbox .prow { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 6px; }
+#prompts .pt { font-size: 17px; }
+
+/* ---------- vote answers ---------- */
+.buckets { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.buckets .or { color: var(--muted); font-size: 13px; }
+.vote .why { margin-top: 8px; font-size: 15px; }
+.vote .vol { margin-top: 6px; font-size: 14px; color: var(--muted); }
 
 /* ---------- prompts and vote ---------- */
 .prompt { display: flex; align-items: center; gap: 12px; }
@@ -322,22 +359,136 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 </section>
 
 <!-- ================= Controls ================= -->
-<section id="controls">
+<section class="anim" id="controls">
   <h2>Ask for the controls you'd expect anywhere else</h2>
-  <p class="take">You can't read the code. You can ask for these.</p>
-  <div class="grid5">
-    <div class="card ctl"><div class="ico">📣</div><div class="nm">Fail loudly</div><div class="tw">= <b>exceptions report</b></div><div class="alarm red">FAILED: 13 ROWS NOT PROCESSED</div><div class="alarm yel" style="margin-top:6px">⚠️ 2 dates unclear</div></div>
-    <div class="card ctl"><div class="ico">🧮</div><div class="nm">Control totals</div><div class="tw">= <b>batch totals, tie-out</b></div><div class="tie">500 in = 487 out + 13 ✓</div></div>
-    <div class="card ctl"><div class="ico">💵</div><div class="nm">Money math</div><div class="tw">= <b>rounding policy</b></div><div class="tie" style="color:var(--warn)">ROUND(2.675) → 2.68?</div></div>
-    <div class="card ctl"><div class="ico">🔁</div><div class="nm">Safe to run twice</div><div class="tw">= <b>no double posting</b></div><div class="tie">▶ ▶ → total still $4,300 ✓</div></div>
-    <div class="card ctl"><div class="ico">🔒</div><div class="nm">Never overwrite an input without asking</div><div class="tw">= <b>source documents untouched</b></div></div>
-    <div class="card ctl"><div class="ico">🔤</div><div class="nm">Text that looks like numbers</div><div class="tw">= <b>leading zeros</b></div><div class="tie" style="color:var(--ai)">00123 → 123 ✗</div></div>
-    <div class="card ctl"><div class="ico">⚙️</div><div class="nm">Rules you review, with a date</div><div class="tw">= <b>assumptions tab</b></div><div class="alarm yel">⚠️ Rules due for review</div></div>
-    <div class="card ctl"><div class="ico">📝</div><div class="nm">Run log</div><div class="tw">= <b>audit trail</b></div></div>
-    <div class="card ctl"><div class="ico">📦</div><div class="nm">What it installs and sends</div><div class="tw">= <b>vendor due diligence</b></div></div>
-    <div class="card ctl"><div class="ico">🧪</div><div class="nm">Tests saved, rerun after changes</div><div class="tw">= <b>re-performing a test</b></div></div>
+  <p class="take">You can't read the code, but you can ask for these. ✅ The starter CLAUDE.md already asks Claude for all ten. Each card shows a prompt to check or fix a script you already have, ready to edit and copy (same numbers as the prompt card).</p>
+  <div class="ctlgrid">
+
+    <div class="card ctl2" data-p="13">
+      <div class="chead"><span class="ico">📣</span><div><div class="nm">Fail loudly</div><div class="tw">Like an exceptions report</div></div></div>
+      <div class="stage2 two">
+        <div class="term"><div class="tt">Quiet script</div>
+          <div data-at="0.5">Reading 500 rows…</div><div data-at="1.3" class="ok">✅ Done!</div>
+          <div data-at="2.4" class="bad big">😬 13 rows silently skipped</div></div>
+        <div class="term"><div class="tt">Loud script</div>
+          <div data-at="0.5">Reading 500 rows…</div>
+          <div data-at="1.3" class="fail">FAILED: 13 ROWS NOT PROCESSED</div>
+          <div data-at="2.0" class="warnl">⚠️ 2 dates unclear: see review list</div>
+          <div data-at="2.8" class="ok">📋 review_list.csv written</div></div>
+      </div>
+      <div class="bottom">👉 Anything unexpected, wrong or not handled should be impossible to miss, so it reaches both Claude and you.</div>
+    </div>
+
+    <div class="card ctl2" data-p="14">
+      <div class="chead"><span class="ico">🧮</span><div><div class="nm">Control totals</div><div class="tw">Like batch totals and a tie-out</div></div></div>
+      <div class="stage2 eq">
+        <span data-at="0.5" class="tok">500 in</span><span data-at="1.1" class="op">=</span>
+        <span data-at="1.4" class="tok">487 out</span><span data-at="2.0" class="op">+</span>
+        <span data-at="2.3" class="tok warnc">13 not processed</span><span data-at="2.9" class="op">=</span>
+        <span data-at="3.2" class="tok okc">500 ✅ ties</span>
+      </div>
+      <div class="bottom">👉 Every row is accounted for. If the numbers don't add up, something was lost.</div>
+    </div>
+
+    <div class="card ctl2" data-p="15">
+      <div class="chead"><span class="ico">💵</span><div><div class="nm">Money math</div><div class="tw">Like a rounding policy</div></div></div>
+      <div class="stage2 money">
+        <div data-at="0.5" class="mrow"><span class="lbl">Round 2.675 to cents</span></div>
+        <div data-at="1.1" class="mrow"><span class="lbl">📊 Excel ROUND</span><b class="okc">2.68</b></div>
+        <div data-at="1.7" class="mrow"><span class="lbl">🐍 Python round()</span><b class="badc">2.67</b></div>
+        <div data-at="2.4" class="mrow"><span class="lbl">0.10 + 0.20 in plain Python</span><b class="badc mono">0.30000000000000004</b></div>
+        <div data-at="3.0" class="warnl">⚠️ A cent here and there adds up across thousands of rows</div>
+      </div>
+      <div class="bottom">👉 Ask how the script stores and rounds money, and have it match Excel.</div>
+    </div>
+
+    <div class="card ctl2" data-p="16">
+      <div class="chead"><span class="ico">🔁</span><div><div class="nm">Safe to run twice</div><div class="tw">Like guarding against double posting</div></div></div>
+      <div class="stage2 two">
+        <div class="term"><div class="tt">Not safe</div>
+          <div data-at="0.5"><span class="pb" data-shake="0.5">▶</span> post_october.py → total <b>$4,300</b></div>
+          <div data-at="1.6"><span class="pb" data-shake="1.6">▶</span> run again → total <b class="badc">$8,600</b></div>
+          <div data-at="2.4" class="bad">❓ Posted twice. Did you want that?</div></div>
+        <div class="term"><div class="tt">Safe</div>
+          <div data-at="0.5"><span class="pb" data-shake="0.5">▶</span> post_october.py → total <b>$4,300</b></div>
+          <div data-at="1.6"><span class="pb" data-shake="1.6">▶</span> run again → total <b class="okc">$4,300</b></div>
+          <div data-at="2.4" class="ok">✅ Already posted; nothing added</div></div>
+      </div>
+      <div class="bottom">👉 Running it again by mistake shouldn't change the books.</div>
+    </div>
+
+    <div class="card ctl2" data-p="17">
+      <div class="chead"><span class="ico">🔒</span><div><div class="nm">Never overwrite an input without asking</div><div class="tw">Like keeping source documents untouched</div></div></div>
+      <div class="stage2 two">
+        <div class="flow"><div class="tt">Overwrites</div>
+          <div class="frow"><span class="docx" data-wreck="2.2">📄 bank_oct.csv<span class="wreck" data-at="2.2">❌ original gone</span></span>
+          <span data-at="0.9" class="op">→ ⚙️ →</span><span data-at="1.5" class="docx">📄 bank_oct.csv</span></div>
+          <div data-at="2.6" class="bad">😱 Saved over the file it was reading</div></div>
+        <div class="flow"><div class="tt">Writes a new file</div>
+          <div class="frow"><span class="docx">📄 bank_oct.csv</span><span data-at="0.9" class="op">→ ⚙️ →</span><span data-at="1.5" class="docx newf">📄 results_oct.csv</span></div>
+          <div data-at="2.6" class="ok">✅ Original untouched</div></div>
+      </div>
+      <div class="bottom">👉 Reading a file should never quietly change it.</div>
+    </div>
+
+    <div class="card ctl2" data-p="18">
+      <div class="chead"><span class="ico">🔤</span><div><div class="nm">Text that looks like numbers</div><div class="tw">Like protecting leading zeros</div></div></div>
+      <div class="stage2 money">
+        <div data-at="0.5" class="mrow"><span class="lbl">Account <b class="mono">00123</b></span><span data-at="1.1">→ <b class="badc mono">123</b> ❌</span></div>
+        <div data-at="1.5" class="mrow"><span class="lbl">ZIP <b class="mono">02134</b></span><span data-at="2.0">→ <b class="badc mono">2134</b> ❌</span></div>
+        <div data-at="2.4" class="mrow"><span class="lbl">Date <b class="mono">03/04/2026</b></span><span data-at="2.9">→ <b class="warnc">March 4 or April 3?</b> ⚠️</span></div>
+        <div data-at="3.4" class="ok">✅ Read as text: <span class="mono">00123</span> stays <span class="mono">00123</span></div>
+      </div>
+      <div class="bottom">👉 IDs, account numbers and ZIP codes are labels, not amounts.</div>
+    </div>
+
+    <div class="card ctl2" data-p="19">
+      <div class="chead"><span class="ico">⚙️</span><div><div class="nm">Rules you review, with a date</div><div class="tw">Like an assumptions tab, reviewed and dated</div></div></div>
+      <div class="stage2">
+        <div class="rulecard"><div><b>settings.csv</b></div><div>IRS mileage rate: <b>$0.70 / mile</b></div><div>Reviewed by you · <b>Review by: Jan 1, 2027</b></div></div>
+        <div class="mrow" style="margin-top:8px"><span class="lbl">📅 Today</span><b class="today mono">Nov 13, 2026</b></div>
+        <div class="warnl" data-at="3.0">⚠️ Rules past their review date: check them before relying on results</div>
+      </div>
+      <div class="bottom">👉 Rules are written down, approved by a person, and flagged when they go stale.</div>
+    </div>
+
+    <div class="card ctl2" data-p="20">
+      <div class="chead"><span class="ico">📝</span><div><div class="nm">Run log</div><div class="tw">Like an audit trail</div></div></div>
+      <div class="stage2">
+        <div data-at="0.4" class="q">❓ Who ran this? On which file? Which version?</div>
+        <div class="term mono small2">
+          <div data-at="1.0">2026-11-03 9:02 AM · J. Doe · bank_oct.csv · 30 in / 28 matched · v3</div>
+          <div data-at="1.6">2026-11-10 4:15 PM · A. Lee · bank_oct_v2.csv · 30 in / 29 matched · v3</div>
+          <div data-at="2.2">2026-11-13 8:47 AM · J. Doe · bank_nov.csv · 34 in / 34 matched · v4</div>
+        </div>
+      </div>
+      <div class="bottom">👉 Every number can be traced to a run, a person, a file and a version.</div>
+    </div>
+
+    <div class="card ctl2" data-p="21">
+      <div class="chead"><span class="ico">📦</span><div><div class="nm">What it installs and sends</div><div class="tw">Like vendor due diligence</div></div></div>
+      <div class="stage2">
+        <div data-at="0.4" class="q">Before running, Claude lists:</div>
+        <div data-at="1.0" class="mrow"><span class="lbl">📥 Installs <b>pandas</b> (reads spreadsheets)</span><span class="okc">✅ common, trusted</span></div>
+        <div data-at="1.7" class="mrow"><span class="lbl">📥 Installs <b>tesseract</b> (reads scans)</span><span class="okc">✅ runs on your computer</span></div>
+        <div data-at="2.4" class="mrow"><span class="lbl">📤 Sends pages to <b>ocr-service.example</b></span><span class="badc">⚠️ client data leaves your computer</span></div>
+      </div>
+      <div class="bottom">👉 Know what gets added to your computer, and whether client data goes anywhere, before it runs.</div>
+    </div>
+
+    <div class="card ctl2" data-p="22">
+      <div class="chead"><span class="ico">🧪</span><div><div class="nm">Tests saved, rerun after changes</div><div class="tw">Like re-performing a test after a change</div></div></div>
+      <div class="stage2 two">
+        <div class="term"><div class="tt">Version 1</div>
+          <div data-at="0.4" class="ok">✅ Amazon → Supplies</div><div data-at="0.7" class="ok">✅ Uber → Travel</div><div data-at="1.0" class="ok">✅ Negative amounts</div></div>
+        <div class="term"><div class="tt">Version 2: adds Uber Eats → Meals</div>
+          <div data-at="1.8" class="ok">✅ Amazon → Supplies</div><div data-at="2.1" class="bad">❌ Uber → Travel <i>(used to pass)</i></div><div data-at="2.4" class="ok">✅ Negative amounts</div><div data-at="2.7" class="ok">✅ Uber Eats → Meals (new)</div></div>
+      </div>
+      <div class="bottom">👉 Rerunning the old tests catches a fix that broke something that used to work.</div>
+    </div>
+
   </div>
-  <div class="means">👉 <b>What this shows:</b> each control is something you already expect in accounting. Ask Claude to build them into every script.</div>
+  <div class="means">👉 <b>What this shows:</b> each control is something you already expect in accounting. The starter CLAUDE.md asks for all of them; the prompt on each card checks or fixes a script you already have.</div>
 </section>
 
 <!-- ================= Demo ================= -->
@@ -352,14 +503,16 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 <!-- ================= Prompts ================= -->
 <section>
   <h2>Ask Claude first</h2>
-  <p class="take">Copy, paste, fill in the brackets.</p>
+  <p class="take">Each prompt is here in full. Fill in the [brackets] here or after pasting, then copy it into Claude. The numbers match the prompt card.</p>
   <div class="grid2" id="prompts"></div>
 </section>
 
 <!-- ================= Vote ================= -->
 <section>
   <h2>Sort these: which bucket?</h2>
-  <p class="take">Vote first. Then hints, then the answer.</p>
+  <p class="take">Vote first, then hints, then the answer. The buckets:
+    <span class="chip c-script">📜 Scripting</span> <span class="chip c-hybrid">🔀 Hybrid</span> <span class="chip c-ai">🤖 AI in the loop</span>
+    · Not hard and fast: the details and your volume can change the answer.</p>
   <div class="grid4" id="votes"></div>
 </section>
 
@@ -858,40 +1011,88 @@ function renderPipes(t) {
   });
 }
 
+// ---------- controls: each card plays its own little story ----------
+var CTL_PROMPTS = {
+  13: "Make this script fail loudly: never skip a row silently. List every row it couldn't process, with the reason. Show failures in red capital letters and warnings in yellow, so both you and I see them.",
+  14: "After each run, report rows in, rows out and rows not processed, and check that they add up. Do the same for the dollar totals.",
+  15: "How does this script store and round money? Use exact decimals, and round the way Excel's ROUND does. Show me an example where it matters.",
+  16: "What happens if I run this twice on the same file? Make sure a second run can't post anything twice.",
+  17: "Does this script change or delete any file it reads? Make it write results to a new file, and ask me before it overwrites anything.",
+  18: "Which columns does this script read as numbers, text and dates? Read account numbers, IDs and ZIP codes as text so leading zeros survive, and tell me how dates are read.",
+  19: "Move the rates, rules and cutoff dates out of the script into a settings file I can review. Add a \"review by\" date, and show a yellow warning once it passes.",
+  20: "Make each run record the date and time, who ran it, the input file, row counts and the script version.",
+  21: "Before I run this: what does it install, and does it send any data anywhere? List each one and why.",
+  22: "Save the sample inputs and expected outputs as tests next to the script. After any change, rerun all of them and tell me if anything that used to pass now fails.",
+};
+function buildControls() {
+  document.querySelectorAll("#controls .ctl2").forEach(function (card) {
+    var n = card.dataset.p;
+    card.insertAdjacentHTML("beforeend", '<div class="ctlfoot"><span>✅ Already in the starter CLAUDE.md. To check a script you have: <b>prompt ' + n + "</b></span></div>" + promptBox(CTL_PROMPTS[n], "prompt " + n));
+  });
+}
+var MONTHS = ["Nov 13, 2026", "Dec 1, 2026", "Dec 15, 2026", "Jan 1, 2027", "Jan 20, 2027", "Feb 3, 2027"];
+function renderControls(t) {
+  document.querySelectorAll("#controls [data-at]").forEach(function (el) {
+    var a = ramp(t, +el.dataset.at, 0.5);
+    el.style.opacity = a; el.style.transform = "translateY(" + (6 * (1 - a)) + "px)";
+  });
+  document.querySelectorAll("#controls [data-shake]").forEach(function (el) {
+    var q = t - +el.dataset.shake;
+    el.style.transform = q > 0 && q < 0.4 ? "scale(1.35)" : "scale(1)";
+  });
+  document.querySelectorAll("#controls [data-wreck]").forEach(function (el) {
+    var a = ramp(t, +el.dataset.wreck, 0.5);
+    el.style.transform = "rotate(" + (-6 * a) + "deg)";
+  });
+  var d = document.querySelector("#controls .today");
+  if (d) {
+    var i = Math.min(MONTHS.length - 1, Math.floor(ramp(t, 0.6, 2.2) * (MONTHS.length - 1) + 0.0001));
+    d.textContent = MONTHS[i];
+    d.style.color = i >= 3 ? "var(--warn)" : "";
+  }
+}
+
 // ---------- prompts ----------
 var PROMPTS = [
-  ["🧭", "Agree on the design first", "Before building anything: restate this task as inputs → outputs. List the hard inputs, not only the typical ones. Propose the design with the least AI in the loop. Label each step Scripting, Local model or AI in the loop, and say why. Rate each step's tokens per run: none, small or large. Wait for my OK."],
-  ["⚖️", "Is it worth converting?", "I do this task with AI today: [describe it]. Each run handles about [how many] [lines / documents / clients], and I run it [how often]. Tell me in plain words how the tokens grow as that count grows, and whether any step compares every item with every other item. Is my volume big enough for that to matter? Would a hybrid or script design change the shape of that growth, or only lower it a little? Use relative amounts. Don't guess my volume."],
-  ["📈", "Plot it", "First, if I haven't told you, ask how many [lines / documents / clients] each run handles and how often I run it. If the designs would differ too little at my volume to matter, say so in one sentence and don't make a chart. Otherwise, chart tokens (relative) against how many I process in a year: one line for today, one per design you'd propose, including the one-time tokens to build each. Mark my volume and any break-even point. Plot only steps that use tokens. Then explain it in plain language and list your assumptions."],
-  ["🥇", "Which one first?", "Here are the tasks I do with AI today, with how many each run handles and how often I run it: [list them]. For each, say how its tokens grow with volume, whether my volume is big enough for that to matter, and whether converting would change the shape of the growth. Rank them by return on my effort. One table and one chart, with my volume marked on each line."],
-  ["🕵️", "Review a script like an auditor", "Before I rely on this script, review it as an auditor would. In plain language: what it does with rows it can't process; whether rows and totals in equal rows and totals out; how money is rounded and whether that matches Excel; what happens if I run it twice; whether it changes any input file; which values are fixed in the code; whether its rules are reviewed and dated; whether tests are saved next to it; what it installs and whether it sends data anywhere; and whether any step still uses tokens on every run. Flag anything you'd fix."],
-  ["🗣️", "Explain the script", "Explain this script for someone with no computer science background: what it reads, what it does, what it writes, and what could go wrong."],
+  ["🧭", "1. Agree on the design first", "Before building anything: restate this task as inputs → outputs. List the hard inputs, not only the typical ones. Propose the design with the least AI in the loop. Label each step Scripting, Local model or AI in the loop, and say why. Rate each step's tokens per run: none, small or large. Wait for my OK."],
+  ["🗣️", "6. Understand the script", "Explain this script for someone with no computer science background: what it reads, what it does, what it writes, and what could go wrong."],
+  ["🕵️", "9. Review a script like an auditor", "Before I rely on this script, review it as an auditor would. In plain language: what it does with rows it can't process; whether rows and totals in equal rows and totals out; how money is rounded and whether that matches Excel; what happens if I run it twice; whether it changes any input file; which values are fixed in the code; whether its rules are reviewed and dated; whether tests are saved next to it; what it installs and whether it sends data anywhere; and whether any step still uses tokens on every run. Flag anything you'd fix."],
+  ["⚖️", "10. Is it worth converting?", "I do this task with AI today: [describe it]. Each run handles about [how many] [lines / documents / clients], and I run it [how often]. Tell me in plain words how the tokens grow as that count grows, and whether any step compares every item with every other item. Is my volume big enough for that to matter? Would a hybrid or script design change the shape of that growth, or only lower it a little? Use relative amounts. Don't guess my volume."],
+  ["📈", "11. Plot it", "First, if I haven't told you, ask how many [lines / documents / clients] each run handles and how often I run it. If the designs would differ too little at my volume to matter, say so in one sentence and don't make a chart. Otherwise, chart tokens (relative) against how many I process in a year: one line for today, one per design you'd propose, including the one-time tokens to build each. Mark my volume and any break-even point. Plot only steps that use tokens. Then explain it in plain language and list your assumptions."],
+  ["🥇", "12. Which one first?", "Here are the tasks I do with AI today, with how many each run handles and how often I run it: [list them]. For each, say how its tokens grow with volume, whether my volume is big enough for that to matter, and whether converting would change the shape of the growth. Rank them by return on my effort. One table and one chart, with my volume marked on each line."]
 ];
+// An editable prompt with a Copy button. Edits aren't saved: they're only for this visit.
+function promptBox(text, label) {
+  return '<div class="pbox"><textarea rows="4" spellcheck="false">' + text.replace(/&/g, "&amp;").replace(/</g, "&lt;") + '</textarea>' +
+    '<div class="prow"><span class="small">✏️ Edit, then copy. Edits aren\'t saved; reload to get the original.</span><button class="btn copyp">📋 Copy ' + label + "</button></div></div>";
+}
+document.addEventListener("click", function (e) {
+  var b = e.target.closest("button.copyp"); if (!b) return;
+  var text = b.closest(".pbox").querySelector("textarea").value, old = b.textContent;
+  (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(function () {
+    b.textContent = "Copied ✓"; setTimeout(function () { b.textContent = old; }, 1500);
+  }, function () { window.prompt("Copy this prompt:", text); });
+});
 function prompts() {
   var box = document.getElementById("prompts");
-  PROMPTS.forEach(function (p, k) {
-    box.insertAdjacentHTML("beforeend", '<div class="card prompt"><span class="pi">' + p[0] + '</span><span class="pt">' + p[1] + '</span><button class="btn" data-k="' + k + '">Copy</button></div>');
-  });
-  box.addEventListener("click", function (e) {
-    var b = e.target.closest("button"); if (!b) return;
-    var text = PROMPTS[+b.dataset.k][2];
-    (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(function () {
-      b.textContent = "Copied ✓"; setTimeout(function () { b.textContent = "Copy"; }, 1500);
-    }, function () { window.prompt("Copy this prompt:", text); });
+  PROMPTS.forEach(function (p) {
+    box.insertAdjacentHTML("beforeend", '<div class="card"><div class="prompt"><span class="pi">' + p[0] + '</span><span class="pt">Prompt ' + p[1] + "</span></div>" + promptBox(p[2], "prompt") + "</div>");
   });
 }
 
 // ---------- vote ----------
+// [icon, task, hints, buckets (in order of likelihood), why, how volume changes it]
 var VOTES = [
-  ["⏰", "Email clients 30 days before their deadline", ["Where do the deadlines come from?", "Same wording for every client?"], "📜 Scripting", "Fixed rule: deadline minus 30 days, same template.", C.script],
-  ["✍️", "A personal year-end note to each client", ["Which part pulls figures, which part writes?", "New wording each time?"], "🔀 Hybrid", "Script pulls the figures; AI writes the note.", C.hybrid],
-  ["🔁", "Flag possible duplicate payments", ["Same number and amount twice?", "\"ACME Inc\" vs \"Acme, Inc.\"?"], "📜 Script, maybe 🔀 Hybrid", "Exact matches are rules; near-matches may need AI.", C.script],
-  ["🎙️", "Voicemails → tasks with name and due date", ["Speech to text: LLM or local model?", "Picking out a due date: rules or understanding?"], "🔀 Hybrid", "💻 Local speech-to-text, then AI picks out the details.", C.hybrid],
-  ["📈", "Monthly KPI summary from the GL export", ["Same columns every month?", "Same formulas every month?"], "📜 Scripting", "Same export, same calculations.", C.script],
-  ["🧾", "Box amounts from uploaded W-2s", ["All text PDFs from one provider?", "Any phone photos?"], "🔀 Hybrid", "Text PDFs → script; photos → local OCR or AI.", C.hybrid],
-  ["💳", "Categorize 3,000 card lines", ["How many would a lookup table catch?", "What happens to the rules list?"], "🔀 Hybrid", "Rules first, AI for leftovers.", C.hybrid],
-  ["🤔", "Is this receipt deductible for this client?", ["Can you list every case in advance?", "Who signs off?"], "🤖 AI + a person", "Judgment about this client's business.", C.ai],
+  ["⏰", "Email clients 30 days before their deadline", ["Where do the deadlines come from?", "Same wording for every client?"], ["s"], "Fixed rule: deadline minus 30 days, same template.", "Any volume: a script, since nothing needs judgment."],
+  ["✍️", "A personal year-end note to each client", ["Which part pulls figures, which part writes?", "New wording each time?"], ["h"], "The script pulls each client's figures; AI writes the note from only those.", "A few clients: just ask AI. Hundreds: hybrid keeps the tokens to the writing."],
+  ["🔁", "Flag possible duplicate payments", ["Same number and amount twice?", "\"ACME Inc\" vs \"Acme, Inc.\"?"], ["s", "h"], "Exact matches are rules. Near-matches (spelling, a cent off) may need AI for the leftovers.", "Thousands of payments: comparing every pair with AI explodes in cost, so script first."],
+  ["🎙️", "Voicemails → tasks with name and due date", ["Speech to text: LLM or local model?", "Picking out a due date: rules or understanding?"], ["h"], "A local speech-to-text model (zero tokens), then AI picks out the name and due date.", "A handful a week: AI alone is fine. Many a day: hybrid."],
+  ["📈", "Monthly KPI summary from the GL export", ["Same columns every month?", "Same formulas every month?"], ["s"], "Same export, same calculations every month.", "Any volume: a script; Excel may already do it."],
+  ["🧾", "Box amounts from uploaded W-2s", ["All text PDFs from one provider?", "Any phone photos?"], ["h", "s"], "Text PDFs → script; scans and photos → local OCR or AI. All text PDFs from one provider → pure script.", "15 a year: below break-even, leave it with AI. Hundreds: convert."],
+  ["💳", "Categorize 3,000 card lines", ["How many would a lookup table catch?", "What happens to the rules list?"], ["h"], "Rules first, AI for the leftovers; good AI answers become new rules.", "3,000 a month: big savings. 50 a month: AI alone may be fine."],
+  ["🤔", "Is this receipt deductible for this client?", ["Can you list every case in advance?", "Who signs off?"], ["a"], "Judgment about this client's business, and a person signs off.", "Any volume: AI to draft, a person to decide."],
 ];
+var BUCKET = { s: ["📜 Scripting", C.script], h: ["🔀 Hybrid", C.hybrid], a: ["🤖 AI in the loop", C.ai] };
 function votes() {
   var box = document.getElementById("votes");
   VOTES.forEach(function (v, k) {
@@ -907,7 +1108,9 @@ function votes() {
       if (n + 1 >= v[2].length) e.target.disabled = true;
     }
     if (e.target.classList.contains("ansb")) {
-      card.querySelector(".ans").innerHTML = '<span class="badge" style="color:' + v[5] + ";border-color:" + v[5] + '">' + v[3] + '</span><div class="hint">' + v[4] + "</div>";
+      card.querySelector(".ans").innerHTML = '<div class="buckets">' + v[3].map(function (b, i) {
+        return (i ? '<span class="or">or</span>' : "") + '<span class="badge" style="color:' + BUCKET[b][1] + ";border-color:" + BUCKET[b][1] + ";background:" + BUCKET[b][1] + '22">' + BUCKET[b][0] + "</span>";
+      }).join("") + '</div><div class="why">' + v[4] + '</div><div class="vol">📈 ' + v[5] + "</div>";
       e.target.disabled = true;
     }
   });
@@ -923,6 +1126,7 @@ var TIMELINES = {
   first: { dur: 6.5, render: renderPanels },
   patterns: { dur: PIPE_START + 3 * PIPE_STEP + 1.4, render: renderPipes },
   demo: { dur: 0.4 + 40 * DEMO_GAP + 1, render: renderDemo },
+  controls: { dur: 4.2, render: renderControls },
 };
 function fmt(s) { return (Math.floor(s / 60)) + ":" + ("0" + Math.floor(s % 60)).slice(-2); }
 function makeControls(sec) {
@@ -956,8 +1160,10 @@ function makeControls(sec) {
   sec._showEnd = function () { t = tl.dur; draw(); };
   draw();
 }
-buildLanes(); buildDemo(); buildSame(); buildCant(); placeSpots(); window.addEventListener('resize', placeSpots); buildFlips(); costChart(); panels(); pipes(); prompts(); votes();
+buildLanes(); buildDemo(); buildControls(); buildSame(); buildCant(); placeSpots(); window.addEventListener('resize', placeSpots); buildFlips(); costChart(); panels(); pipes(); prompts(); votes();
 document.querySelectorAll("section.anim").forEach(makeControls);
+// Show each prompt in full: grow every box to fit its text.
+document.querySelectorAll(".pbox textarea").forEach(function (ta) { ta.style.height = "auto"; ta.style.height = (ta.scrollHeight + 4) + "px"; });
 // Nothing plays on its own: each panel waits for its Play button.
 </script>
 
