@@ -46,6 +46,8 @@ GitHub and Claude both show the `.md` files formatted, with the diagrams.
 
 ## For agents and maintainers
 
+Every folder has its own README explaining what's in it and what to do with it.
+
 Instructions for Claude when it works on this repo are in the root `CLAUDE.md`. In short:
 
 | File | What it is |
