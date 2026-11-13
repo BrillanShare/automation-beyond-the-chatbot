@@ -1,37 +1,32 @@
-# Automation beyond the chatbot
+# Automation beyond the chatbot (development copy)
 
-Workshop materials for advanced AI users in accounting: when to script, when to put AI in the loop, and how to combine them (hybrid) to save tokens.
+Private development copy of the workshop materials. Only the `participant/` folder is published: its contents are copied into a public repo, and that's all the instructor and participants use.
 
 ## Start here
 
-**Open `index.html`** in a browser. It shows every handout on one page, with a menu on the left.
+**Open `participant/index.html`** in a browser. It shows every handout on one page.
 
-- On GitHub: download the repo (Code → Download ZIP), unzip it, then double-click `index.html`.
-- In a clone: double-click `index.html`, or run `start index.html` (Windows) / `open index.html` (Mac).
+- Double-click it to see the copy saved inside the page.
+- To see edits to the Markdown files as soon as you refresh, serve the folder:
+    - `cd participant`
+    - `python -m http.server 8000`
+    - open http://localhost:8000
 
 ## What's here
 
-| Path | For | What it is |
+| Path | Published? | What it is |
 |---|---|---|
-| `participant/handout.md` | Participants | Concepts with examples: three buckets, "deterministic", what a script can't do, data type, input/output, rules and their limits, tokens, hybrid patterns, zero-token helpers, a vote with answer key |
-| `participant/buckets.svg`, `participant/venn.svg` | Participants | Diagrams used in the handout |
-| `participant/prompt-card.md` | Participants | Prompts to copy |
-| `participant/CLAUDE.md` | Participants | Starter CLAUDE.md promised in the class description |
-| `participant/homework.md` | Participants | Homework: a Python script as the output |
-| `instructor/run-of-show.md` | Instructor | 60-minute timeline |
-| `build.py` | Maintainers | Rebuilds `index.html` from the Markdown files |
-
-The `participant/` folder is what will be copied to the public participant repo. `instructor/` stays private.
+| `participant/` | ✅ Yes | Everything participants and the instructor use; see `participant/README.md` |
+| `instructor/run-of-show.md` | ❌ No | 60-minute timeline |
+| `build.py` | ❌ No | Refreshes the saved copy inside `participant/index.html` |
+| `CLAUDE.md` | ❌ No | Instructions for Claude when working on this repo |
 
 ## Editing
 
-1. Edit the Markdown files.
-2. Rebuild the start page:
-   a. `pip install markdown` (once)
-   b. `python build.py`
-3. Commit both the Markdown changes and `index.html`.
+1. Edit the Markdown files in `participant/`.
+2. Run `python build.py` to refresh the saved copy inside `participant/index.html`.
+3. Commit both.
 
-## Repo rules
+## Publishing
 
-- Keep people's names and personal information out of this repo.
-- Don't link to Claude chats or artifacts from this repo.
+Copy the contents of `participant/` (not the folder itself) into the root of the public repo.
