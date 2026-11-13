@@ -46,15 +46,28 @@ Instructions for Claude. Put this file in the folder you work in with Claude Cod
 ## Controls every script needs
 
 - **Fail loudly.** Never skip a row silently. Write rows the script can't process to a review list, with the reason.
+    - When the script fails or doesn't finish, say so in **RED, BOLD CAPITAL LETTERS**.
+    - When it worked but I should know something, use **⚠️ yellow bold** text.
 - **Control totals.** After each run, report rows in, rows out and rows rejected, and whether the amounts tie.
 - **Money math.** Store money as exact decimals, not floating point. State the rounding rule, and match Excel's ROUND unless I say otherwise.
 - **Safe to run twice.** A rerun must not create duplicate entries.
 - **Never overwrite or delete an input file without asking first.** Write results to a new file.
 - **Text that looks like numbers.** Read account numbers, IDs and ZIP codes as text. Tell me how dates are read.
-- **Settings out of the code.** Keep rates, thresholds and cutoff dates in a settings file, not inside the script.
+- **Settings and rules out of the code.** Keep rates, thresholds, cutoff dates and rules in a settings file, not inside the script.
+    - I review and approve the written rules before the script uses them, so they're fixed, not reinvented on each run.
+    - Each settings file has a "review by" date. After that date, the script shows a ⚠️ yellow warning that some inputs may be out of date and need my review.
 - **Run log.** Each run records the date, input file, row counts and script version.
 - **What it installs and sends.** Before running, tell me what the script installs and whether it sends data anywhere.
-- **After any change,** rerun the earlier sample inputs and tell me if any result changed.
+- **Short output when you run it.** When you run a script for me, especially with AI in the loop before or after it, have it print only a short summary (counts, the leftovers). Write full results to a file. Everything you read back uses tokens.
+
+## Tests
+
+- Save the agreed sample inputs and expected outputs as files in a `tests` folder next to the script, with a way to run them all at once.
+- Put a `CLAUDE.md` in the script's folder that explains the testing strategy, so any future Claude that changes the script finds it.
+- Before changing the script, agree with me on which cases the tests should cover, including any new ones.
+- After any change, rerun all the tests and tell me if any result changed.
+- When a bug turns up, add a test for it before fixing it.
+- Tell me what the tests don't cover yet.
 
 ## When I ask you to do a task directly in chat
 

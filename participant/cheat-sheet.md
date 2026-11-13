@@ -33,6 +33,7 @@
 
 ## Tokens
 
+- Claude running a finished script uses no tokens for the script's work; keep what it prints short
 - AI in the loop: every run. Scripting: once, to build.
 - Big files: a script reads them for free; pasting them into chat burns tokens.
 - Hybrid: send the LLM only the slice that needs judgment.
@@ -47,7 +48,9 @@
 
 ## Before you rely on a script
 
-- Fail loudly: rows it can't process go on a list, never skipped silently
+- Fail loudly: rows it can't process go on a list, never skipped silently; failures in **RED CAPITALS**, warnings in **⚠️ yellow**
+- Rules reviewed by you, with a "review by" date
+- Tests saved next to the script, rerun after every change
 - Control totals: rows in = rows out + rejected; amounts tie
 - Money math: how is it rounded, and does it match Excel?
 - Safe to run twice; never overwrites an input without asking first

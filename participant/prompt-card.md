@@ -36,7 +36,7 @@ Copy and adapt. The starter [CLAUDE.md](https://code.claude.com/docs/en/memory) 
 
 ## Review a script like an auditor
 
-> Before I rely on this script, review it as an auditor would. Tell me in plain language: what it does with rows it can't process; whether rows and totals in equal rows and totals out; how money is stored and rounded, and whether that matches Excel; what happens if I run it twice; whether it changes any input file; which values are fixed in the code; what it installs and whether it sends data anywhere; and whether any step still uses tokens on every run. Flag anything you'd fix.
+> Before I rely on this script, review it as an auditor would. Tell me in plain language: what it does with rows it can't process; whether rows and totals in equal rows and totals out; how money is stored and rounded, and whether that matches Excel; what happens if I run it twice; whether it changes any input file; which values are fixed in the code; what it installs and whether it sends data anywhere; whether its rules are reviewed and dated; whether tests are saved next to it; and whether any step still uses tokens on every run. Flag anything you'd fix.
 
 ## Is it worth converting?
 

@@ -327,22 +327,29 @@ def hard_inputs():
 # ------------------------------------------------------------ demo: tokens
 def demo_tokens():
     b = DEFS
-    b += t(20, 34, "Lines sent to the LLM each month (demo file: 40 credit card lines)", 16, TEXT, "700")
-    rows = [("All AI", "every line, every month", 40, AI),
-            ("Hybrid", "only the 9 lines no rule matched", 9, HYBRID),
-            ("All script", "none; the 9 leftovers go to a person", 0, SCRIPT)]
+    b += t(20, 34, "Lines sent to the LLM each month", 17, TEXT, "700")
+    groups = [
+        ("Example 1: match bank lines to the ledger", [("All AI", "every line, every month", 30, AI),
+                                                        ("All script", "none: the script does all of it", 0, SCRIPT)]),
+        ("Example 2: categorize credit card lines", [("All AI", "every line, every month", 40, AI),
+                                                      ("Hybrid", "only the 9 lines no rule matched", 9, HYBRID)]),
+    ]
     scale = 15
-    for k, (name, note, n, color) in enumerate(rows):
-        y = 70 + k * 80
-        b += t(20, y + 30, name, 17, color, "700")
-        b += f'<rect x="160" y="{y + 8}" width="{40 * scale}" height="34" rx="6" fill="#21262d"/>\n'
-        if n:
-            b += f'<rect x="160" y="{y + 8}" width="{n * scale}" height="34" rx="6" fill="{color}"/>\n'
-        b += t(160 + max(n * scale, 0) + 12, y + 31, str(n), 17, TEXT, "700")
-        b += t(160, y + 62, note, 13, MUTED)
-    b += t(20, 320, "Building the script costs tokens once. After that, only the AI-in-the-loop part costs tokens on every run.", 13, TEXT)
-    return svg(960, 340, "Demo: lines sent to the LLM each month, three ways", b)
-
+    y = 62
+    for title, rows in groups:
+        b += t(20, y + 4, title, 14, MUTED, "700")
+        y += 16
+        for name, note, n, color in rows:
+            b += t(20, y + 30, name, 16, color, "700")
+            b += f'<rect x="160" y="{y + 8}" width="{40 * scale}" height="30" rx="6" fill="#21262d"/>\n'
+            if n:
+                b += f'<rect x="160" y="{y + 8}" width="{n * scale}" height="30" rx="6" fill="{color}"/>\n'
+            b += t(160 + n * scale + 12, y + 29, str(n), 16, TEXT, "700")
+            b += t(160, y + 56, note, 12, MUTED)
+            y += 66
+        y += 14
+    b += t(20, y + 6, "Building the script uses tokens once. After that, only the AI-in-the-loop part uses tokens on every run.", 13, TEXT)
+    return svg(960, y + 24, "Demo: lines sent to the LLM each month, two examples", b)
 
 # ------------------------------------------------- cost-volume chart (growth)
 def cost_volume():
@@ -385,7 +392,7 @@ def cost_volume():
     # Fixed cost bracket on the axis
     b += f'<line x1="{x0 - 10}" y1="{Y(0)}" x2="{x0 - 10}" y2="{Y(build)}" stroke="{SCRIPT}" stroke-width="2"/>\n'
     b += f'<line x1="{x0 - 15}" y1="{Y(build)}" x2="{x0 - 5}" y2="{Y(build)}" stroke="{SCRIPT}" stroke-width="2"/>\n'
-    b += t(X(52), Y(build) + 19, "Fixed cost: tokens to build the script, once", 12, SCRIPT)
+    b += t(X(40), Y(build) + 19, "Fixed cost: tokens to build the script, once (treated as fixed)", 12, SCRIPT)
 
     # Break-even: where AI in the loop passes the script's build cost
     be = build / 0.9
