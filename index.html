@@ -31,6 +31,12 @@ ol ul { list-style: none; padding-left: 1.4em; }
 .t-bad { background: #f8514926; }
 details { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 8px 14px; }
 summary { cursor: pointer; color: #58a6ff; font-weight: 600; }
+.vote { border: 1px solid #30363d; border-radius: 8px; padding: 4px 16px 12px; margin: 10px 0; }
+.vote details { border: none; padding: 0; }
+.vote li.answer { background: #8957e530; border-radius: 6px; padding: 4px 8px; font-weight: 600; list-style: none; margin-left: -1em; }
+button { background: #1f6feb; color: #fff; border: none; border-radius: 6px; padding: 6px 14px; font-size: 14px; cursor: pointer; margin-top: 6px; }
+button:disabled { background: #30363d; color: #8b949e; cursor: default; }
+a { color: #58a6ff; }
 </style></head><body><nav><h1>Automation beyond the chatbot</h1><div class="group">Participants</div><a href="#s0">Concepts and examples</a><a href="#s1">Prompt card</a><a href="#s2">Starter CLAUDE.md</a><a href="#s3">Homework</a><div class="group">Instructor only</div><a href="#s4">Run of show</a></nav><main><section id="s0"><span class="badge Participants">Participants</span> <span class="src">participant/handout.md</span><h1>Script or AI? Concepts and examples</h1>
 <h2>Three buckets</h2>
 <p><img alt="Three buckets: what happens at build time and at run time" src="participant/buckets.svg"/></p>
@@ -50,7 +56,7 @@ summary { cursor: pointer; color: #58a6ff; font-weight: 600; }
 </tr>
 <tr>
 <td class="c-ai">🤖 AI in the loop</td>
-<td>An LLM is called every time the task runs.</td>
+<td>An <a href="https://en.wikipedia.org/wiki/Large_language_model" rel="noopener" target="_blank">LLM</a> is called every time the task runs.</td>
 <td>Small to large, every run</td>
 </tr>
 <tr>
@@ -65,7 +71,7 @@ summary { cursor: pointer; color: #58a6ff; font-weight: 600; }
 <li>Writing tests and sample data with AI is part of building, so it's scripting too.</li>
 </ul>
 <h2>What "deterministic" means</h2>
-<p><strong>Strict definition: deterministic means the same inputs always give the same output.</strong></p>
+<p><strong>Strict definition: <a href="https://en.wikipedia.org/wiki/Deterministic_algorithm" rel="noopener" target="_blank">deterministic</a> means the same inputs always give the same output.</strong></p>
 <p><img alt="Venn diagram: where procedures fall" src="participant/venn.svg"/></p>
 <table>
 <thead>
@@ -77,15 +83,15 @@ summary { cursor: pointer; color: #58a6ff; font-weight: 600; }
 <tbody>
 <tr>
 <td>🟢 Same inputs → same output</td>
-<td><code>=SUM()</code>, a tax-bracket lookup, matching invoice numbers</td>
+<td><a href="https://support.microsoft.com/en-us/office/sum-function-043e1c7d-7726-4e80-8f32-07b23e057f89" rel="noopener" target="_blank"><code>=SUM()</code></a>, a tax-bracket lookup, matching invoice numbers</td>
 </tr>
 <tr>
 <td>🟠 Also depends on the clock, the internet or a file</td>
-<td><code>=NOW()</code>, today's stock price, today's exchange rate</td>
+<td><a href="https://support.microsoft.com/en-us/office/now-function-3337fd29-145a-4347-b2e6-20c904739c46" rel="noopener" target="_blank"><code>=NOW()</code></a>, today's stock price, today's exchange rate</td>
 </tr>
 <tr>
 <td>🎲 Random on purpose</td>
-<td><code>=RAND()</code>, random IDs, an audit sample</td>
+<td><a href="https://support.microsoft.com/en-us/office/rand-function-4cbfa695-8869-4788-8d90-021ea9f5be73" rel="noopener" target="_blank"><code>=RAND()</code></a>, random IDs, an audit sample</td>
 </tr>
 <tr>
 <td>🔴 AI in the loop</td>
@@ -227,7 +233,7 @@ summary { cursor: pointer; color: #58a6ff; font-weight: 600; }
 <tr>
 <td>Pick a random audit sample</td>
 <td class="c-script">📜 Scripting</td>
-<td>Random on purpose; record the seed so the sample can be reproduced</td>
+<td>Random on purpose; record the <a href="https://en.wikipedia.org/wiki/Random_seed" rel="noopener" target="_blank">seed</a> so the sample can be reproduced</td>
 </tr>
 <tr>
 <td>Draft a client email explaining a variance</td>
@@ -305,7 +311,7 @@ summary { cursor: pointer; color: #58a6ff; font-weight: 600; }
 <li>Ask for the hard inputs, not only the typical ones.</li>
 <li>Ask for the design with the least AI in the loop.</li>
 <li>Ask Claude to compare designs by tokens per run: none / small / large.</li>
-<li>See the prompt card and the starter CLAUDE.md.</li>
+<li>See the prompt card and the starter <a href="https://code.claude.com/docs/en/memory" rel="noopener" target="_blank">CLAUDE.md</a>.</li>
 </ul>
 <h2>Tokens</h2>
 <table>
@@ -363,7 +369,7 @@ summary { cursor: pointer; color: #58a6ff; font-weight: 600; }
 <tr>
 <td><strong>AI extracts → script processes</strong></td>
 <td class="c-script">Validate, total, fill the Excel form</td>
-<td class="c-ai">Pull fields from messy PDFs into a CSV</td>
+<td class="c-ai">Pull fields from messy PDFs into a <a href="https://en.wikipedia.org/wiki/Comma-separated_values" rel="noopener" target="_blank">CSV</a></td>
 <td>Fixed CSV columns; the script rejects rows that fail checks</td>
 </tr>
 <tr>
@@ -400,28 +406,28 @@ summary { cursor: pointer; color: #58a6ff; font-weight: 600; }
 </thead>
 <tbody>
 <tr>
-<td>Text from scanned documents</td>
-<td class="c-local">Tesseract</td>
+<td>Text from scanned documents (<a href="https://en.wikipedia.org/wiki/Optical_character_recognition" rel="noopener" target="_blank">OCR</a>)</td>
+<td class="c-local"><a href="https://github.com/tesseract-ocr/tesseract" rel="noopener" target="_blank">Tesseract</a></td>
 <td>Struggles with poor scans and handwriting</td>
 </tr>
 <tr>
 <td>Speech to text</td>
-<td class="c-local">whisper.cpp, Vosk</td>
+<td class="c-local"><a href="https://github.com/ggml-org/whisper.cpp" rel="noopener" target="_blank">whisper.cpp</a>, <a href="https://alphacephei.com/vosk/" rel="noopener" target="_blank">Vosk</a></td>
 <td>Runs offline; larger models need a stronger computer</td>
 </tr>
 <tr>
 <td>Categorize transactions from the firm's own past entries</td>
-<td class="c-local">scikit-learn</td>
+<td class="c-local"><a href="https://scikit-learn.org/stable/" rel="noopener" target="_blank">scikit-learn</a></td>
 <td>Needs enough past examples to learn from</td>
 </tr>
 <tr>
 <td>Find names, dates and amounts in text</td>
-<td class="c-local">spaCy</td>
+<td class="c-local"><a href="https://spacy.io/" rel="noopener" target="_blank">spaCy</a></td>
 <td>Accuracy depends on the type of text</td>
 </tr>
 <tr>
 <td>Remove an image background</td>
-<td class="c-local">rembg</td>
+<td class="c-local"><a href="https://github.com/danielgatis/rembg" rel="noopener" target="_blank">rembg</a></td>
 <td>Downloads a model file on first run</td>
 </tr>
 </tbody>
@@ -432,112 +438,104 @@ summary { cursor: pointer; color: #58a6ff; font-weight: 600; }
 <li>Setting them up takes real technical knowledge. Claude can carry most of it, but expect some back-and-forth.</li>
 </ul>
 <h2>Sort these: discuss and vote</h2>
-<p>For each task, vote: 📜 Scripting, 🤖 AI in the loop or 🔀 Hybrid. Then ask: what hard inputs could change the answer?</p>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Task</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>Email every client a reminder 30 days before their filing deadline</td>
-</tr>
-<tr>
-<td>2</td>
-<td>Write a personal year-end note to each client about their year</td>
-</tr>
-<tr>
-<td>3</td>
-<td>Flag possible duplicate vendor payments</td>
-</tr>
-<tr>
-<td>4</td>
-<td>Turn client voicemails into tasks with the client's name and a due date</td>
-</tr>
-<tr>
-<td>5</td>
-<td>Build a monthly KPI summary from the general ledger export</td>
-</tr>
-<tr>
-<td>6</td>
-<td>Pull box amounts from W-2s that clients upload</td>
-</tr>
-<tr>
-<td>7</td>
-<td>Categorize 3,000 credit card lines from their memo text</td>
-</tr>
-<tr>
-<td>8</td>
-<td>Decide whether a receipt is a deductible business expense for this client</td>
-</tr>
-</tbody>
-</table>
+<p>For each task, vote: 📜 Scripting, 🤖 AI in the loop or 🔀 Hybrid. Then ask: what hard inputs could change the answer? Reveal the hints one at a time, then the answer.</p>
+<div class="vote">
+<p><strong>1. Email every client a reminder 30 days before their filing deadline</strong></p>
 <details>
-<summary>Answer key (open after voting)</summary>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Bucket</th>
-<th>Why</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td class="c-script">📜 Scripting</td>
-<td>Depends on the clock, but the rule is fixed: date minus 30 days, same template</td>
-</tr>
-<tr>
-<td>2</td>
-<td class="c-hybrid">🔀 Hybrid</td>
-<td>The script pulls each client's figures; AI writes the note from only those figures</td>
-</tr>
-<tr>
-<td>3</td>
-<td class="c-script">📜 Scripting, maybe 🔀 Hybrid</td>
-<td>Exact matches are rules; near-matches ("ACME Inc" vs "Acme, Inc.") may need AI for leftovers</td>
-</tr>
-<tr>
-<td>4</td>
-<td class="c-hybrid">🔀 Hybrid</td>
-<td>A local speech-to-text model (zero tokens), then AI to pick out the name and due date from the transcript</td>
-</tr>
-<tr>
-<td>5</td>
-<td class="c-script">📜 Scripting</td>
-<td>Same export, same calculations every month</td>
-</tr>
-<tr>
-<td>6</td>
-<td class="c-hybrid">🔀 Hybrid</td>
-<td>Text PDFs → script; scans and photos → local OCR or AI; the script checks totals either way</td>
-</tr>
-<tr>
-<td>7</td>
-<td class="c-hybrid">🔀 Hybrid</td>
-<td>Rules first, AI for leftovers; the rules list grows from the AI's reviewed answers</td>
-</tr>
-<tr>
-<td>8</td>
-<td class="c-ai">🤖 AI in the loop, plus a person</td>
-<td>Judgment about this client's business; a person signs off</td>
-</tr>
-</tbody>
-</table>
+<summary>Hints and answer</summary>
+<ul>
+<li>Hint: Where does each deadline come from: a list, or someone's judgment?</li>
+<li>Hint: Is the email wording the same for every client?</li>
+<li>Answer: 📜 Scripting. Depends on the clock, but the rule is fixed: deadline minus 30 days, same template.</li>
+</ul>
 </details>
+</div>
+<div class="vote">
+<p><strong>2. Write a personal year-end note to each client about their year</strong></p>
+<details>
+<summary>Hints and answer</summary>
+<ul>
+<li>Hint: Which part is pulling each client's figures, and which part is writing?</li>
+<li>Hint: Does each note need new wording?</li>
+<li>Answer: 🔀 Hybrid. The script pulls each client's figures; AI writes the note from only those figures.</li>
+</ul>
+</details>
+</div>
+<div class="vote">
+<p><strong>3. Flag possible duplicate vendor payments</strong></p>
+<details>
+<summary>Hints and answer</summary>
+<ul>
+<li>Hint: What if the same invoice was entered twice with the same number and amount?</li>
+<li>Hint: What about "ACME Inc" vs. "Acme, Inc." with amounts a cent apart?</li>
+<li>Answer: 📜 Scripting, maybe 🔀 Hybrid. Exact matches are rules; near-matches may need AI for the leftovers.</li>
+</ul>
+</details>
+</div>
+<div class="vote">
+<p><strong>4. Turn client voicemails into tasks with the client's name and a due date</strong></p>
+<details>
+<summary>Hints and answer</summary>
+<ul>
+<li>Hint: Turning speech into text: does that need an LLM, or can a local model do it?</li>
+<li>Hint: Picking a name and a due date out of a rambling message: rules, or understanding?</li>
+<li>Answer: 🔀 Hybrid. A local speech-to-text model (zero tokens), then AI picks out the name and due date from the transcript.</li>
+</ul>
+</details>
+</div>
+<div class="vote">
+<p><strong>5. Build a monthly KPI summary from the general ledger export</strong></p>
+<details>
+<summary>Hints and answer</summary>
+<ul>
+<li>Hint: Does the export have the same columns every month?</li>
+<li>Hint: Are the KPI formulas the same every month?</li>
+<li>Answer: 📜 Scripting. Same export, same calculations every month.</li>
+</ul>
+</details>
+</div>
+<div class="vote">
+<p><strong>6. Pull box amounts from W-2s that clients upload</strong></p>
+<details>
+<summary>Hints and answer</summary>
+<ul>
+<li>Hint: What if every W-2 is a text PDF from the same payroll provider?</li>
+<li>Hint: What if some are phone photos?</li>
+<li>Answer: 🔀 Hybrid. Text PDFs → script; scans and photos → local OCR or AI; the script checks totals either way.</li>
+</ul>
+</details>
+</div>
+<div class="vote">
+<p><strong>7. Categorize 3,000 credit card lines from their memo text</strong></p>
+<details>
+<summary>Hints and answer</summary>
+<ul>
+<li>Hint: How many lines could a vendor lookup table catch?</li>
+<li>Hint: What happens to the rules list as you chase the rest?</li>
+<li>Answer: 🔀 Hybrid. Rules first, AI for leftovers; the rules list grows from the AI's reviewed answers.</li>
+</ul>
+</details>
+</div>
+<div class="vote">
+<p><strong>8. Decide whether a receipt is a deductible business expense for this client</strong></p>
+<details>
+<summary>Hints and answer</summary>
+<ul>
+<li>Hint: Can you list in advance every kind of receipt and every kind of business?</li>
+<li>Hint: Who is accountable for the decision?</li>
+<li>Answer: 🤖 AI in the loop, plus a person. Judgment about this client's business; a person signs off.</li>
+</ul>
+</details>
+</div>
 <h2>Testing (if there's time)</h2>
 <ul>
 <li>Testability comes from written-down code you can run on controlled inputs.</li>
 <li><strong>Random IDs:</strong> test the properties: right length and format, no duplicates in 10,000 runs.</li>
 <li><strong>Today's stock price:</strong> test the calculation with a fake price source that always returns $100.</li>
 <li><strong>Due-date reminders:</strong> test with the clock frozen ("pretend today is April 10").</li>
-<li><strong>Audit sample:</strong> record the random seed in the workpapers so the sample can be reproduced.</li>
+<li><strong>Audit sample:</strong> record the <a href="https://en.wikipedia.org/wiki/Random_seed" rel="noopener" target="_blank">random seed</a> in the workpapers so the sample can be reproduced.</li>
 </ul></section><section id="s1"><span class="badge Participants">Participants</span> <span class="src">participant/prompt-card.md</span><h1>Prompt card</h1>
-<p>Copy and adapt. The starter CLAUDE.md already includes the first one.</p>
+<p>Copy and adapt. The starter <a href="https://code.claude.com/docs/en/memory" rel="noopener" target="_blank">CLAUDE.md</a> already includes the first one.</p>
 <h2>Agree on the design first</h2>
 <blockquote>
 <p>Before building anything: restate this task as inputs → outputs. List the hard inputs, not only the typical ones. Propose the design with the least AI in the loop. Label each step Scripting, Local model or AI in the loop, and say why. Rate each step's tokens per run: none, small or large. Wait for my OK.</p>
@@ -612,7 +610,7 @@ summary { cursor: pointer; color: #58a6ff; font-weight: 600; }
 <li>If it looks repeatable and would cost fewer tokens as a script, say so before doing it.</li>
 <li>If a file is large, offer a script that pulls out only the part that needs your judgment.</li>
 </ul></section><section id="s3"><span class="badge Participants">Participants</span> <span class="src">participant/homework.md</span><h1>Homework</h1>
-<p><strong>Output: a Python script that runs one step of a real workflow with no AI in the loop.</strong></p>
+<p><strong>Output: a <a href="https://www.python.org/" rel="noopener" target="_blank">Python</a> script that runs one step of a real workflow with no AI in the loop.</strong></p>
 <ol>
 <li>Pick one workflow from your firm.<ul>
 <li>a. Use one you do often, so the token savings matter.</li>
@@ -698,4 +696,33 @@ summary { cursor: pointer; color: #58a6ff; font-weight: 600; }
 <li>Show the presenter deciding: asking Claude "do this" vs. "write me a script that does this."</li>
 <li>Ask Claude for the hard inputs out loud, so participants see the habit.</li>
 <li>Ask Claude for relative tokens per run (none / small / large), not exact counts.</li>
-</ul></section></main></body></html>
+</ul></section></main><script>
+document.querySelectorAll('.vote').forEach(function (box) {
+  var det = box.querySelector('details');
+  if (!det) return;
+  var items = Array.prototype.slice.call(det.querySelectorAll('li'));
+  det.open = true;
+  det.querySelector('summary').style.display = 'none';
+  items.forEach(function (li) { li.hidden = true; });
+  var shown = 0;
+  var hints = items.filter(function (li) { return li.textContent.trim().indexOf('Hint:') === 0; }).length;
+  var btn = document.createElement('button');
+  function label() {
+    if (shown < hints) return 'Show hint ' + (shown + 1) + ' of ' + hints;
+    if (shown < items.length) return 'Show answer';
+    return 'Done';
+  }
+  btn.textContent = label();
+  btn.onclick = function () {
+    if (shown < items.length) {
+      var li = items[shown];
+      li.hidden = false;
+      if (li.textContent.trim().indexOf('Answer:') === 0) li.className = 'answer';
+      shown++;
+    }
+    btn.textContent = label();
+    btn.disabled = shown >= items.length;
+  };
+  det.appendChild(btn);
+});
+</script></body></html>

@@ -7,7 +7,7 @@
 | Bucket | What happens at run time | Tokens per run |
 |---|---|---|
 | 📜 Scripting | Code runs on your computer. AI may have written the code, its tests and its sample data, but no LLM runs now. | None |
-| 🤖 AI in the loop | An LLM is called every time the task runs. | Small to large, every run |
+| 🤖 AI in the loop | An [LLM](https://en.wikipedia.org/wiki/Large_language_model) is called every time the task runs. | Small to large, every run |
 | 🔀 Hybrid | Some steps are scripting, some are AI in the loop. | Only for the AI steps |
 
 - AI helping you **build** a script doesn't make it AI in the loop.
@@ -15,15 +15,15 @@
 
 ## What "deterministic" means
 
-**Strict definition: deterministic means the same inputs always give the same output.**
+**Strict definition: [deterministic](https://en.wikipedia.org/wiki/Deterministic_algorithm) means the same inputs always give the same output.**
 
 ![Venn diagram: where procedures fall](venn.svg)
 
 | Region | Examples |
 |---|---|
-| 🟢 Same inputs → same output | `=SUM()`, a tax-bracket lookup, matching invoice numbers |
-| 🟠 Also depends on the clock, the internet or a file | `=NOW()`, today's stock price, today's exchange rate |
-| 🎲 Random on purpose | `=RAND()`, random IDs, an audit sample |
+| 🟢 Same inputs → same output | [`=SUM()`](https://support.microsoft.com/en-us/office/sum-function-043e1c7d-7726-4e80-8f32-07b23e057f89), a tax-bracket lookup, matching invoice numbers |
+| 🟠 Also depends on the clock, the internet or a file | [`=NOW()`](https://support.microsoft.com/en-us/office/now-function-3337fd29-145a-4347-b2e6-20c904739c46), today's stock price, today's exchange rate |
+| 🎲 Random on purpose | [`=RAND()`](https://support.microsoft.com/en-us/office/rand-function-4cbfa695-8869-4788-8d90-021ea9f5be73), random IDs, an audit sample |
 | 🔴 AI in the loop | Every LLM call: never deterministic |
 
 ### Randomness in LLMs
@@ -74,7 +74,7 @@ A script needs you to say **in advance** where to look and what to do with what 
 | Rename and file 200 PDFs by client ID from a system export | 📜 Scripting | The ID is in a fixed place in each file name |
 | Combine monthly CSV exports from the same system into one workbook | 📜 Scripting | Same columns every month |
 | Convert balances at today's published exchange rate | 📜 Scripting | Depends on the internet, but needs no judgment |
-| Pick a random audit sample | 📜 Scripting | Random on purpose; record the seed so the sample can be reproduced |
+| Pick a random audit sample | 📜 Scripting | Random on purpose; record the [seed](https://en.wikipedia.org/wiki/Random_seed) so the sample can be reproduced |
 | Draft a client email explaining a variance | 🤖 AI in the loop | New wording for each client and situation |
 | Summarize the key terms of a 40-page lease | 🤖 AI in the loop | The terms can be anywhere, worded any way |
 | Answer a client's free-form question | 🤖 AI in the loop | No way to list the questions in advance |
@@ -104,7 +104,7 @@ A script needs you to say **in advance** where to look and what to do with what 
 - Ask for the hard inputs, not only the typical ones.
 - Ask for the design with the least AI in the loop.
 - Ask Claude to compare designs by tokens per run: none / small / large.
-- See the prompt card and the starter CLAUDE.md.
+- See the prompt card and the starter [CLAUDE.md](https://code.claude.com/docs/en/memory).
 
 ## Tokens
 
@@ -124,7 +124,7 @@ Agree on the split for each one before building.
 
 | Pattern | 📜 Scripting part | 🤖 AI-in-the-loop part | The seam |
 |---|---|---|---|
-| **AI extracts → script processes** | Validate, total, fill the Excel form | Pull fields from messy PDFs into a CSV | Fixed CSV columns; the script rejects rows that fail checks |
+| **AI extracts → script processes** | Validate, total, fill the Excel form | Pull fields from messy PDFs into a [CSV](https://en.wikipedia.org/wiki/Comma-separated_values) | Fixed CSV columns; the script rejects rows that fail checks |
 | **Script filters → AI judges** | Run the reconciliation, find the exceptions | Draft the explanation for only the exceptions | The script sends only the exception rows, not the whole file |
 | **Rules first, AI for leftovers** | Categorize by vendor rules (most transactions) | Categorize only the unmatched ones | Unmatched list → AI → review list; good answers become new rules |
 | **AI first, then promote to script** | Later: the script that replaced the AI step | Early: do the task with AI a few times | Once the pattern is stable, ask Claude to turn it into a script |
@@ -135,11 +135,11 @@ Agree on the split for each one before building.
 
 | Need | 💻 Local model | Notes |
 |---|---|---|
-| Text from scanned documents | Tesseract | Struggles with poor scans and handwriting |
-| Speech to text | whisper.cpp, Vosk | Runs offline; larger models need a stronger computer |
-| Categorize transactions from the firm's own past entries | scikit-learn | Needs enough past examples to learn from |
-| Find names, dates and amounts in text | spaCy | Accuracy depends on the type of text |
-| Remove an image background | rembg | Downloads a model file on first run |
+| Text from scanned documents ([OCR](https://en.wikipedia.org/wiki/Optical_character_recognition)) | [Tesseract](https://github.com/tesseract-ocr/tesseract) | Struggles with poor scans and handwriting |
+| Speech to text | [whisper.cpp](https://github.com/ggml-org/whisper.cpp), [Vosk](https://alphacephei.com/vosk/) | Runs offline; larger models need a stronger computer |
+| Categorize transactions from the firm's own past entries | [scikit-learn](https://scikit-learn.org/stable/) | Needs enough past examples to learn from |
+| Find names, dates and amounts in text | [spaCy](https://spacy.io/) | Accuracy depends on the type of text |
+| Remove an image background | [rembg](https://github.com/danielgatis/rembg) | Downloads a model file on first run |
 
 - Not LLMs. They run on your computer. Zero tokens.
 - Narrow: each one does one job.
@@ -147,34 +147,119 @@ Agree on the split for each one before building.
 
 ## Sort these: discuss and vote
 
-For each task, vote: 📜 Scripting, 🤖 AI in the loop or 🔀 Hybrid. Then ask: what hard inputs could change the answer?
+For each task, vote: 📜 Scripting, 🤖 AI in the loop or 🔀 Hybrid. Then ask: what hard inputs could change the answer? Reveal the hints one at a time, then the answer.
 
-| # | Task |
-|---|---|
-| 1 | Email every client a reminder 30 days before their filing deadline |
-| 2 | Write a personal year-end note to each client about their year |
-| 3 | Flag possible duplicate vendor payments |
-| 4 | Turn client voicemails into tasks with the client's name and a due date |
-| 5 | Build a monthly KPI summary from the general ledger export |
-| 6 | Pull box amounts from W-2s that clients upload |
-| 7 | Categorize 3,000 credit card lines from their memo text |
-| 8 | Decide whether a receipt is a deductible business expense for this client |
+<div class="vote" markdown="1">
+
+**1. Email every client a reminder 30 days before their filing deadline**
 
 <details markdown="1">
-<summary>Answer key (open after voting)</summary>
+<summary>Hints and answer</summary>
 
-| # | Bucket | Why |
-|---|---|---|
-| 1 | 📜 Scripting | Depends on the clock, but the rule is fixed: date minus 30 days, same template |
-| 2 | 🔀 Hybrid | The script pulls each client's figures; AI writes the note from only those figures |
-| 3 | 📜 Scripting, maybe 🔀 Hybrid | Exact matches are rules; near-matches ("ACME Inc" vs "Acme, Inc.") may need AI for leftovers |
-| 4 | 🔀 Hybrid | A local speech-to-text model (zero tokens), then AI to pick out the name and due date from the transcript |
-| 5 | 📜 Scripting | Same export, same calculations every month |
-| 6 | 🔀 Hybrid | Text PDFs → script; scans and photos → local OCR or AI; the script checks totals either way |
-| 7 | 🔀 Hybrid | Rules first, AI for leftovers; the rules list grows from the AI's reviewed answers |
-| 8 | 🤖 AI in the loop, plus a person | Judgment about this client's business; a person signs off |
+- Hint: Where does each deadline come from: a list, or someone's judgment?
+- Hint: Is the email wording the same for every client?
+- Answer: 📜 Scripting. Depends on the clock, but the rule is fixed: deadline minus 30 days, same template.
 
 </details>
+</div>
+
+<div class="vote" markdown="1">
+
+**2. Write a personal year-end note to each client about their year**
+
+<details markdown="1">
+<summary>Hints and answer</summary>
+
+- Hint: Which part is pulling each client's figures, and which part is writing?
+- Hint: Does each note need new wording?
+- Answer: 🔀 Hybrid. The script pulls each client's figures; AI writes the note from only those figures.
+
+</details>
+</div>
+
+<div class="vote" markdown="1">
+
+**3. Flag possible duplicate vendor payments**
+
+<details markdown="1">
+<summary>Hints and answer</summary>
+
+- Hint: What if the same invoice was entered twice with the same number and amount?
+- Hint: What about "ACME Inc" vs. "Acme, Inc." with amounts a cent apart?
+- Answer: 📜 Scripting, maybe 🔀 Hybrid. Exact matches are rules; near-matches may need AI for the leftovers.
+
+</details>
+</div>
+
+<div class="vote" markdown="1">
+
+**4. Turn client voicemails into tasks with the client's name and a due date**
+
+<details markdown="1">
+<summary>Hints and answer</summary>
+
+- Hint: Turning speech into text: does that need an LLM, or can a local model do it?
+- Hint: Picking a name and a due date out of a rambling message: rules, or understanding?
+- Answer: 🔀 Hybrid. A local speech-to-text model (zero tokens), then AI picks out the name and due date from the transcript.
+
+</details>
+</div>
+
+<div class="vote" markdown="1">
+
+**5. Build a monthly KPI summary from the general ledger export**
+
+<details markdown="1">
+<summary>Hints and answer</summary>
+
+- Hint: Does the export have the same columns every month?
+- Hint: Are the KPI formulas the same every month?
+- Answer: 📜 Scripting. Same export, same calculations every month.
+
+</details>
+</div>
+
+<div class="vote" markdown="1">
+
+**6. Pull box amounts from W-2s that clients upload**
+
+<details markdown="1">
+<summary>Hints and answer</summary>
+
+- Hint: What if every W-2 is a text PDF from the same payroll provider?
+- Hint: What if some are phone photos?
+- Answer: 🔀 Hybrid. Text PDFs → script; scans and photos → local OCR or AI; the script checks totals either way.
+
+</details>
+</div>
+
+<div class="vote" markdown="1">
+
+**7. Categorize 3,000 credit card lines from their memo text**
+
+<details markdown="1">
+<summary>Hints and answer</summary>
+
+- Hint: How many lines could a vendor lookup table catch?
+- Hint: What happens to the rules list as you chase the rest?
+- Answer: 🔀 Hybrid. Rules first, AI for leftovers; the rules list grows from the AI's reviewed answers.
+
+</details>
+</div>
+
+<div class="vote" markdown="1">
+
+**8. Decide whether a receipt is a deductible business expense for this client**
+
+<details markdown="1">
+<summary>Hints and answer</summary>
+
+- Hint: Can you list in advance every kind of receipt and every kind of business?
+- Hint: Who is accountable for the decision?
+- Answer: 🤖 AI in the loop, plus a person. Judgment about this client's business; a person signs off.
+
+</details>
+</div>
 
 ## Testing (if there's time)
 
@@ -182,4 +267,4 @@ For each task, vote: 📜 Scripting, 🤖 AI in the loop or 🔀 Hybrid. Then as
 - **Random IDs:** test the properties: right length and format, no duplicates in 10,000 runs.
 - **Today's stock price:** test the calculation with a fake price source that always returns $100.
 - **Due-date reminders:** test with the clock frozen ("pretend today is April 10").
-- **Audit sample:** record the random seed in the workpapers so the sample can be reproduced.
+- **Audit sample:** record the [random seed](https://en.wikipedia.org/wiki/Random_seed) in the workpapers so the sample can be reproduced.

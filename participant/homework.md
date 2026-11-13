@@ -1,6 +1,6 @@
 # Homework
 
-**Output: a Python script that runs one step of a real workflow with no AI in the loop.**
+**Output: a [Python](https://www.python.org/) script that runs one step of a real workflow with no AI in the loop.**
 
 1. Pick one workflow from your firm.
     - a. Use one you do often, so the token savings matter.

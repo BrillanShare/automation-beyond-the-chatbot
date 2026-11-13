@@ -54,6 +54,43 @@ ol ul { list-style: none; padding-left: 1.4em; }
 .t-bad { background: #f8514926; }
 details { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 8px 14px; }
 summary { cursor: pointer; color: #58a6ff; font-weight: 600; }
+.vote { border: 1px solid #30363d; border-radius: 8px; padding: 4px 16px 12px; margin: 10px 0; }
+.vote details { border: none; padding: 0; }
+.vote li.answer { background: #8957e530; border-radius: 6px; padding: 4px 8px; font-weight: 600; list-style: none; margin-left: -1em; }
+button { background: #1f6feb; color: #fff; border: none; border-radius: 6px; padding: 6px 14px; font-size: 14px; cursor: pointer; margin-top: 6px; }
+button:disabled { background: #30363d; color: #8b949e; cursor: default; }
+a { color: #58a6ff; }
+"""
+
+JS = """
+document.querySelectorAll('.vote').forEach(function (box) {
+  var det = box.querySelector('details');
+  if (!det) return;
+  var items = Array.prototype.slice.call(det.querySelectorAll('li'));
+  det.open = true;
+  det.querySelector('summary').style.display = 'none';
+  items.forEach(function (li) { li.hidden = true; });
+  var shown = 0;
+  var hints = items.filter(function (li) { return li.textContent.trim().indexOf('Hint:') === 0; }).length;
+  var btn = document.createElement('button');
+  function label() {
+    if (shown < hints) return 'Show hint ' + (shown + 1) + ' of ' + hints;
+    if (shown < items.length) return 'Show answer';
+    return 'Done';
+  }
+  btn.textContent = label();
+  btn.onclick = function () {
+    if (shown < items.length) {
+      var li = items[shown];
+      li.hidden = false;
+      if (li.textContent.trim().indexOf('Answer:') === 0) li.className = 'answer';
+      shown++;
+    }
+    btn.textContent = label();
+    btn.disabled = shown >= items.length;
+  };
+  det.appendChild(btn);
+});
 """
 
 
@@ -79,6 +116,10 @@ CELL_PREFIXES = [("📜", "c-script"), ("🤖", "c-ai"), ("🔀", "c-hybrid"), (
 
 def color_tables(body):
     soup = BeautifulSoup(body, "html.parser")
+    for a in soup.find_all("a", href=True):
+        if a["href"].startswith("http"):
+            a["target"] = "_blank"
+            a["rel"] = "noopener"
     for table in soup.find_all("table"):
         headers = [th.get_text().strip().lower() for th in table.find_all("th")]
         col_class = {}
@@ -126,7 +167,7 @@ def main():
         "<title>Automation beyond the chatbot</title>"
         f"<style>{CSS}</style></head><body>"
         f"<nav><h1>Automation beyond the chatbot</h1>{''.join(nav)}</nav>"
-        f"<main>{''.join(sections)}</main></body></html>\n"
+        f"<main>{''.join(sections)}</main><script>{JS}</script></body></html>\n"
     )
     (ROOT / "index.html").write_text(page, encoding="utf-8")
     print("Wrote index.html")

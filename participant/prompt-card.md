@@ -1,6 +1,6 @@
 # Prompt card
 
-Copy and adapt. The starter CLAUDE.md already includes the first one.
+Copy and adapt. The starter [CLAUDE.md](https://code.claude.com/docs/en/memory) already includes the first one.
 
 ## Agree on the design first
 
