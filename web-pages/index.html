@@ -12,7 +12,7 @@
   --paper: #f4f1ea; --ink: #3b3f46; --faint: #b9b4aa;
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.45 "Segoe UI", Helvetica, Arial, sans-serif; }
+body { margin: 0; background-color: var(--bg); background-image: radial-gradient(#ffffff0d 1px, transparent 1.3px), radial-gradient(#58a6ff0a 1px, transparent 1.3px); background-size: 24px 24px, 24px 24px; background-position: 0 0, 12px 12px; color: var(--text); font: 17px/1.45 "Segoe UI", Helvetica, Arial, sans-serif; }
 header { padding: 28px 40px 8px; max-width: 1500px; margin: 0 auto; }
 header h1 { margin: 0 0 12px; font-size: 34px; }
 .legend { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -146,20 +146,23 @@ svg text { font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
 .badge { display: inline-block; padding: 4px 12px; border-radius: 999px; font-weight: 800; border: 2px solid; font-size: 15px; }
 
 /* ---------- which first: workflow cards ---------- */
-.pic { margin: 8px 0 4px; background: var(--paper); color: var(--ink); border-radius: 6px; padding: 8px 10px; font-size: 13px; min-height: 74px; }
+.wf { display: flex; flex-direction: column; }
+.wf .pname { min-height: 24px; }
+.wf .badgebox { margin-top: auto; padding-top: 6px; text-align: center; min-height: 34px; }
+.pic { height: 92px; box-sizing: border-box; overflow: hidden; margin: 8px 0 4px; background: var(--paper); color: var(--ink); border-radius: 6px; padding: 8px 10px; font-size: 13px; min-height: 74px; }
 .pic div { display: flex; justify-content: space-between; gap: 8px; }
 .pic.stmt span, .pic.w2 span { font-family: Consolas, Menlo, monospace; }
 .pic.dup .chip { background: #ffd8d3; border-radius: 4px; padding: 4px 6px; margin: 3px 0; font-weight: 700; justify-content: center; }
 .pic.w2 .hd { font-weight: 800; justify-content: flex-start; margin-bottom: 4px; }
 .pic.mail { font-style: italic; }
-.wread { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; min-height: 44px; font-size: 13px; text-align: center; }
+.wread { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; min-height: 44px; transition: none; font-size: 13px; text-align: center; }
 .wread b { display: block; font-size: 17px; color: var(--text); }
 
 /* ---------- cost readout ---------- */
-.readout { display: grid; grid-template-columns: repeat(4, auto); gap: 6px 26px; justify-content: start; min-height: 64px; margin-top: 6px; padding: 10px 14px; background: #0d1117; border-radius: 10px; }
-.readout .rhead { grid-column: 1 / -1; font-size: 16px; }
-.readout .rrow { display: flex; flex-direction: column; gap: 2px; font-size: 15px; }
-.readout .usd { color: var(--good); font-weight: 800; font-size: 18px; }
+.readout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 26px; min-height: 120px; margin-top: 10px; padding: 18px 24px; background: #0d1117; border-radius: 12px; }
+.readout .rhead { grid-column: 1 / -1; font-size: 20px; text-align: center; }
+.readout .rrow { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 18px; text-align: center; }
+.readout .usd { color: var(--good); font-weight: 900; font-size: 32px; }
 
 /* ---------- pipelines (hybrid patterns) ---------- */
 .pipe { display: flex; align-items: center; gap: 8px; position: relative; padding: 14px 0 6px; }
@@ -172,6 +175,9 @@ svg text { font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
 .pname { font-weight: 800; font-size: 16px; margin-bottom: 2px; }
 
 /* ---------- split the work ---------- */
+.node { position: relative; }
+.node .cash { position: absolute; left: 50%; top: -30px; transform: translateX(-50%); font-size: 34px; font-weight: 900; color: var(--good); text-shadow: 0 0 10px #3fb95066; pointer-events: none; }
+.pcard .pipe { padding-top: 40px; }
 .node .who { display: block; font-size: 11px; font-weight: 800; margin-top: 2px; }
 .pchart svg { max-height: 170px; }
 .pchart { display: grid; grid-template-columns: 1fr 180px; gap: 12px; align-items: center; margin-top: 8px; }
@@ -368,7 +374,7 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 <!-- ================= Which first ================= -->
 <section class="anim" id="first">
   <h2>Many tasks? Convert the biggest gap first</h2>
-  <p class="take">Four example tasks. Press play: the lines draw, then the marker walks to each firm's volume and shows what converting would save in a year.</p>
+  <p class="take">Four example tasks. Press play: the lines draw, then one task at a time, left to right, the marker walks to the firm's volume and shows what converting would save in a year.</p>
   <div class="grid4" id="panels"></div>
   <div class="means">👉 <b>What this shows:</b> converting saves the most where today's line is steep and your volume is high (green bars). At low volume, building the script can cost more than it saves. If every item still needs an LLM, converting saves little.</div>
 </section>
@@ -376,7 +382,7 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 <!-- ================= Hybrid patterns ================= -->
 <section class="anim" id="patterns">
   <h2>Split the work</h2>
-  <p class="take">Each pattern starts with the LLM doing every step. Press play: the steps a script can do turn blue, and the chart shows the LLM tokens that are left.</p>
+  <p class="take">Each pattern starts with the LLM doing every step. Every <b style="color:var(--good)">$</b> is a step that costs tokens on every run. Press play: the steps a script can do turn blue, their $ goes away, and the chart shows the LLM tokens that are left.</p>
   <div class="grid2" id="pipes"></div>
   <div class="means">👉 <b>What this shows:</b> every step a script takes over flattens the token line. What remains is the LLM's share: the step that needs judgment. In the last pattern, the LLM's work happens once, so nothing is left per run.</div>
 </section>
@@ -886,9 +892,9 @@ var COST = {
 function fmtTok(x) { return x >= 1e6 ? (x / 1e6).toFixed(x >= 1e7 ? 0 : 1) + "M" : Math.round(x / 1000) + "k"; }
 function fmtUsd(x) { var d = x / 1e6 * COST.perMillion; return "$" + (d >= 100 ? Math.round(d).toLocaleString() : d.toFixed(2)); }
 function costChart() {
-  var W = 1200, H = 470, x0 = 120, y0 = 30, w = 700, h = 360;
+  var W = 1110, H = 470, x0 = 120, y0 = 30, w = 700, h = 360;
   var X = function (n) { return x0 + n / COST.maxDocs * w; }, Y = function (tok) { return y0 + h - tok / COST.maxTok * h; };
-  var s = '<svg viewBox="0 0 ' + W + " " + H + '" style="width:100%;max-width:1250px;display:block">';
+  var s = '<svg viewBox="0 0 ' + W + " " + H + '" style="width:100%;max-width:1250px;display:block;margin:0 auto">';
   for (var k = 0; k <= 5; k++) {
     var tok = k * 1e6, yy = Y(tok);
     s += '<line x1="' + x0 + '" x2="' + (x0 + w) + '" y1="' + yy + '" y2="' + yy + '" stroke="' + C.line + '"/>';
@@ -951,6 +957,8 @@ function renderCost(t) {
 
 // The dashed every-item-against-every-other line needs its own dash pattern after drawing.
 // Hypothetical yearly costs in dollars ($10 per million tokens), chosen to show magnitude.
+// Each card's marker walks to "you" in turn, left to right.
+var FIRST_START = 2.4, FIRST_STEP = 1.6;
 var PANELS = [
   { ico: "💳", title: "Categorize card lines", vol: "3,000 lines a month", unit: "lines", you: 36000, max: 45000,
     pic: '<div class="pic stmt"><div><span>AMZN Mktp US*RT5</span><b>38.12</b></div><div><span>UBER *TRIP</span><b>23.80</b></div><div><span>SQ *BLUE HERON</span><b>9.75</b></div></div>',
@@ -986,7 +994,7 @@ function panels() {
     s += '<line class="gap" stroke-width="7"/><text class="you" y="' + (y0 + h + 16) + '" fill="' + C.text + '" font-size="13" font-weight="800" text-anchor="middle">you</text></g>';
     s += "</svg>";
     html += '<div class="card wf" data-i="' + i + '"><div class="pname">' + p.ico + " " + p.title + '</div><div class="small">' + p.vol + "</div>" + p.pic + s +
-      '<div class="wread"></div><div style="text-align:center;min-height:34px"><span class="badge" style="opacity:0;color:' + p.color + ";border-color:" + p.color + '">' + p.badge + "</span></div></div>";
+      '<div class="wread"></div><div class="badgebox"><span class="badge" style="opacity:0;color:' + p.color + ";border-color:" + p.color + '">' + p.badge + "</span></div></div>";
   });
   box.innerHTML = '<div class="small" style="grid-column:1/-1;margin-top:-8px"><span style="color:' + C.ai + ';font-weight:700">━ today: all AI 💸</span> &nbsp; <span style="color:' + C.hybrid + ';font-weight:700">━ after converting</span> &nbsp; <span style="color:' + C.good + ';font-weight:700">▌ saved</span> &nbsp; <span style="color:' + C.warn + ';font-weight:700">▌ costs more</span> &nbsp; Hypothetical $ at $10 per million tokens.</div>' + html;
 }
@@ -994,19 +1002,21 @@ function renderPanels(t) {
   var sec = document.getElementById("first");
   renderDraw(sec, t);
   sec.querySelectorAll(".wf").forEach(function (card) {
-    var p = PANELS[+card.dataset.i], k = ramp(t, 2.4, 3), e = k * k * (3 - 2 * k), n = Math.round(e * p.you);
+    var i = +card.dataset.i, p = PANELS[i], t0 = FIRST_START + i * FIRST_STEP;
+    var k = ramp(t, t0, 2), e = k * k * (3 - 2 * k), n = Math.round(e * p.you);
     var mk = card.querySelector(".mk"), x = p._X(n), a = p.today(n), b = p.after(n);
-    mk.setAttribute("opacity", t >= 2.4 ? 1 : 0);
+    mk.setAttribute("opacity", ramp(t, t0 - 0.3, 0.4));
     var ml = card.querySelector(".mline"); ml.setAttribute("x1", x); ml.setAttribute("x2", x);
     card.querySelector(".you").setAttribute("x", x);
     var g = card.querySelector(".gap");
     g.setAttribute("x1", x + 7); g.setAttribute("x2", x + 7); g.setAttribute("y1", p._Y(a)); g.setAttribute("y2", p._Y(b));
     g.setAttribute("stroke", a >= b ? C.good : C.warn); g.setAttribute("opacity", Math.abs(p._Y(a) - p._Y(b)) > 3 ? 1 : 0);
     var diff = a - b;
-    card.querySelector(".wread").innerHTML = t < 2.4 ? "" :
+    var wr = card.querySelector(".wread"); wr.style.opacity = ramp(t, t0, 0.5);
+    wr.innerHTML = t < t0 - 0.5 ? "" :
       '<div><span style="color:' + C.ai + '">Today</span> <b>' + money(a) + '</b></div><div><span style="color:' + C.hybrid + '">After</span> <b>' + money(b) + "</b></div>" +
       '<div><span style="color:' + (diff >= 0 ? C.good : C.warn) + '">' + (diff >= 0 ? "Saved" : "Costs more") + '</span> <b style="color:' + (diff >= 0 ? C.good : C.warn) + '">' + money(Math.abs(diff)) + "</b></div>";
-    card.querySelector(".badge").style.opacity = ramp(t, 5.6, 0.6);
+    card.querySelector(".badge").style.opacity = ramp(t, t0 + 2.1, 0.6);
   });
 }
 
@@ -1024,7 +1034,7 @@ var PIPE_STEP = 1.1, PIPE_START = 0.8;
 function pipes() {
   var html = "";
   PIPES.forEach(function (p, k) {
-    var nodes = p[1].map(function (n) { return '<div class="node a" data-final="' + n[2] + '"><span class="i">' + n[0] + "</span>" + n[1] + '<span class="who">🤖 LLM</span></div>'; }).join('<span class="arrow">→</span>');
+    var nodes = p[1].map(function (n) { return '<div class="node a" data-final="' + n[2] + '"><span class="i">' + n[0] + "</span>" + n[1] + '<span class="who">🤖 LLM</span><span class="cash">$</span></div>'; }).join('<span class="arrow">→</span>');
     html += '<div class="card pcard" data-k="' + k + '"><div class="pname">' + p[0] + '</div><div class="pipe">' + nodes + "</div>" +
       '<div class="pchart"><svg viewBox="0 0 300 150" style="width:100%"></svg><div class="pread"></div></div></div>';
   });
@@ -1051,6 +1061,8 @@ function renderPipes(t) {
       el.style.borderColor = k > 0.5 ? col : C.ai;
       el.style.color = k > 0.5 ? col : C.ai;
       el.style.background = "rgba(" + (k > 0.5 ? (fin === "o" ? "139,148,158" : "88,166,255") : "248,81,73") + "," + (0.08 + 0.1 * Math.sin(Math.PI * k)) + ")";
+      var cash = el.querySelector(".cash"), gone = clamp(k * 1.4, 0, 1);
+      cash.style.opacity = 1 - gone; cash.style.transform = "translate(-50%, " + (-18 * gone) + "px) scale(" + (1 + 0.3 * gone) + ")";
       el.querySelector(".who").textContent = k > 0.5 ? (fin === "o" ? "🤖 once, then done" : "📜 script") : "🤖 LLM";
     });
     var W = 300, H = 150, x0 = 34, y0 = 8, w = 250, h = 110;
@@ -1181,7 +1193,7 @@ var TIMELINES = {
   hard: { dur: 0.5 + 5 * 1.6 + 2.4, render: renderFlips },
   dtypes: { dur: DT_START + 4 * DT_STEP + 0.4, render: renderDtypes },
   cost: { dur: 11.5, render: renderCost },
-  first: { dur: 6.5, render: renderPanels },
+  first: { dur: FIRST_START + 3 * FIRST_STEP + 3.2, render: renderPanels },
   patterns: { dur: PIPE_START + 3 * PIPE_STEP + 1.4, render: renderPipes },
   demo: { dur: 0.4 + 40 * DEMO_GAP + 1, render: renderDemo },
   controls: { dur: 4.2, render: renderControls },
