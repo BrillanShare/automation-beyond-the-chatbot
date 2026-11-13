@@ -123,6 +123,28 @@ A script needs you to say **in advance** where to look and what to do with what 
 - **Big files make it worse.** Pasting a large spreadsheet into chat burns tokens just to read it.
 - **Hybrid:** send only the slice that needs judgment to the LLM; let the script do the rest.
 
+## How cost grows with volume
+
+![Cost-volume chart: scripting is a flat fixed cost, AI in the loop rises with every item, hybrid rises slowly, and comparing every item with every other item curves upward](cost-volume.svg)
+
+Read it like a cost-volume (break-even) chart:
+
+- **Scripting = fixed cost.** Tokens to build it once, then a flat line.
+- **AI in the loop = variable cost.** Every item, every run.
+- **Hybrid = fixed cost + a small variable cost.**
+- **Break-even:** the volume where the script has paid for itself. For a task you repeat, that comes early.
+- **Watch for the curve.** Comparing every item with every other item (finding duplicates, fuzzy matching) grows with the square of the volume.
+
+| Volume | 📜 Scripting | 🔀 Hybrid (1 item in 10 needs judgment) | 🤖 AI in the loop | ⚠️ Every item against every other |
+|---|---|---|---|---|
+| 10 items | Build cost | Build cost + 1 | 10 | 100 |
+| 100 items | Build cost | Build cost + 10 | 100 | 10,000 |
+| 1,000 items | Build cost | Build cost + 100 | 1,000 | 1,000,000 |
+
+One unit = the tokens for one item or one comparison.
+
+**Ask Claude:** "What happens to run time and tokens at 10× the data?"
+
 ## Hybrid patterns
 
 Agree on the split for each one before building.
@@ -149,6 +171,38 @@ Agree on the split for each one before building.
 - Not LLMs. They run on your computer. Zero tokens.
 - Narrow: each one does one job.
 - Setting them up takes real technical knowledge. Claude can carry most of it, but expect some back-and-forth.
+
+## Controls for scripts
+
+You can't read the code, but you can ask for the same controls you'd expect anywhere else. These are the failures you won't see unless you ask.
+
+| Control | What goes wrong unseen | Accounting equivalent | Ask Claude |
+|---|---|---|---|
+| 📣 **Fail loudly** | The script skips rows it can't read and still reports success | Exceptions report | "What does the script do with a row it can't process? Show me the list." |
+| 🧮 **Control totals** | 500 rows in, 487 out, and nobody notices | Batch totals, tie-out | "Do rows in equal rows out plus rejected? Do the totals tie?" |
+| 💵 **Money math** | Cents drift, or the script rounds differently from Excel | Rounding policy | "How is money stored and rounded? Does it match Excel?" |
+| 🔁 **Safe to run twice** | A rerun doubles the entries | Double posting | "What happens if I run this twice?" |
+| 🔒 **Never overwrite an input without asking first** | The script replaces the only copy of a source file | Source documents stay untouched | "Does it change or delete any file it reads? Write results to a new file." |
+| 🔤 **Text that looks like numbers** | Account 00123 becomes 123; dates shift | Leading zeros in account numbers | "Which columns are read as text, numbers and dates?" |
+| ⚙️ **Settings out of the code** | A tax rate or cutoff date is buried in the script | Assumptions on their own tab, not inside formulas | "Which values are fixed in the code? Move them to a settings file." |
+| 📝 **Run log** | Nobody can say which version and which input produced a number | Audit trail | "Does each run record the date, input file, row counts and version?" |
+| 📦 **What it installs and sends** | A downloaded add-on, or data leaving your computer | Vendor due diligence | "What does it install? Does it send data anywhere?" |
+| ♻️ **Changes can break what worked** | Claude fixes one case and breaks another | Re-performing a test after a change | "Rerun the earlier sample inputs after every change." |
+
+### Money math: why to ask
+
+- Ordinary computer decimals can't hold 0.10 exactly: 0.10 + 0.20 comes out as 0.30000000000000004.
+- Python's built-in rounding sends 2.5 to 2. Excel's [`ROUND`](https://support.microsoft.com/en-us/office/round-function-c018c5d8-40fb-4053-90b1-b3e7f61a213c) sends it to 3.
+- Python rounds 2.675 to 2.67. Excel gives 2.68.
+- The fix exists (exact decimal arithmetic and a stated rounding rule). Claude applies it reliably when you ask.
+
+### What you don't need to learn
+
+- Big O notation, algorithms and data structures
+- Design patterns and programming languages
+- Performance tuning
+
+Claude handles these. When they go wrong, the script is slow, and you can see that for yourself.
 
 ## Sort these: discuss and vote
 
