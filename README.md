@@ -23,6 +23,13 @@ Workshop materials for advanced AI users in accounting: when to script, when to 
 
 GitHub and Claude both show the `.md` files formatted, with the diagrams.
 
+**Need Python on your own computer?** Only if you want to run scripts there yourself. Claude can run them for you in the Claude app or Claude Code on the web.
+
+- **Download:** [python.org/downloads](https://www.python.org/downloads/)
+- **Windows setup:** [Using Python on Windows](https://docs.python.org/3/using/windows.html)
+- **Mac setup:** [Using Python on macOS](https://docs.python.org/3/using/mac.html)
+- **Or ask Claude:** "Walk me through installing Python on my [Windows / Mac] computer, one step at a time, and how to check that it worked."
+
 **Using the starter CLAUDE.md:**
 
 - **Claude Code:** copy `starter/CLAUDE.md` into the folder you work in. Claude reads it automatically.

@@ -18,6 +18,7 @@
     - b. Run it on the sample inputs and compare with the expected outputs.
     - c. Ask Claude to explain the script in plain language.
     - d. Run the "Review a script like an auditor" prompt from the prompt card.
+    - e. Running it on your own computer needs Python: see "Need Python on your own computer?" in the README.
 5. Bring back:
     - a. the design (which steps are scripting, local model, AI in the loop)
     - b. the script
