@@ -240,6 +240,21 @@ svg text { font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
 @media (max-width: 1100px) { .ctlgrid { grid-template-columns: 1fr; } }
 
 /* ---------- editable prompts ---------- */
+.lt { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: #1f6feb; color: #fff; font-weight: 900; font-size: 14px; }
+.lt.big { width: 36px; height: 36px; font-size: 20px; margin-right: 6px; vertical-align: 3px; }
+.xref { margin-top: 8px; font-size: 15px; color: var(--muted); display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.xref.down { margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--line); }
+a.xl { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 4px; border: 1px solid var(--line); border-radius: 999px; background: #0d1117; color: var(--text); text-decoration: none; font-size: 14px; }
+a.xl:hover { border-color: #58a6ff; color: #58a6ff; }
+.ideanav { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; font-size: 14px; }
+html { scroll-behavior: smooth; }
+section, .pcard2 { scroll-margin-top: 16px; }
+section:target, .pcard2:target { animation: flash 1.6s ease-out; }
+@keyframes flash { 0% { box-shadow: 0 0 0 4px #58a6ffaa; } 100% { box-shadow: 0 0 0 0 #58a6ff00; } }
+.pcard2 .phead { display: flex; gap: 14px; align-items: center; }
+.pcard2 svg.pill { flex: 0 0 210px; width: 210px; height: 115px; background: #0d1117; border-radius: 10px; }
+.pcard2 .pt { font-size: 18px; font-weight: 800; }
+.pnum { display: inline-flex; align-items: center; justify-content: center; min-width: 28px; height: 28px; border-radius: 8px; background: #21262d; border: 1px solid var(--line); font-size: 15px; margin-right: 4px; }
 .pbox { margin-top: 8px; }
 .pbox textarea { width: 100%; box-sizing: border-box; background: #0d1117; color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 10px; font: 15px/1.45 "Segoe UI", Helvetica, Arial, sans-serif; resize: vertical; }
 .pbox .prow { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 6px; }
@@ -290,6 +305,7 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
     <span class="chip c-hybrid">🔀 Hybrid: script + LLM for the slice that needs judgment</span>
     <span class="chip c-local">💻 Local model: not an LLM, zero tokens</span>
   </div>
+  <nav class="ideanav" id="ideanav"></nav>
 </header>
 
 <main>
@@ -523,9 +539,9 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 </section>
 
 <!-- ================= Prompts ================= -->
-<section>
+<section id="promptsec">
   <h2>Ask Claude first</h2>
-  <p class="take">Each prompt is here in full. Fill in the [brackets] here or after pasting, then copy it into Claude. The numbers match the prompt card.</p>
+  <p class="take">All twelve prompts from the prompt card, in full. Fill in the [brackets] here or after pasting, then copy it into Claude. Each one links ↑ to the ideas it goes with; each idea links ↓ back here. Prompts 13 to 22 are on the controls cards (idea I).</p>
   <div class="grid2" id="prompts"></div>
 </section>
 
@@ -1069,14 +1085,61 @@ function renderControls(card, t) {
 }
 
 // ---------- prompts ----------
+// [number, icon, title, full text (same as prompt-card.md), ideas above it relates to]
 var PROMPTS = [
-  ["🧭", "1. Agree on the design first", "Before building anything: restate this task as inputs → outputs. List the hard inputs, not only the typical ones. Propose the design with the least AI in the loop. Label each step Scripting, Local model or AI in the loop, and say why. Rate each step's tokens per run: none, small or large. Wait for my OK."],
-  ["🗣️", "6. Understand the script", "Explain this script for someone with no computer science background: what it reads, what it does, what it writes, and what could go wrong."],
-  ["🕵️", "9. Review a script like an auditor", "Before I rely on this script, review it as an auditor would. In plain language: what it does with rows it can't process; whether rows and totals in equal rows and totals out; how money is rounded and whether that matches Excel; what happens if I run it twice; whether it changes any input file; which values are fixed in the code; whether its rules are reviewed and dated; whether tests are saved next to it; what it installs and whether it sends data anywhere; and whether any step still uses tokens on every run. Flag anything you'd fix."],
-  ["⚖️", "10. Is it worth converting?", "I do this task with AI today: [describe it]. Each run handles about [how many] [lines / documents / clients], and I run it [how often]. Tell me in plain words how the tokens grow as that count grows, and whether any step compares every item with every other item. Is my volume big enough for that to matter? Would a hybrid or script design change the shape of that growth, or only lower it a little? Use relative amounts. Don't guess my volume."],
-  ["📈", "11. Plot it", "First, if I haven't told you, ask how many [lines / documents / clients] each run handles and how often I run it. If the designs would differ too little at my volume to matter, say so in one sentence and don't make a chart. Otherwise, chart tokens (relative) against how many I process in a year: one line for today, one per design you'd propose, including the one-time tokens to build each. Mark my volume and any break-even point. Plot only steps that use tokens. Then explain it in plain language and list your assumptions."],
-  ["🥇", "12. Which one first?", "Here are the tasks I do with AI today, with how many each run handles and how often I run it: [list them]. For each, say how its tokens grow with volume, whether my volume is big enough for that to matter, and whether converting would change the shape of the growth. Rank them by return on my effort. One table and one chart, with my volume marked on each line."]
+  [1, "\ud83e\udded", "Agree on the design first", "Before building anything: restate this task as inputs → outputs. List the hard inputs, not only the typical ones. Propose the design with the least AI in the loop. Label each step Scripting, Local model or AI in the loop, and say why. Rate each step's tokens per run: none, small or large. Wait for my OK.", ["lanes", "dtypes", "hard", "patterns"]],
+  [2, "\ud83d\udd00", "Find another way", "How would I do this without AI in the loop? What would I lose?", ["lanes", "patterns"]],
+  [3, "\ud83e\udde9", "Find the hard inputs", "What could arrive for this task that would break the obvious rules? Think about scans, photos, layout changes, spelling variations, date formats, duplicates and missing files.", ["hard", "cant"]],
+  [4, "\u2696\ufe0f", "Compare designs", "Give me two or three designs for this. Rank them by tokens per run (none, small, large), reliability on the hard inputs, and how hard they are to maintain.", ["lanes", "patterns", "cost"]],
+  [5, "\ud83c\udfaf", "Define \"done\" before building", "Before writing the script, write sample inputs, including hard ones, and the output you expect for each. We'll use them to check the script.", ["same", "hard"]],
+  [6, "\ud83d\udde3\ufe0f", "Understand the script", "Explain this script for someone with no computer science background: what it reads, what it does, what it writes, and what could go wrong.", ["same", "cant"]],
+  [7, "\ud83d\udcac", "Turn a chat habit into a script", "I keep asking you to do this in chat. Turn it into a script I can run on my own computer, so it costs no tokens per run.", ["lanes", "cost"]],
+  [8, "\ud83d\uddc2\ufe0f", "Large files", "This file is large. Don't read all of it. Write a script that pulls out only the part you need to see.", ["lanes", "cost"]],
+  [9, "\ud83d\udd75\ufe0f", "Review a script like an auditor", "Before I rely on this script, review it as an auditor would. Tell me in plain language: what it does with rows it can't process; whether rows and totals in equal rows and totals out; how money is stored and rounded, and whether that matches Excel; what happens if I run it twice; whether it changes any input file; which values are fixed in the code; what it installs and whether it sends data anywhere; whether its rules are reviewed and dated; whether tests are saved next to it; and whether any step still uses tokens on every run. Flag anything you'd fix.", ["controls"]],
+  [10, "\ud83d\udcb8", "Is it worth converting?", "I do this task with AI today: [describe it]. Each run handles about [how many] [lines / documents / clients], and I run it [how often]. Before proposing anything, tell me in plain words how the tokens grow as that count grows, and whether any step compares every item with every other item. Then tell me whether my volume is big enough for that to matter, and at what volume it would start to. Then say whether a hybrid or script design would change the shape of that growth or only lower it a little. Use relative amounts, not exact token counts. If you need a number from me, ask. Don't guess my volume.", ["cost", "first"]],
+  [11, "\ud83d\udcc8", "Plot it", "First, if I haven't told you, ask how many [lines / documents / clients] each run handles and how often I run it. If the designs would differ too little at my volume to matter, say so in one sentence and don't make a chart. Otherwise, make a chart for this task. Horizontal axis: how many [lines / documents / clients] I process in a year. Vertical axis: tokens, in relative units. Draw one line for how you do it today and one line for each design you'd propose (hybrid, script). Include the one-time tokens to build each design. Mark my volume with a \"you are here\" line, and mark any break-even point. Plot only steps that use tokens. For a step that compares every item with every other, use the count in one run, not the yearly total. Then explain the chart in plain language: what I'd save in a year at my volume, and what would have to change for the answer to flip. List your assumptions.", ["cost"]],
+  [12, "\ud83e\udd47", "Which one first?", "Here are the tasks I do with AI today, with how many each run handles and how often I run it: [list them]. For each one, say how its tokens grow with volume, whether my volume is big enough for that to matter, and whether converting to hybrid or script would change the shape of the growth. Then rank them by return on my effort: tokens saved in a year against the work to convert. Show one table and one chart, with my volume marked on each line.", ["first"]]
 ];
+// Small drawings, one per prompt, so each card shows what the prompt does.
+function svgWrap(inner) { return '<svg viewBox="0 0 220 120" class="pill">' + inner + "</svg>"; }
+function doc(x, y, w, h, extra) { return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="3" fill="#f4f1ea"' + (extra || "") + "/>"; }
+function lines(x, y, w, n, gap) { var o = ""; for (var i = 0; i < n; i++) o += '<rect x="' + x + '" y="' + (y + i * (gap || 7)) + '" width="' + (w * (i % 3 === 2 ? 0.6 : 1)) + '" height="3" rx="1.5" fill="#b9b4aa"/>'; return o; }
+function box(x, y, w, h, col, label) { return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="7" fill="' + col + '22" stroke="' + col + '" stroke-width="2.5"/><text x="' + (x + w / 2) + '" y="' + (y + h / 2 + 5) + '" text-anchor="middle" font-size="14" font-weight="800" fill="' + col + '">' + label + "</text>"; }
+function arrow(x1, y1, x2, y2, col) { return '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="' + (col || "#8b949e") + '" stroke-width="2.5" marker-end="url(#ah)"/>'; }
+var DEFS = '<defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L10,5L0,10z" fill="#8b949e"/></marker></defs>';
+function txt(x, y, t, col, size, anchor) { return '<text x="' + x + '" y="' + y + '" font-size="' + (size || 12) + '" font-weight="700" fill="' + (col || "#e6edf3") + '" text-anchor="' + (anchor || "middle") + '">' + t + "</text>"; }
+var ILLUS = {
+  1: function () { return DEFS + box(4, 42, 56, 36, C.script, "📜") + arrow(62, 60, 80, 60) + box(82, 42, 56, 36, C.hybrid, "🔀") + arrow(140, 60, 158, 60) + box(160, 42, 56, 36, C.ai, "🤖") +
+       txt(110, 24, "inputs → outputs", C.text, 13) + '<rect x="60" y="88" width="100" height="26" rx="13" fill="' + C.warn + '33" stroke="' + C.warn + '" stroke-width="2"/>' + txt(110, 105, "✋ wait for OK", C.warn, 12); },
+  2: function () { return DEFS + doc(8, 42, 34, 44) + lines(13, 50, 24, 4) + arrow(44, 56, 96, 26, C.ai) + arrow(44, 72, 96, 98, C.script) + box(100, 8, 112, 34, C.ai, "🤖 with AI") + box(100, 80, 112, 34, C.script, "📜 without?") + txt(150, 64, "what would I lose?", C.muted, 11); },
+  3: function () { return doc(10, 22, 52, 70) + lines(16, 32, 40, 6) + '<g transform="rotate(-9 110 60)">' + doc(84, 22, 52, 70, ' opacity=".85"') + lines(90, 32, 40, 6) + '<rect x="84" y="22" width="52" height="70" fill="#00000022"/></g>' +
+       '<g transform="rotate(7 180 60)">' + doc(156, 22, 52, 70) + '<text x="182" y="66" font-size="22" text-anchor="middle">📷</text></g>' + txt(36, 112, "typical", C.good, 12) + txt(110, 112, "scanned", C.warn, 12) + txt(182, 112, "phone photo", C.ai, 12); },
+  4: function () { var o = "", d = [["A", 30, C.script, "🥇"], ["B", 60, C.hybrid, "🥈"], ["C", 92, C.ai, "🥉"]];
+       d.forEach(function (r, i) { var y = 14 + i * 34; o += txt(14, y + 18, r[0], C.text, 14) + '<rect x="28" y="' + y + '" width="' + (r[1] * 1.5) + '" height="22" rx="5" fill="' + r[2] + '"/>' + '<text x="' + (34 + r[1] * 1.5) + '" y="' + (y + 18) + '" font-size="18">' + r[3] + "</text>"; });
+       return o + txt(200, 116, "tokens per run →", C.muted, 10, "end"); },
+  5: function () { return DEFS + doc(8, 20, 70, 80) + lines(14, 30, 58, 3) + '<rect x="14" y="58" width="58" height="16" rx="3" fill="' + C.warn + '55"/>' + txt(43, 70, "hard one", "#3b3f46", 10) + arrow(82, 60, 128, 60) +
+       doc(132, 20, 80, 80) + lines(138, 30, 66, 3) + '<circle cx="172" cy="76" r="14" fill="' + C.good + '"/>' + txt(172, 81, "✓", "#0d1117", 16) + txt(43, 114, "sample input", C.muted, 11) + txt(172, 114, "expected output", C.muted, 11); },
+  6: function () { return DEFS + '<rect x="8" y="14" width="86" height="92" rx="6" fill="#0d1117" stroke="#30363d" stroke-width="2"/>' + ["def run(f):", "  rows = read(f)", "  for r in rows:", "    total += r", "  write(out)"].map(function (t, i) { return '<text x="14" y="' + (32 + i * 16) + '" font-size="10" font-family="Consolas, monospace" fill="' + C.script + '">' + t + "</text>"; }).join("") +
+       arrow(98, 60, 120, 60) + '<path d="M124 22h88a6 6 0 0 1 6 6v54a6 6 0 0 1-6 6h-56l-14 14v-14h-18a6 6 0 0 1-6-6v-54a6 6 0 0 1 6-6z" fill="#f4f1ea"/>' + txt(170, 44, "Reads the file,", "#3b3f46", 11) + txt(170, 60, "adds the rows,", "#3b3f46", 11) + txt(170, 76, "writes a total.", "#3b3f46", 11); },
+  7: function () { var o = DEFS; for (var i = 0; i < 3; i++) o += '<rect x="' + (8 + i * 8) + '" y="' + (18 + i * 26) + '" width="74" height="20" rx="10" fill="' + C.ai + '33" stroke="' + C.ai + '" stroke-width="2"/>' + txt(45 + i * 8, 32 + i * 26, "same ask 💸", C.ai, 10);
+       return o + arrow(100, 60, 128, 60) + box(132, 34, 80, 52, C.script, "📜 script") + txt(172, 106, "0 tokens per run", C.good, 11); },
+  8: function () { var o = doc(14, 6, 70, 108); for (var i = 0; i < 13; i++) o += '<rect x="20" y="' + (12 + i * 8) + '" width="' + (i % 4 === 3 ? 34 : 58) + '" height="3" rx="1.5" fill="#b9b4aa"/>';
+       return DEFS + o + '<rect x="16" y="58" width="66" height="18" rx="3" fill="none" stroke="' + C.good + '" stroke-width="2.5"/>' + arrow(88, 67, 130, 67, C.good) + doc(134, 50, 74, 34) + lines(140, 58, 60, 3) + txt(171, 104, "only this part", C.good, 11) + txt(49, 4 + 0, "", C.muted); },
+  9: function () { var o = '<rect x="12" y="10" width="150" height="104" rx="6" fill="#f4f1ea"/><rect x="68" y="4" width="38" height="14" rx="4" fill="#8b949e"/>';
+       ["rows in = out", "money rounding", "run twice", "inputs untouched"].forEach(function (t, i) { o += txt(22, 38 + i * 21, i === 2 ? "⚠️" : "✅", "#3b3f46", 12, "start") + txt(42, 38 + i * 21, t, "#3b3f46", 12, "start"); });
+       return o + '<text x="192" y="84" font-size="36" text-anchor="middle">🔎</text>'; },
+  10: function () { var x0 = 20, y0 = 100; return '<line x1="' + x0 + '" y1="10" x2="' + x0 + '" y2="' + y0 + '" stroke="#8b949e" stroke-width="2"/><line x1="' + x0 + '" y1="' + y0 + '" x2="210" y2="' + y0 + '" stroke="#8b949e" stroke-width="2"/>' +
+       '<line x1="' + x0 + '" y1="' + y0 + '" x2="200" y2="14" stroke="' + C.ai + '" stroke-width="4"/><line x1="' + x0 + '" y1="84" x2="200" y2="80" stroke="' + C.script + '" stroke-width="4"/>' +
+       '<line x1="150" y1="10" x2="150" y2="' + y0 + '" stroke="#e6edf3" stroke-dasharray="4 4" stroke-width="2"/>' + txt(150, 116, "your volume", C.text, 11) + txt(206, 34, "💸", C.ai, 18, "end") + txt(60, 78, "worth it?", C.warn, 12); },
+  11: function () { var x0 = 24, y0 = 96; return '<line x1="' + x0 + '" y1="8" x2="' + x0 + '" y2="' + y0 + '" stroke="#8b949e" stroke-width="2"/><line x1="' + x0 + '" y1="' + y0 + '" x2="212" y2="' + y0 + '" stroke="#8b949e" stroke-width="2"/>' +
+       '<line x1="' + x0 + '" y1="' + y0 + '" x2="206" y2="12" stroke="' + C.ai + '" stroke-width="3.5"/><line x1="' + x0 + '" y1="76" x2="206" y2="66" stroke="' + C.hybrid + '" stroke-width="3.5"/><line x1="' + x0 + '" y1="70" x2="206" y2="70" stroke="' + C.script + '" stroke-width="3.5"/>' +
+       '<circle cx="58" cy="80" r="6" fill="#0d1117" stroke="#e6edf3" stroke-width="2.5"/>' + txt(58, 64, "break-even", C.text, 10) + '<line x1="168" y1="8" x2="168" y2="' + y0 + '" stroke="#e6edf3" stroke-dasharray="4 4" stroke-width="2"/>' + txt(168, 112, "you are here", C.text, 11); },
+  12: function () { var o = "", d = [[2, 74, 46, "💳"], [1, 74 + 0, 22, "🔁"], [3, 0, 64, "🧾"]];
+       o += '<rect x="80" y="54" width="60" height="58" rx="4" fill="' + C.good + '"/>' + txt(110, 90, "1", "#0d1117", 22) + '<text x="110" y="44" font-size="30" text-anchor="middle">🔁</text>';
+       o += '<rect x="18" y="72" width="60" height="40" rx="4" fill="' + C.good + '99"/>' + txt(48, 98, "2", "#0d1117", 20) + '<text x="48" y="64" font-size="28" text-anchor="middle">💳</text>';
+       o += '<rect x="142" y="88" width="60" height="24" rx="4" fill="' + C.warn + '99"/>' + txt(172, 106, "3", "#0d1117", 18) + '<text x="172" y="80" font-size="26" text-anchor="middle">🧾</text>';
+       return o; },
+};
 // An editable prompt with a Copy button. Edits aren't saved: they're only for this visit.
 function promptBox(text, label) {
   return '<div class="pbox"><textarea rows="4" spellcheck="false">' + text.replace(/&/g, "&amp;").replace(/</g, "&lt;") + '</textarea>' +
@@ -1089,11 +1152,33 @@ document.addEventListener("click", function (e) {
     b.textContent = "Copied ✓"; setTimeout(function () { b.textContent = old; }, 1500);
   }, function () { window.prompt("Copy this prompt:", text); });
 });
+// Ideas above get letters; prompts and ideas link to each other.
+var IDEAS = ["lanes", "same", "cant", "dtypes", "hard", "cost", "first", "patterns", "controls"];
+function ideaLetter(id) { return String.fromCharCode(65 + IDEAS.indexOf(id)); }
+var IDEA_TITLES = {};
+function ideaTitle(id) { return IDEA_TITLES[id]; }
+function ideaLink(id) { return '<a class="xl" href="#' + id + '"><span class="lt">' + ideaLetter(id) + "</span> " + ideaTitle(id) + "</a>"; }
+function promptLink(p) { return '<a class="xl" href="#p' + p[0] + '"><b>' + p[0] + ".</b> " + p[2] + "</a>"; }
 function prompts() {
   var box = document.getElementById("prompts");
-  PROMPTS.forEach(function (p) {
-    box.insertAdjacentHTML("beforeend", '<div class="card"><div class="prompt"><span class="pi">' + p[0] + '</span><span class="pt">Prompt ' + p[1] + "</span></div>" + promptBox(p[2], "prompt") + "</div>");
+  IDEAS.forEach(function (id) {
+    var h = document.querySelector("#" + id + " h2");
+    IDEA_TITLES[id] = h.textContent;
+    h.insertAdjacentHTML("afterbegin", '<span class="lt big">' + ideaLetter(id) + "</span> ");
   });
+  PROMPTS.forEach(function (p) {
+    box.insertAdjacentHTML("beforeend", '<div class="card pcard2" id="p' + p[0] + '"><div class="phead">' + svgWrap(ILLUS[p[0]]()) +
+      '<div><div class="pt"><span class="pnum">' + p[0] + "</span> " + p[1] + " " + p[2] + '</div><div class="xref">↑ Related ideas: ' + p[4].map(ideaLink).join(" ") + "</div></div></div>" +
+      promptBox(p[3], "prompt " + p[0]) + "</div>");
+  });
+  // Each idea links down to its prompts.
+  IDEAS.forEach(function (id) {
+    var mine = PROMPTS.filter(function (p) { return p[4].indexOf(id) >= 0; });
+    var extra = id === "controls" ? ' <span class="small">Prompts 13 to 22 are on the cards above.</span>' : "";
+    document.getElementById(id).insertAdjacentHTML("beforeend", '<div class="xref down">↓ Prompts for this idea: ' + mine.map(promptLink).join(" ") + extra + "</div>");
+  });
+  // A jump list of every idea under the page header.
+  document.getElementById("ideanav").innerHTML = "<b>Jump to:</b> " + IDEAS.map(ideaLink).join(" ") + ' <a class="xl" href="#promptsec">✏️ All prompts</a>';
 }
 
 // ---------- vote ----------
@@ -1177,6 +1262,7 @@ function makeControls(sec, tl, before) {
 }
 buildLanes(); buildControls(); buildDtypes(); buildSame(); buildCant(); placeSpots(); window.addEventListener('resize', placeSpots); buildFlips(); costChart(); panels(); pipes(); prompts(); votes();
 document.querySelectorAll("section.anim").forEach(function (sec) { if (TIMELINES[sec.id]) makeControls(sec); });
+document.querySelectorAll(".xref.down").forEach(function (x) { x.parentNode.appendChild(x); });
 // The controls cards each play their own story.
 document.querySelectorAll("#controls .ctl2").forEach(function (card) {
   makeControls(card, { dur: 4.2, render: function (t) { renderControls(card, t); } }, card.querySelector(".bottom"));
