@@ -3,7 +3,7 @@
 text.html shows a copy of those Markdown files. It doesn't update by itself.
 Run this when you've edited the Markdown and want the page to match:
 
-    python build.py
+    python rebuild_text_page.py
 
 It needs only Python; nothing to install. It also stamps the date and time it
 ran into the banner at the top of the page.
