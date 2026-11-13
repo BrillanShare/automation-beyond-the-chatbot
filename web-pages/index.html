@@ -12,7 +12,7 @@
   --paper: #f4f1ea; --ink: #3b3f46; --faint: #b9b4aa;
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.45 "Segoe UI", Helvetica, Arial, sans-serif; }
+body { margin: 0; background-color: var(--bg); background-image: radial-gradient(#ffffff0d 1px, transparent 1.3px), radial-gradient(#58a6ff0a 1px, transparent 1.3px); background-size: 24px 24px, 24px 24px; background-position: 0 0, 12px 12px; color: var(--text); font: 17px/1.45 "Segoe UI", Helvetica, Arial, sans-serif; }
 header { padding: 28px 40px 8px; max-width: 1500px; margin: 0 auto; }
 header h1 { margin: 0 0 12px; font-size: 34px; }
 .legend { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -41,6 +41,8 @@ a { color: var(--script); }
 .ctrl button.play { background: #1f6feb; border-color: #1f6feb; width: auto; height: 42px; padding: 0 22px; font-size: 18px; font-weight: 800; }
 .ctrl button.play.idle { box-shadow: 0 0 0 4px #1f6feb44; }
 .ctrl input[type=range] { flex: 1; accent-color: #58a6ff; height: 6px; cursor: pointer; }
+.ctrl.cardbar { margin: 10px 0; padding: 6px 10px; gap: 8px; }
+.ctrl.cardbar button.play { height: 36px; padding: 0 16px; font-size: 16px; }
 .ctrl .time { font-family: Consolas, Menlo, monospace; font-size: 13px; color: var(--muted); min-width: 92px; text-align: right; }
 
 /* ---------- plain-language takeaway under each visual ---------- */
@@ -100,6 +102,16 @@ a { color: var(--script); }
 .result { margin-top: 10px; text-align: center; font-weight: 800; font-size: 17px; min-height: 54px; opacity: 0; }
 .on .spot, .result.on { opacity: 1; }
 
+/* ---------- data types sorter ---------- */
+.dtgrid { display: grid; grid-template-columns: 150px 1fr 1fr; gap: 16px; align-items: center; }
+.dthead { font-weight: 800; font-size: 18px; text-align: center; }
+.dtrow { padding: 8px 0; border-top: 1px dashed var(--line); }
+.dtl { font-weight: 800; font-size: 18px; }
+.dcard { display: flex; gap: 12px; align-items: center; background: #1c2128; border: 2px solid var(--line); border-radius: 10px; padding: 10px 14px; opacity: 0; }
+.dcard .di { font-size: 30px; }
+.dcard .dn { font-weight: 700; font-size: 16px; }
+.dcard .dw { font-size: 14px; color: var(--muted); opacity: 0; }
+
 /* ---------- typical → hard cards ---------- */
 .th { background: #1c2128; border: 2px solid var(--line); border-radius: 12px; padding: 14px; }
 .hv { position: relative; height: 200px; border-radius: 10px; background: #0d1117; overflow: hidden; display: flex; align-items: center; justify-content: center; }
@@ -136,20 +148,23 @@ svg text { font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
 .badge { display: inline-block; padding: 4px 12px; border-radius: 999px; font-weight: 800; border: 2px solid; font-size: 15px; }
 
 /* ---------- which first: workflow cards ---------- */
-.pic { margin: 8px 0 4px; background: var(--paper); color: var(--ink); border-radius: 6px; padding: 8px 10px; font-size: 13px; min-height: 74px; }
+.wf { display: flex; flex-direction: column; }
+.wf .pname { min-height: 24px; }
+.wf .badgebox { margin-top: auto; padding-top: 6px; text-align: center; min-height: 34px; }
+.pic { height: 92px; box-sizing: border-box; overflow: hidden; margin: 8px 0 4px; background: var(--paper); color: var(--ink); border-radius: 6px; padding: 8px 10px; font-size: 13px; min-height: 74px; }
 .pic div { display: flex; justify-content: space-between; gap: 8px; }
 .pic.stmt span, .pic.w2 span { font-family: Consolas, Menlo, monospace; }
 .pic.dup .chip { background: #ffd8d3; border-radius: 4px; padding: 4px 6px; margin: 3px 0; font-weight: 700; justify-content: center; }
 .pic.w2 .hd { font-weight: 800; justify-content: flex-start; margin-bottom: 4px; }
 .pic.mail { font-style: italic; }
-.wread { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; min-height: 44px; font-size: 13px; text-align: center; }
+.wread { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; min-height: 44px; transition: none; font-size: 13px; text-align: center; }
 .wread b { display: block; font-size: 17px; color: var(--text); }
 
 /* ---------- cost readout ---------- */
-.readout { display: grid; grid-template-columns: repeat(4, auto); gap: 6px 26px; justify-content: start; min-height: 64px; margin-top: 6px; padding: 10px 14px; background: #0d1117; border-radius: 10px; }
-.readout .rhead { grid-column: 1 / -1; font-size: 16px; }
-.readout .rrow { display: flex; flex-direction: column; gap: 2px; font-size: 15px; }
-.readout .usd { color: var(--good); font-weight: 800; font-size: 18px; }
+.readout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 26px; min-height: 120px; margin-top: 10px; padding: 18px 24px; background: #0d1117; border-radius: 12px; }
+.readout .rhead { grid-column: 1 / -1; font-size: 20px; text-align: center; }
+.readout .rrow { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 18px; text-align: center; }
+.readout .usd { color: var(--good); font-weight: 900; font-size: 32px; }
 
 /* ---------- pipelines (hybrid patterns) ---------- */
 .pipe { display: flex; align-items: center; gap: 8px; position: relative; padding: 14px 0 6px; }
@@ -162,6 +177,9 @@ svg text { font-family: "Segoe UI", Helvetica, Arial, sans-serif; }
 .pname { font-weight: 800; font-size: 16px; margin-bottom: 2px; }
 
 /* ---------- split the work ---------- */
+.node { position: relative; }
+.node .cash { position: absolute; left: 50%; top: -30px; transform: translateX(-50%); font-size: 34px; font-weight: 900; color: var(--good); text-shadow: 0 0 10px #3fb95066; pointer-events: none; }
+.pcard .pipe { padding-top: 40px; }
 .node .who { display: block; font-size: 11px; font-weight: 800; margin-top: 2px; }
 .pchart svg { max-height: 170px; }
 .pchart { display: grid; grid-template-columns: 1fr 180px; gap: 12px; align-items: center; margin-top: 8px; }
@@ -329,10 +347,13 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 </section>
 
 <!-- ================= Data type ================= -->
-<section>
+<section class="anim" id="dtypes">
   <h2>Data type doesn't decide the bucket</h2>
-  <p class="take">Numbers can need AI. Language can be scripted.</p>
-  <img src="../images/data-types.svg" alt="Numbers, language, images and audio: one example each that scripting handles and one that needs AI in the loop" style="width:100%;max-width:1100px;display:block;margin:auto">
+  <p class="take">Press play: one task at a time arrives in the middle and moves to the bucket it needs. Each kind of data ends up in both buckets.</p>
+  <div class="dtgrid">
+    <div></div><div class="dthead" style="color:var(--script)">📜 Scripting can handle it</div><div class="dthead" style="color:var(--ai)">🤖 Needs AI in the loop</div>
+  </div>
+  <div id="dtrows"></div>
   <div class="means">👉 <b>What this shows:</b> every kind of data has some tasks a script can handle and some that need an LLM. Ask what the task needs, not what kind of data it is.</div>
 </section>
 
@@ -355,7 +376,7 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 <!-- ================= Which first ================= -->
 <section class="anim" id="first">
   <h2>Many tasks? Convert the biggest gap first</h2>
-  <p class="take">Four example tasks. Press play: the lines draw, then the marker walks to each firm's volume and shows what converting would save in a year.</p>
+  <p class="take">Four example tasks. Press play: the lines draw, then one task at a time, left to right, the marker walks to the firm's volume and shows what converting would save in a year.</p>
   <div class="grid4" id="panels"></div>
   <div class="means">👉 <b>What this shows:</b> converting saves the most where today's line is steep and your volume is high (green bars). At low volume, building the script can cost more than it saves. If every item still needs an LLM, converting saves little.</div>
 </section>
@@ -363,7 +384,7 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 <!-- ================= Hybrid patterns ================= -->
 <section class="anim" id="patterns">
   <h2>Split the work</h2>
-  <p class="take">Each pattern starts with the LLM doing every step. Press play: the steps a script can do turn blue, and the chart shows the LLM tokens that are left.</p>
+  <p class="take">Each pattern starts with the LLM doing every step. Every <b style="color:var(--good)">$</b> is a step that costs tokens on every run. Press play: the steps a script can do turn blue, their $ goes away, and the chart shows the LLM tokens that are left.</p>
   <div class="grid2" id="pipes"></div>
   <div class="means">👉 <b>What this shows:</b> every step a script takes over flattens the token line. What remains is the LLM's share: the step that needs judgment. In the last pattern, the LLM's work happens once, so nothing is left per run.</div>
 </section>
@@ -371,7 +392,7 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 <!-- ================= Controls ================= -->
 <section class="anim" id="controls">
   <h2>Ask for the controls you'd expect anywhere else</h2>
-  <p class="take">You can't read the code, but you can ask for these. ✅ The starter CLAUDE.md already asks Claude for all ten. Each card shows a prompt to check or fix a script you already have, ready to edit and copy (same numbers as the prompt card).</p>
+  <p class="take">You can't read the code, but you can ask for these. ✅ The starter CLAUDE.md already asks Claude for all ten. Press ▶ on any card to play its story. Each card shows a prompt to check or fix a script you already have, ready to edit and copy (same numbers as the prompt card).</p>
   <div class="ctlgrid">
 
     <div class="card ctl2" data-p="13">
@@ -499,15 +520,6 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
 
   </div>
   <div class="means">👉 <b>What this shows:</b> each control is something you already expect in accounting. The starter CLAUDE.md asks for all of them; the prompt on each card checks or fixes a script you already have.</div>
-</section>
-
-<!-- ================= Demo ================= -->
-<section class="anim" id="demo">
-  <h2>Demo: where each line goes</h2>
-  <p class="take">Press play: each line drops into the LLM row or the script row, and the total row adds them up.</p>
-  <div class="grid2" id="demoCards"></div>
-  <div class="means">👉 <b>What this shows:</b> matching bank lines needs no judgment, so the script does every line and the total is all blue: 🟢 nothing goes to the LLM. Categorizing card lines needs judgment for 9 of the 40, so hybrid sends only those 9 to the LLM: 💰 about 4× fewer tokens than all AI.</div>
-  <p class="small" style="margin:10px 0 0">Running a finished script uses no tokens. Keep what it prints short, because anything Claude reads back uses tokens.</p>
 </section>
 
 <!-- ================= Prompts ================= -->
@@ -693,6 +705,39 @@ function renderCant(t) {
   });
 }
 
+// ---------- data types: same kind of data, sorted into different buckets ----------
+var DTYPES = [
+  ["🔢 Numbers", ["📊", "Total the same columns every month", "Same shape every time"], ["🧾", "Is this balance plausible for this business?", "Needs judgment"]],
+  ["💬 Language", ["✉️", "Fill in a letter template", "Blanks in fixed places"], ["📨", "Reply to a free-form client email", "Needs understanding"]],
+  ["🖼️ Images", ["⬜", "Remove a plain white background", "Rule: by color"], ["📷", "Read a crumpled receipt photo", "Needs reading"]],
+  ["🔊 Audio", ["🔔", "Detect a beep", "Rule: by sound"], ["🎙️", "Transcribe a client voicemail", "Needs understanding"]],
+];
+var DT_START = 0.5, DT_STEP = 2.4;
+function buildDtypes() {
+  var box = document.getElementById("dtrows"), html = "";
+  DTYPES.forEach(function (r) {
+    html += '<div class="dtgrid dtrow"><div class="dtl">' + r[0] + "</div>" +
+      '<div class="dcell"><div class="dcard s"><span class="di">' + r[1][0] + '</span><div><div class="dn">' + r[1][1] + '</div><div class="dw">📜 ' + r[1][2] + "</div></div></div></div>" +
+      '<div class="dcell"><div class="dcard a"><span class="di">' + r[2][0] + '</span><div><div class="dn">' + r[2][1] + '</div><div class="dw">🤖 ' + r[2][2] + "</div></div></div></div></div>";
+  });
+  box.innerHTML = html;
+}
+function renderDtypes(t) {
+  // One card at a time: it fades in at the middle, then slides to its bucket.
+  document.querySelectorAll("#dtrows .dtrow").forEach(function (row, r) {
+    var gap = row.querySelector(".dcell").offsetWidth / 2 + 8;
+    row.querySelectorAll(".dcard").forEach(function (c, k) {
+      var t0 = DT_START + r * DT_STEP + k * (DT_STEP / 2);
+      var show = ramp(t, t0, 0.35), move = ramp(t, t0 + 0.35, 0.45), e = move * move * (3 - 2 * move);
+      var dir = c.classList.contains("s") ? 1 : -1;
+      c.style.opacity = show;
+      c.style.transform = "translateX(" + (dir * gap * (1 - e)) + "px)";
+      c.style.borderColor = e > 0.6 ? (dir > 0 ? C.script : C.ai) : "var(--line)";
+      c.querySelector(".dw").style.opacity = ramp(t, t0 + 0.7, 0.4);
+    });
+  });
+}
+
 // ---------- hard inputs: each card morphs from what we picture to what arrives ----------
 var HARD = [
   ["📄 Text PDF", "📷 Tilted phone photo", "photo"],
@@ -722,7 +767,7 @@ function buildFlips() {
 }
 function renderFlips(t) {
   document.querySelectorAll("#flips .th").forEach(function (c, k) {
-    var a = ramp(t, 0.5 + k * 1.2, 1.2), e = a * a * (3 - 2 * a), kind = c.dataset.kind;
+    var a = ramp(t, 0.5 + k * 1.6, 2.2), e = a * a * (3 - 2 * a), kind = c.dataset.kind;
     c.style.borderColor = a > 0.5 ? "var(--warn)" : "";
     c.querySelector(".hrd").style.opacity = 0.3 + 0.7 * e;
     c.querySelector(".arr").style.opacity = 0.3 + 0.7 * e;
@@ -738,8 +783,8 @@ function renderFlips(t) {
         n.querySelector(".a").style.opacity = 1 - q; n.querySelector(".b").style.opacity = q;
       });
     } else if (kind === "rules") {
-      var rows = c.querySelectorAll(".rl"), show = 2 + Math.round(e * (rows.length - 2));
-      rows.forEach(function (r, i) { r.style.opacity = i < show ? 1 : 0; });
+      var rows = c.querySelectorAll(".rl"), steps = rows.length - 2;
+      rows.forEach(function (r, i) { r.style.opacity = i < 2 ? 1 : clamp((e * steps) - (i - 2), 0, 1); });
       c.querySelector(".rc").textContent = Math.round(lerp(5, 417, e * e));
     } else if (kind === "export") {
       c.querySelectorAll("tr.x").forEach(function (r) { r.style.opacity = e; });
@@ -769,53 +814,6 @@ function renderDraw(sec, t) {
   });
 }
 
-// ---------- demo: each line drops into the LLM row or the script row ----------
-var DEMOS = [
-  { title: "🏦 Match bank lines to the ledger", n: 30, setups: [["🤖 All AI", function () { return "a"; }], ["📜 All script", function () { return "s"; }]],
-    verdict: '<div class="verdict good">✅ 30 → 0 lines to the LLM: 🟢 free every month after</div>' },
-  { title: "💳 Categorize credit card lines", n: 40, setups: [["🤖 All AI", function () { return "a"; }], ["🔀 Hybrid", function (i) { return [3, 8, 12, 17, 21, 26, 30, 34, 38].indexOf(i) >= 0 ? "a" : "s"; }]],
-    verdict: '<div class="verdict good">✅ 40 → 9 lines to the LLM: 💰 about 4× fewer tokens</div>' },
-];
-var DEMO_GAP = 0.13;
-function buildDemo() {
-  var box = document.getElementById("demoCards"), html = "";
-  DEMOS.forEach(function (d, di) {
-    html += '<div class="card"><div class="pname">' + d.title + '</div><div class="setups">';
-    d.setups.forEach(function (st, si) {
-      html += '<div class="setup" data-d="' + di + '" data-s="' + si + '"><div class="sname">' + st[0] + "</div>" +
-        '<div class="crow"><span class="cl" style="color:var(--ai)">🤖 LLM</span><div class="cells a"></div><b class="cn a">0</b></div>' +
-        '<div class="crow"><span class="cl" style="color:var(--script)">📜 Script</span><div class="cells s"></div><b class="cn s">0</b></div>' +
-        '<div class="crow total"><span class="cl">= Total</span><div class="cells t"></div><b class="cn t">0</b></div></div>';
-    });
-    html += "</div>" + d.verdict + "</div>";
-  });
-  box.innerHTML = html;
-  document.querySelectorAll("#demo .setup").forEach(function (el) {
-    var d = DEMOS[+el.dataset.d], st = d.setups[+el.dataset.s];
-    for (var i = 0; i < d.n; i++) {
-      var kind = st[1](i);
-      var c = document.createElement("span"); c.className = "cell " + kind; c.style.opacity = 0;
-      el.querySelector(".cells." + kind).appendChild(c);
-      var tc = document.createElement("span"); tc.className = "cell " + kind; tc.style.opacity = 0;
-      el.querySelector(".cells.t").appendChild(tc);
-      c._t = tc._t = 0.4 + i * DEMO_GAP;
-    }
-  });
-}
-function renderDemo(t) {
-  document.querySelectorAll("#demo .setup").forEach(function (el) {
-    ["a", "s", "t"].forEach(function (k) {
-      var n = 0;
-      el.querySelectorAll(".cells." + k + " .cell").forEach(function (c) {
-        var q = ramp(t, c._t + (k === "t" ? 0.25 : 0), 0.35);
-        c.style.opacity = q; c.style.transform = "translate(" + (-24 * (1 - q)) + "px," + (k === "t" ? -14 * (1 - q) : 0) + "px)";
-        if (q >= 1) n++;
-      });
-      el.querySelector(".cn." + k).textContent = n;
-    });
-  });
-}
-
 // ---------- charts ----------
 function pathOf(fn, X, Y) {
   var d = "";
@@ -840,9 +838,9 @@ var COST = {
 function fmtTok(x) { return x >= 1e6 ? (x / 1e6).toFixed(x >= 1e7 ? 0 : 1) + "M" : Math.round(x / 1000) + "k"; }
 function fmtUsd(x) { var d = x / 1e6 * COST.perMillion; return "$" + (d >= 100 ? Math.round(d).toLocaleString() : d.toFixed(2)); }
 function costChart() {
-  var W = 1200, H = 470, x0 = 120, y0 = 30, w = 700, h = 360;
+  var W = 1110, H = 470, x0 = 120, y0 = 30, w = 700, h = 360;
   var X = function (n) { return x0 + n / COST.maxDocs * w; }, Y = function (tok) { return y0 + h - tok / COST.maxTok * h; };
-  var s = '<svg viewBox="0 0 ' + W + " " + H + '" style="width:100%;max-width:1250px;display:block">';
+  var s = '<svg viewBox="0 0 ' + W + " " + H + '" style="width:100%;max-width:1250px;display:block;margin:0 auto">';
   for (var k = 0; k <= 5; k++) {
     var tok = k * 1e6, yy = Y(tok);
     s += '<line x1="' + x0 + '" x2="' + (x0 + w) + '" y1="' + yy + '" y2="' + yy + '" stroke="' + C.line + '"/>';
@@ -905,6 +903,8 @@ function renderCost(t) {
 
 // The dashed every-item-against-every-other line needs its own dash pattern after drawing.
 // Hypothetical yearly costs in dollars ($10 per million tokens), chosen to show magnitude.
+// Each card's marker walks to "you" in turn, left to right.
+var FIRST_START = 2.4, FIRST_STEP = 1.6;
 var PANELS = [
   { ico: "💳", title: "Categorize card lines", vol: "3,000 lines a month", unit: "lines", you: 36000, max: 45000,
     pic: '<div class="pic stmt"><div><span>AMZN Mktp US*RT5</span><b>38.12</b></div><div><span>UBER *TRIP</span><b>23.80</b></div><div><span>SQ *BLUE HERON</span><b>9.75</b></div></div>',
@@ -940,7 +940,7 @@ function panels() {
     s += '<line class="gap" stroke-width="7"/><text class="you" y="' + (y0 + h + 16) + '" fill="' + C.text + '" font-size="13" font-weight="800" text-anchor="middle">you</text></g>';
     s += "</svg>";
     html += '<div class="card wf" data-i="' + i + '"><div class="pname">' + p.ico + " " + p.title + '</div><div class="small">' + p.vol + "</div>" + p.pic + s +
-      '<div class="wread"></div><div style="text-align:center;min-height:34px"><span class="badge" style="opacity:0;color:' + p.color + ";border-color:" + p.color + '">' + p.badge + "</span></div></div>";
+      '<div class="wread"></div><div class="badgebox"><span class="badge" style="opacity:0;color:' + p.color + ";border-color:" + p.color + '">' + p.badge + "</span></div></div>";
   });
   box.innerHTML = '<div class="small" style="grid-column:1/-1;margin-top:-8px"><span style="color:' + C.ai + ';font-weight:700">━ today: all AI 💸</span> &nbsp; <span style="color:' + C.hybrid + ';font-weight:700">━ after converting</span> &nbsp; <span style="color:' + C.good + ';font-weight:700">▌ saved</span> &nbsp; <span style="color:' + C.warn + ';font-weight:700">▌ costs more</span> &nbsp; Hypothetical $ at $10 per million tokens.</div>' + html;
 }
@@ -948,19 +948,21 @@ function renderPanels(t) {
   var sec = document.getElementById("first");
   renderDraw(sec, t);
   sec.querySelectorAll(".wf").forEach(function (card) {
-    var p = PANELS[+card.dataset.i], k = ramp(t, 2.4, 3), e = k * k * (3 - 2 * k), n = Math.round(e * p.you);
+    var i = +card.dataset.i, p = PANELS[i], t0 = FIRST_START + i * FIRST_STEP;
+    var k = ramp(t, t0, 2), e = k * k * (3 - 2 * k), n = Math.round(e * p.you);
     var mk = card.querySelector(".mk"), x = p._X(n), a = p.today(n), b = p.after(n);
-    mk.setAttribute("opacity", t >= 2.4 ? 1 : 0);
+    mk.setAttribute("opacity", ramp(t, t0 - 0.3, 0.4));
     var ml = card.querySelector(".mline"); ml.setAttribute("x1", x); ml.setAttribute("x2", x);
     card.querySelector(".you").setAttribute("x", x);
     var g = card.querySelector(".gap");
     g.setAttribute("x1", x + 7); g.setAttribute("x2", x + 7); g.setAttribute("y1", p._Y(a)); g.setAttribute("y2", p._Y(b));
     g.setAttribute("stroke", a >= b ? C.good : C.warn); g.setAttribute("opacity", Math.abs(p._Y(a) - p._Y(b)) > 3 ? 1 : 0);
     var diff = a - b;
-    card.querySelector(".wread").innerHTML = t < 2.4 ? "" :
+    var wr = card.querySelector(".wread"); wr.style.opacity = ramp(t, t0, 0.5);
+    wr.innerHTML = t < t0 - 0.5 ? "" :
       '<div><span style="color:' + C.ai + '">Today</span> <b>' + money(a) + '</b></div><div><span style="color:' + C.hybrid + '">After</span> <b>' + money(b) + "</b></div>" +
       '<div><span style="color:' + (diff >= 0 ? C.good : C.warn) + '">' + (diff >= 0 ? "Saved" : "Costs more") + '</span> <b style="color:' + (diff >= 0 ? C.good : C.warn) + '">' + money(Math.abs(diff)) + "</b></div>";
-    card.querySelector(".badge").style.opacity = ramp(t, 5.6, 0.6);
+    card.querySelector(".badge").style.opacity = ramp(t, t0 + 2.1, 0.6);
   });
 }
 
@@ -978,7 +980,7 @@ var PIPE_STEP = 1.1, PIPE_START = 0.8;
 function pipes() {
   var html = "";
   PIPES.forEach(function (p, k) {
-    var nodes = p[1].map(function (n) { return '<div class="node a" data-final="' + n[2] + '"><span class="i">' + n[0] + "</span>" + n[1] + '<span class="who">🤖 LLM</span></div>'; }).join('<span class="arrow">→</span>');
+    var nodes = p[1].map(function (n) { return '<div class="node a" data-final="' + n[2] + '"><span class="i">' + n[0] + "</span>" + n[1] + '<span class="who">🤖 LLM</span><span class="cash">$</span></div>'; }).join('<span class="arrow">→</span>');
     html += '<div class="card pcard" data-k="' + k + '"><div class="pname">' + p[0] + '</div><div class="pipe">' + nodes + "</div>" +
       '<div class="pchart"><svg viewBox="0 0 300 150" style="width:100%"></svg><div class="pread"></div></div></div>';
   });
@@ -1005,6 +1007,8 @@ function renderPipes(t) {
       el.style.borderColor = k > 0.5 ? col : C.ai;
       el.style.color = k > 0.5 ? col : C.ai;
       el.style.background = "rgba(" + (k > 0.5 ? (fin === "o" ? "139,148,158" : "88,166,255") : "248,81,73") + "," + (0.08 + 0.1 * Math.sin(Math.PI * k)) + ")";
+      var cash = el.querySelector(".cash"), gone = clamp(k * 1.4, 0, 1);
+      cash.style.opacity = 1 - gone; cash.style.transform = "translate(-50%, " + (-18 * gone) + "px) scale(" + (1 + 0.3 * gone) + ")";
       el.querySelector(".who").textContent = k > 0.5 ? (fin === "o" ? "🤖 once, then done" : "📜 script") : "🤖 LLM";
     });
     var W = 300, H = 150, x0 = 34, y0 = 8, w = 250, h = 110;
@@ -1042,20 +1046,21 @@ function buildControls() {
   });
 }
 var MONTHS = ["Nov 13, 2026", "Dec 1, 2026", "Dec 15, 2026", "Jan 1, 2027", "Jan 20, 2027", "Feb 3, 2027"];
-function renderControls(t) {
-  document.querySelectorAll("#controls [data-at]").forEach(function (el) {
+// Each controls card has its own Play bar, so this draws one card at time t.
+function renderControls(card, t) {
+  card.querySelectorAll("[data-at]").forEach(function (el) {
     var a = ramp(t, +el.dataset.at, 0.5);
     el.style.opacity = a; el.style.transform = "translateY(" + (6 * (1 - a)) + "px)";
   });
-  document.querySelectorAll("#controls [data-shake]").forEach(function (el) {
+  card.querySelectorAll("[data-shake]").forEach(function (el) {
     var q = t - +el.dataset.shake;
     el.style.transform = q > 0 && q < 0.4 ? "scale(1.35)" : "scale(1)";
   });
-  document.querySelectorAll("#controls [data-wreck]").forEach(function (el) {
+  card.querySelectorAll("[data-wreck]").forEach(function (el) {
     var a = ramp(t, +el.dataset.wreck, 0.5);
     el.style.transform = "rotate(" + (-6 * a) + "deg)";
   });
-  var d = document.querySelector("#controls .today");
+  var d = card.querySelector(".today");
   if (d) {
     var i = Math.min(MONTHS.length - 1, Math.floor(ramp(t, 0.6, 2.2) * (MONTHS.length - 1) + 0.0001));
     d.textContent = MONTHS[i];
@@ -1132,21 +1137,20 @@ var TIMELINES = {
   lanes: { dur: (LANE_DOCS - 1) * LANE_GAP + LANE_TRAVEL + 1.6, render: renderLanes },
   same: { dur: 9, render: renderSame },
   cant: { dur: 7.2, render: renderCant },
-  hard: { dur: 8, render: renderFlips },
+  hard: { dur: 0.5 + 5 * 1.6 + 2.4, render: renderFlips },
+  dtypes: { dur: DT_START + 4 * DT_STEP + 0.4, render: renderDtypes },
   cost: { dur: 11.5, render: renderCost },
-  first: { dur: 6.5, render: renderPanels },
+  first: { dur: FIRST_START + 3 * FIRST_STEP + 3.2, render: renderPanels },
   patterns: { dur: PIPE_START + 3 * PIPE_STEP + 1.4, render: renderPipes },
-  demo: { dur: 0.4 + 40 * DEMO_GAP + 1, render: renderDemo },
-  controls: { dur: 4.2, render: renderControls },
 };
 function fmt(s) { return (Math.floor(s / 60)) + ":" + ("0" + Math.floor(s % 60)).slice(-2); }
-function makeControls(sec) {
-  var tl = TIMELINES[sec.id];
+function makeControls(sec, tl, before) {
+  tl = tl || TIMELINES[sec.id];
   var bar = document.createElement("div");
-  bar.className = "ctrl";
+  bar.className = before ? "ctrl cardbar" : "ctrl";
   bar.innerHTML = '<button class="play" title="Play or pause">▶</button><button class="again" title="Back to the start">⏮</button>' +
     '<input type="range" min="0" max="1000" value="0" aria-label="Scrub through the animation"><span class="time">0:00 / ' + fmt(tl.dur) + "</span>";
-  sec.appendChild(bar);
+  if (before) sec.insertBefore(bar, before); else sec.appendChild(bar);
   var play = bar.querySelector(".play"), again = bar.querySelector(".again"), range = bar.querySelector("input"), time = bar.querySelector(".time");
   var t = 0, playing = false, last = 0;
   function draw() {
@@ -1171,8 +1175,12 @@ function makeControls(sec) {
   sec._showEnd = function () { t = tl.dur; draw(); };
   draw();
 }
-buildLanes(); buildDemo(); buildControls(); buildSame(); buildCant(); placeSpots(); window.addEventListener('resize', placeSpots); buildFlips(); costChart(); panels(); pipes(); prompts(); votes();
-document.querySelectorAll("section.anim").forEach(makeControls);
+buildLanes(); buildControls(); buildDtypes(); buildSame(); buildCant(); placeSpots(); window.addEventListener('resize', placeSpots); buildFlips(); costChart(); panels(); pipes(); prompts(); votes();
+document.querySelectorAll("section.anim").forEach(function (sec) { if (TIMELINES[sec.id]) makeControls(sec); });
+// The controls cards each play their own story.
+document.querySelectorAll("#controls .ctl2").forEach(function (card) {
+  makeControls(card, { dur: 4.2, render: function (t) { renderControls(card, t); } }, card.querySelector(".bottom"));
+});
 // Show each prompt in full: grow every box to fit its text.
 document.querySelectorAll(".pbox textarea").forEach(function (ta) { ta.style.height = "auto"; ta.style.height = (ta.scrollHeight + 4) + "px"; });
 // Nothing plays on its own: each panel waits for its Play button.
