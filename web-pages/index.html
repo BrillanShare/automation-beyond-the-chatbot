@@ -116,6 +116,17 @@ a { color: var(--script); }
 .rent { background: #fff1a8; border-radius: 4px; padding: 6px 8px; font-weight: 700; font-size: 16px; }
 .spot { position: absolute; left: 6px; right: 6px; border: 3px dashed var(--script); border-radius: 6px; opacity: 0; transition: opacity .6s; }
 .result { margin-top: 10px; text-align: center; font-weight: 800; font-size: 17px; min-height: 64px; opacity: 0; position: relative; z-index: 3; }
+.rlog { display: grid; gap: 6px; margin-top: 10px; font-family: Consolas, Menlo, monospace; font-size: 13.5px; }
+.rlh, .rlr { display: grid; grid-template-columns: 1.2fr .8fr 1.3fr 1.4fr .5fr; gap: 6px; align-items: center; }
+.rlh span { font-family: "Segoe UI", Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+.rlr span { padding: 4px 7px; border-radius: 5px; font-weight: 700; }
+.rlr .lw { color: #8b949e; background: #21262d; }
+.rlr .lp { color: var(--hybrid); background: #bc8cff1f; }
+.rlr .lf { color: #e3b341; background: #d2992218; }
+.rlr .lc.ok { color: var(--good); background: #2ea04322; }
+.rlr .lc.warn { color: var(--warn); background: #d2992222; }
+.rlr .lv { color: var(--script); background: #58a6ff22; text-align: center; }
+.rlr .lv.new { color: #0d1117; background: var(--script); }
 .ftag { display: inline-block; padding: 6px 14px; border-radius: 999px; font-size: 18px; font-weight: 900; border: 2px solid; box-shadow: 0 4px 14px #0009; opacity: 0; }
 .ftag.ok { color: var(--good); border-color: var(--good); background: #12261a; }
 .ftag.miss { color: var(--ai); border-color: var(--ai); background: #2d1214; }
@@ -531,11 +542,7 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
       <div class="chead"><span class="ico">📝</span><div><div class="nm">Run log</div><div class="tw">Like an audit trail</div></div></div>
       <div class="stage2">
         <div data-at="0.4" class="q">❓ Who ran this? On which file? Which version?</div>
-        <div class="term mono small2">
-          <div data-at="1.0">2026-11-03 9:02 AM · J. Doe · bank_oct.csv · 30 in / 28 matched · v3</div>
-          <div data-at="1.6">2026-11-10 4:15 PM · A. Lee · bank_oct_v2.csv · 30 in / 29 matched · v3</div>
-          <div data-at="2.2">2026-11-13 8:47 AM · J. Doe · bank_nov.csv · 34 in / 34 matched · v4</div>
-        </div>
+        <div class="rlog"><div class="rlh"><span class="lw">🕒 when</span><span class="lp">👤 who</span><span class="lf">📄 file</span><span class="lc">🔢 rows</span><span class="lv">🏷️ ver.</span></div><div class="rlr" data-at="1.0"><span class="lw">Nov 3, 9:02 AM</span><span class="lp">J. Doe</span><span class="lf">bank_oct.csv</span><span class="lc warn">🟡 28 of 30 matched</span><span class="lv">v3</span></div><div class="rlr" data-at="1.6"><span class="lw">Nov 10, 4:15 PM</span><span class="lp">A. Lee</span><span class="lf">bank_oct_v2.csv</span><span class="lc warn">🟡 29 of 30 matched</span><span class="lv">v3</span></div><div class="rlr" data-at="2.2"><span class="lw">Nov 13, 8:47 AM</span><span class="lp">J. Doe</span><span class="lf">bank_nov.csv</span><span class="lc ok">✅ 34 of 34 matched</span><span class="lv new">v4</span></div></div>
       </div>
       <div class="bottom">👉 Every number can be traced to a run, a person, a file and a version.</div>
     </div>
@@ -544,9 +551,9 @@ footer { max-width: 1500px; margin: 0 auto; padding: 0 40px 50px; color: var(--m
       <div class="chead"><span class="ico">📦</span><div><div class="nm">What it installs and sends</div><div class="tw">Like vendor due diligence</div></div></div>
       <div class="stage2">
         <div data-at="0.4" class="q">Before running, Claude lists:</div>
-        <div data-at="1.0" class="mrow"><span class="lbl">📥 Installs <b>pandas</b> (reads spreadsheets)</span><span class="okc">✅ common, trusted</span></div>
-        <div data-at="1.7" class="mrow"><span class="lbl">📥 Installs <b>tesseract</b> (reads scans)</span><span class="okc">✅ runs on your computer</span></div>
-        <div data-at="2.4" class="mrow"><span class="lbl">📤 Sends pages to <b>ocr-service.example</b></span><span class="badc">⚠️ client data leaves your computer</span></div>
+        <div data-at="1.0" class="mrow"><span class="lbl">📥 Adds <b>a free tool for reading spreadsheets</b></span><span class="okc">✅ widely used, trusted</span></div>
+        <div data-at="1.7" class="mrow"><span class="lbl">📥 Adds <b>a tool that reads text from scans</b></span><span class="okc">✅ stays on your computer</span></div>
+        <div data-at="2.4" class="mrow"><span class="lbl">📤 Sends scanned pages to <b>an online reading service</b></span><span class="badc">⚠️ client data leaves your computer</span></div>
       </div>
       <div class="bottom">👉 Know what gets added to your computer, and whether client data goes anywhere, before it runs.</div>
     </div>
