@@ -5,6 +5,7 @@
 1. Pick one workflow from your firm.
     - a. Use one you do often, so the token savings matter.
     - b. Use made-up or anonymized sample data, not client data.
+    - c. Several candidates? Use the "Which one first?" prompt from the prompt card to choose.
 2. Agree on the design with Claude.
     - a. Use the starter CLAUDE.md, or the "Agree on the design first" prompt.
     - b. Make sure Claude lists the hard inputs.
