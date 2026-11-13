@@ -2,7 +2,7 @@
 
 ## Three buckets
 
-![Three buckets: what happens at build time and at run time](buckets.svg)
+![Three buckets: what happens at build time and at run time](images/buckets.svg)
 
 | Bucket | What happens at run time | Tokens per run |
 |---|---|---|
@@ -17,7 +17,7 @@
 
 **Strict definition: [deterministic](https://en.wikipedia.org/wiki/Deterministic_algorithm) means the same inputs always give the same output.**
 
-![Venn diagram: where procedures fall](venn.svg)
+![Venn diagram: where procedures fall](images/venn.svg)
 
 | Region | Examples |
 |---|---|
@@ -40,7 +40,7 @@
 
 A script needs you to say **in advance** where to look and what to do with what it finds.
 
-![Monthly Excel exports with the same shape next to two leases with the rent in different places](script-cant.svg)
+![Monthly Excel exports with the same shape next to two leases with the rent in different places](images/script-cant.svg)
 
 | | Changes from run to run | Script still works? |
 |---|---|---|
@@ -52,7 +52,7 @@ A script needs you to say **in advance** where to look and what to do with what 
 
 ## Data type doesn't decide the bucket
 
-![Numbers, language, images and audio: one example each that scripting can handle and one that needs AI in the loop](data-types.svg)
+![Numbers, language, images and audio: one example each that scripting can handle and one that needs AI in the loop](images/data-types.svg)
 
 | Data type | 📜 Scripting example | 🤖 AI-in-the-loop example |
 |---|---|---|
@@ -66,7 +66,7 @@ A script needs you to say **in advance** where to look and what to do with what 
 - **Use it to describe the task:** what goes in, what has to come out, in what format.
 - **Don't use it to pick the bucket:** the same input and output can land in different buckets.
 
-![Bank statements in, Excel form out: text PDFs from one bank are scripting; scans and photos from many banks are hybrid](io-lens.svg)
+![Bank statements in, Excel form out: text PDFs from one bank are scripting; scans and photos from many banks are hybrid](images/io-lens.svg)
 
 ## Clear-cut examples
 
@@ -93,7 +93,7 @@ A script needs you to say **in advance** where to look and what to do with what 
 
 **Why they're hard to apply:** we picture the typical input, not the hard ones.
 
-![Six hard inputs: a tilted scan, one vendor under many names, a rules list that keeps growing, a messy Excel export, a changed invoice layout, duplicate and locked files](hard-inputs.svg)
+![Six hard inputs: a tilted scan, one vendor under many names, a rules list that keeps growing, a messy Excel export, a changed invoice layout, duplicate and locked files](images/hard-inputs.svg)
 
 | Task that looks like scripting | ⚠️ Hard input that's easy to overlook | What it does to the design |
 |---|---|---|
@@ -125,7 +125,7 @@ A script needs you to say **in advance** where to look and what to do with what 
 
 ## How cost grows with volume
 
-![Cost-volume chart: scripting is a flat fixed cost, AI in the loop rises with every item, hybrid rises slowly, and comparing every item with every other item curves upward](cost-volume.svg)
+![Cost-volume chart: scripting is a flat fixed cost, AI in the loop rises with every item, hybrid rises slowly, and comparing every item with every other item curves upward](images/cost-volume.svg)
 
 Read it like a cost-volume (break-even) chart:
 
@@ -158,7 +158,7 @@ The return depends on two things together:
 
 A steep line doesn't matter at a tiny volume. A gentle line matters a lot at a large one.
 
-![Four workflows, each with today's all-AI token line, the line after converting, and a marker at the firm's volume: categorizing card lines (large return), finding duplicate payments (largest), pulling amounts from W-2s (not yet), answering client questions (none)](return-panels.svg)
+![Four workflows, each with today's all-AI token line, the line after converting, and a marker at the firm's volume: categorizing card lines (large return), finding duplicate payments (largest), pulling amounts from W-2s (not yet), answering client questions (none)](images/return-panels.svg)
 
 | Workflow | Volume | Today's line (all AI) | After converting | Return |
 |---|---|---|---|---|

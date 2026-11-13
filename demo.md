@@ -1,6 +1,6 @@
 # Demo: two examples
 
-![Lines sent to the LLM each month: example 1, all AI 30 vs. all script 0; example 2, all AI 40 vs. hybrid 9](demo-tokens.svg)
+![Lines sent to the LLM each month: example 1, all AI 30 vs. all script 0; example 2, all AI 40 vs. hybrid 9](images/demo-tokens.svg)
 
 | | Example 1: all AI → 📜 all script | Example 2: all AI → 🔀 hybrid |
 |---|---|---|

@@ -1,11 +1,11 @@
 """Draw the document illustrations used in handout.md and demo.md.
 
 Run from the repo root:  python tools/make_illustrations.py
-Writes SVG files into the repo root.
+Writes SVG files into images/.
 """
 from pathlib import Path
 
-OUT = Path(__file__).resolve().parent.parent
+OUT = Path(__file__).resolve().parent.parent / "images"
 
 BG = "#161a1f"
 PAPER = "#f4f1ea"
