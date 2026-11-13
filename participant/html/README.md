@@ -1,11 +1,12 @@
-# All the handouts on one page
+# Web pages
 
-Double-click `index.html` to open it in a browser. It shows every handout with a menu, colored tables and hint buttons.
+| File | What it is |
+|---|---|
+| `index.html` | **Start here.** The workshop as a series of animated infographics. Double-click to open. |
+| `text.html` | All the Markdown handouts on one page, with colored tables and hint buttons |
 
-**The page is a copy of the Markdown files in the folder above.** It doesn't update by itself. The banner at the top says when it was last built.
+**`text.html` is a copy of the Markdown files in the folder above.** It doesn't update by itself; its banner says when it was last built. If you edit the Markdown and want it to match, open a terminal in this folder and run `python build.py`. If you don't need it to match, ignore it.
 
-- Only matters if you edit those Markdown files and want this page to match.
-- To rebuild it: open a terminal in this folder and run `python build.py`. It needs only Python.
-- If you don't need this page to match, ignore it and read the Markdown files directly.
+`index.html` is drawn by hand. It summarizes the handouts; the Markdown files have the full text.
 
-`vendor/` holds [marked](https://github.com/markedjs/marked), the library the page uses to show Markdown (MIT license).
+`vendor/` holds [marked](https://github.com/markedjs/marked), the library `text.html` uses to show Markdown (MIT license).

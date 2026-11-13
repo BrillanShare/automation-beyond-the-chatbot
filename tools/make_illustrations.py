@@ -232,12 +232,16 @@ def io_lens():
     b += t(478, 92, "Script reads fixed spots", 13, SCRIPT)
 
     b += frame(20, 190, 920, 170, HYBRID, "Hybrid")
-    b += paper(55, 228, 80, 100, rot=-8, fill="#e7e1d4")
-    b += t(62, 250, "Cascade CU", 8, "#7a3b1f", "700") + lines(62, 258, 60, 7, color="#a9a294")
-    b += f'<rect x="135" y="240" width="72" height="104" rx="8" fill="#222"/>\n' + paper(141, 250, 60, 84, rot=6)
-    b += lines(147, 262, 46, 7)
-    b += paper(212, 232, 82, 100, rot=3)
-    b += t(219, 250, "Northwest Sav.", 8, "#2e6b3a", "700") + lines(219, 258, 64, 7)
+    def tilt(cx, cy, deg, content):
+        # Rotate a page and everything printed on it together.
+        return f'<g transform="rotate({deg} {cx} {cy})">\n{content}</g>\n'
+
+    b += tilt(95, 278, -8, paper(55, 228, 80, 100, fill="#e7e1d4")
+              + t(62, 250, "Cascade CU", 8, "#7a3b1f", "700") + lines(62, 258, 60, 7, color="#a9a294"))
+    b += tilt(171, 292, 6, f'<rect x="135" y="240" width="72" height="104" rx="8" fill="#222"/>\n'
+              + paper(141, 250, 60, 84) + lines(147, 262, 46, 7))
+    b += tilt(253, 282, 3, paper(212, 232, 82, 100)
+              + t(219, 250, "Northwest Sav.", 8, "#2e6b3a", "700") + lines(219, 258, 64, 7))
     b += t(320, 270, "Scans, phone photos,", 14, TEXT)
     b += t(320, 290, "many banks", 14, TEXT)
     b += arrow(470, 280, 640, 280)

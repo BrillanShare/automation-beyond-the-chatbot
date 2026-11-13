@@ -1,6 +1,6 @@
-"""Rebuild index.html from the Markdown files in the folder above.
+"""Rebuild text.html from the Markdown files in the folder above.
 
-index.html shows a copy of those Markdown files. It doesn't update by itself.
+text.html shows a copy of those Markdown files. It doesn't update by itself.
 Run this when you've edited the Markdown and want the page to match:
 
     python build.py
@@ -15,7 +15,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 MARKDOWN_FOLDER = HERE.parent
-PAGE = HERE / "index.html"
+PAGE = HERE / "text.html"
 
 
 def main():
@@ -32,7 +32,7 @@ def main():
         flags=re.S,
     )
     if count != 1:
-        raise SystemExit("Couldn't find the saved-copy markers in index.html")
+        raise SystemExit("Couldn't find the saved-copy markers in text.html")
     built = datetime.now().astimezone().strftime("%b %d, %Y %I:%M %p %Z").replace(" 0", " ")
     html, count = re.subn(
         r"<!--BUILT-AT-->.*?<!--/BUILT-AT-->",
@@ -41,9 +41,9 @@ def main():
         flags=re.S,
     )
     if count != 1:
-        raise SystemExit("Couldn't find the built-at marker in index.html")
+        raise SystemExit("Couldn't find the built-at marker in text.html")
     PAGE.write_text(html, encoding="utf-8")
-    print(f"Rebuilt index.html from {len(files)} Markdown files ({built})")
+    print(f"Rebuilt text.html from {len(files)} Markdown files ({built})")
 
 
 if __name__ == "__main__":
