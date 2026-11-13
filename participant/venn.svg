@@ -25,9 +25,10 @@
   <text x="545" y="260" fill="#c9d1d9" font-size="14" text-anchor="middle">today's stock price</text>
   <!-- random -->
   <circle cx="545" cy="425" r="95" fill="#db61a233" stroke="#db61a2" stroke-width="2.5"/>
-  <text x="545" y="405" fill="#db61a2" font-size="15" font-weight="700" text-anchor="middle">Random on purpose</text>
-  <text x="545" y="435" fill="#c9d1d9" font-size="14" text-anchor="middle">=RAND()</text>
-  <text x="545" y="457" fill="#c9d1d9" font-size="14" text-anchor="middle">random IDs, audit sample</text>
+  <text x="545" y="403" fill="#db61a2" font-size="15" font-weight="700" text-anchor="middle">Random on purpose</text>
+  <text x="545" y="424" fill="#db61a2" font-size="13" text-anchor="middle">(pseudo-random)</text>
+  <text x="545" y="450" fill="#c9d1d9" font-size="14" text-anchor="middle">=RAND()</text>
+  <text x="545" y="471" fill="#c9d1d9" font-size="14" text-anchor="middle">random IDs, audit sample</text>
   <!-- AI in the loop -->
   <circle cx="815" cy="320" r="118" fill="#f8514933" stroke="#f85149" stroke-width="2.5"/>
   <text x="815" y="295" fill="#f85149" font-size="18" font-weight="700" text-anchor="middle">AI in the loop</text>

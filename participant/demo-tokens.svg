@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="340" viewBox="0 0 960 340" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<title>Demo: lines sent to the LLM each month, three ways</title>
+<rect width="960" height="340" fill="#161a1f"/>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker></defs>
+<text x="20" y="34" font-size="16" fill="#e6edf3" font-weight="700" text-anchor="start">Lines sent to the LLM each month (demo file: 40 credit card lines)</text>
+<text x="20" y="100" font-size="17" fill="#f85149" font-weight="700" text-anchor="start">All AI</text>
+<rect x="160" y="78" width="600" height="34" rx="6" fill="#21262d"/>
+<rect x="160" y="78" width="600" height="34" rx="6" fill="#f85149"/>
+<text x="772" y="101" font-size="17" fill="#e6edf3" font-weight="700" text-anchor="start">40</text>
+<text x="160" y="132" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="start">every line, every month</text>
+<text x="20" y="180" font-size="17" fill="#bc8cff" font-weight="700" text-anchor="start">Hybrid</text>
+<rect x="160" y="158" width="600" height="34" rx="6" fill="#21262d"/>
+<rect x="160" y="158" width="135" height="34" rx="6" fill="#bc8cff"/>
+<text x="307" y="181" font-size="17" fill="#e6edf3" font-weight="700" text-anchor="start">9</text>
+<text x="160" y="212" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="start">only the 9 lines no rule matched</text>
+<text x="20" y="260" font-size="17" fill="#58a6ff" font-weight="700" text-anchor="start">All script</text>
+<rect x="160" y="238" width="600" height="34" rx="6" fill="#21262d"/>
+<text x="172" y="261" font-size="17" fill="#e6edf3" font-weight="700" text-anchor="start">0</text>
+<text x="160" y="292" font-size="13" fill="#8b949e" font-weight="normal" text-anchor="start">none; the 9 leftovers go to a person</text>
+<text x="20" y="320" font-size="13" fill="#e6edf3" font-weight="normal" text-anchor="start">Building the script costs tokens once. After that, only the AI-in-the-loop part costs tokens on every run.</text>
+</svg>

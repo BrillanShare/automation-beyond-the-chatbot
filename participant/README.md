@@ -16,7 +16,9 @@ Materials for advanced AI users in accounting: when to script, when to put AI in
 | File | What it is |
 |---|---|
 | `index.html` | Start page: all the handouts on one page |
+| `cheat-sheet.md` | One page: the three buckets, the question to ask, hard inputs, tokens, the first prompt |
 | `handout.md` | Concepts with examples: three buckets, "deterministic", what a script can't do, hard inputs, tokens, hybrid patterns, local models, and a vote with hints |
+| `demo.md`, `demo/` | One task three ways (all AI, hybrid, all script) with sample files and a backup script |
 | `prompt-card.md` | Prompts to copy and adapt |
 | `CLAUDE.md` | Starter instructions for Claude that apply the workshop's principles |
 | `homework.md` | Homework: a Python script as the output |
