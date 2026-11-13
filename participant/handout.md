@@ -129,7 +129,7 @@ A script needs you to say **in advance** where to look and what to do with what 
 
 Read it like a cost-volume (break-even) chart:
 
-- **Scripting = fixed cost.** Tokens to build it once, then a flat line.
+- **Scripting = fixed cost.** Tokens to build it once, then a flat line. (Building a script can take more or fewer tokens, but for this chart we treat it as fixed: the point is that it stops growing.)
 - **AI in the loop = variable cost.** Every item, every run.
 - **Hybrid = fixed cost + a small variable cost.**
 - **Break-even:** the volume where the script has paid for itself. For a task you repeat, that comes early.
@@ -147,7 +147,11 @@ One unit = the tokens for one item or one comparison.
 
 ## Is it worth converting?
 
-Converting a task from all AI to hybrid or script takes effort. The return depends on two things together:
+For a single task you repeat, converting is usually worth it. These charts are for when you have **many** tasks, run at different volumes and different frequencies, and need to decide **which to convert first** and **how big the difference is**.
+
+You already have a feel for half of this: how much data you handle and how often. What's hard to see is how Claude's token use grows with it. That's what the charts show.
+
+The return depends on two things together:
 
 - **The shape of today's line:** how the tokens grow as you process more lines, documents or clients.
 - **Your volume over a year:** how many per run × how often you run it. 100 records every day is about 36,000 a year.
@@ -206,13 +210,13 @@ You can't read the code, but you can ask for the same controls you'd expect anyw
 
 | Control | What goes wrong unseen | Accounting equivalent | Ask Claude |
 |---|---|---|---|
-| 📣 **Fail loudly** | The script skips rows it can't read and still reports success | Exceptions report | "What does the script do with a row it can't process? Show me the list." |
+| 📣 **Fail loudly** | The script skips rows it can't read and still reports success | Exceptions report. Failures in **RED CAPITALS**; things to be aware of in **⚠️ yellow** | "What does the script do with a row it can't process? Show me the list." |
 | 🧮 **Control totals** | 500 rows in, 487 out, and nobody notices | Batch totals, tie-out | "Do rows in equal rows out plus rejected? Do the totals tie?" |
 | 💵 **Money math** | Cents drift, or the script rounds differently from Excel | Rounding policy | "How is money stored and rounded? Does it match Excel?" |
 | 🔁 **Safe to run twice** | A rerun doubles the entries | Double posting | "What happens if I run this twice?" |
 | 🔒 **Never overwrite an input without asking first** | The script replaces the only copy of a source file | Source documents stay untouched | "Does it change or delete any file it reads? Write results to a new file." |
 | 🔤 **Text that looks like numbers** | Account 00123 becomes 123; dates shift | Leading zeros in account numbers | "Which columns are read as text, numbers and dates?" |
-| ⚙️ **Settings out of the code** | A tax rate or cutoff date is buried in the script | Assumptions on their own tab, not inside formulas | "Which values are fixed in the code? Move them to a settings file." |
+| ⚙️ **Settings and rules out of the code** | A tax rate or rule is buried in the script, or reinvented on each run | Assumptions on their own tab, reviewed and dated. A "review by" date triggers a ⚠️ warning when it passes | "Which values are fixed in the code? Move them to a settings file." |
 | 📝 **Run log** | Nobody can say which version and which input produced a number | Audit trail | "Does each run record the date, input file, row counts and version?" |
 | 📦 **What it installs and sends** | A downloaded add-on, or data leaving your computer | Vendor due diligence | "What does it install? Does it send data anywhere?" |
 | ♻️ **Changes can break what worked** | Claude fixes one case and breaks another | Re-performing a test after a change | "Rerun the earlier sample inputs after every change." |
@@ -355,3 +359,13 @@ For each task, vote: 📜 Scripting, 🤖 AI in the loop or 🔀 Hybrid. Then as
 - **Today's stock price:** test the calculation with a fake price source that always returns $100.
 - **Due-date reminders:** test with the clock frozen ("pretend today is April 10").
 - **Audit sample:** the script saves the starting number for its (pseudo) random picks in the workpapers, so a reviewer can draw the exact same sample again and check it.
+
+### Tests that last
+
+- **Save the tests as files** next to the script, so they're there next time.
+- **A `CLAUDE.md` in the script's folder** explains the testing strategy, so any future Claude that changes the script finds it and reruns the tests.
+- **Agree on coverage first.** Before a change, you and Claude agree which cases the tests cover, including new ones.
+- **Every bug becomes a test,** so it can't come back unnoticed.
+- **Ask what's not covered yet.**
+
+The starter CLAUDE.md asks Claude to do all of this.

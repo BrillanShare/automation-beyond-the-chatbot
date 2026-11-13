@@ -4,28 +4,22 @@ Private development copy of the workshop materials. Only the `participant/` fold
 
 ## Start here
 
-**Open `participant/index.html`** in a browser. It shows every handout on one page.
-
-- Double-click it to see the copy saved inside the page.
-- To see edits to the Markdown files as soon as you refresh, serve the folder:
-    - `cd participant`
-    - `python -m http.server 8000`
-    - open http://localhost:8000
+**Open `participant/html/index.html`** in a browser. It shows every handout on one page.
 
 ## What's here
 
 | Path | Published? | What it is |
 |---|---|---|
 | `participant/` | ✅ Yes | Everything participants and the instructor use; see `participant/README.md` |
+| `participant/html/` | ✅ Yes | One-page view of the handouts, rebuilt with `python participant/html/build.py` |
 | `instructor/run-of-show.md` | ❌ No | 60-minute timeline |
-| `build.py` | ❌ No | Refreshes the saved copy inside `participant/index.html` |
 | `tools/make_illustrations.py` | ❌ No | Draws the document illustrations in `participant/` |
 | `CLAUDE.md` | ❌ No | Instructions for Claude when working on this repo |
 
 ## Editing
 
 1. Edit the Markdown files in `participant/`.
-2. Run `python build.py` to refresh the saved copy inside `participant/index.html`.
+2. Run `python participant/html/build.py` to rebuild the one-page view. It stamps the build time in the page's banner.
 3. Commit both.
 
 ## Publishing
